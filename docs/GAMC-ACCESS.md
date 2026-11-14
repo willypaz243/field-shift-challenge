@@ -16,7 +16,8 @@
 | Autorización | **Estricta por `service_id`**: la key solo abre los UUID de su catálogo (403 si no) |
 | Parámetro `LAYERS` | **Completamente ignorado por el proxy** (vacío, con nombre, o basura → misma imagen, idéntico md5). La capa la decide el `service_id` |
 | `GetCapabilities` | ✅ **Funciona y atraviesa el proxy** → expone el inventario completo del GeoServer (15 capas reales del GAMC + 3 capas demo), incluidas capas NO autorizadas para la key |
-| `GetFeatureInfo` | ✅ JSON GeoJSON. Verificado con atributos reales en Periurbanos y Limite Distritos. En Drenaje devuelve vacío en todos los puntos probados (pendiente) |
+| `GetFeatureInfo` | ✅ JSON GeoJSON. Verificado con atributos reales en Periurbanos y Limite Distritos. En Drenaje devuelve vacío en **12 puntos** (4 faldeos + eje Rocha + centro del valle) → probable que no esté habilitado para esa capa |
+| Datos descargados | ✅ Leyendas, mapas y featureinfo de las 3 capas guardados en [`data/gamc/04/`](../data/gamc/04/README.md) |
 | Rate limit | **Existe y es agresivo** (HTTP 429 global). Con ráfagas de 8 requests seguidos todos fallan; separando ~10–15 s pasan normal |
 | Backend directo | `serviciosgamcgeo.cochabamba.bo/geoserver/app/wms` **no accesible** (TLS "unrecognized name" → servidor interno, solo vía proxy) |
 | Formatos | `image/png`, `image/png8` y `image/jpeg` funcionan en GetMap |
@@ -154,12 +155,12 @@ de la key 04, o para usar keys de otros proyectos si el equipo consigue más de 
 
 | Capa | Atributos observados | Ejemplo |
 |---|---|---|
-| `periurbanos` | `Detalle`, `Periurbano` | `{"Detalle":"Periurbano","Periurbano":"Periurbanos consolidados"}` |
-| `limite_distritos` | `Distrito`, `Comuna` | `{"Distrito":"D4","Comuna":"MOLLE"}` |
-| `drenaje_e_influencia` | ⚠️ vacío en 8 puntos probados (centro del valle, eje Rocha) | `features: []` — posible que el FeatureInfo no esté habilitado para esa capa, o que los buffers "de influencia" no cubran los puntos elegidos. Pendiente |
+| `periurbanos` | `Detalle`, `Periurbano` | `{"Detalle":"Periurbano","Periurbano":"Periurbanos consolidados"}` y `{"Detalle":"Herbazales ralos con intervenión urbana","Periurbano":"Periurbanos en crecimiento"}` |
+| `limite_distritos` | `Distrito`, `Comuna` | `{"Distrito":"D4","Comuna":"MOLLE"}`, `{"Distrito":"D12","Comuna":"ADELA ZAMUDIO"}`, `{"Distrito":"D9","Comuna":"ITOCTA"}` |
+| `drenaje_e_influencia` | ⚠️ vacío en **12 puntos** probados (centro del valle, eje Rocha, 4 faldeos) | `features: []` — probable que el FeatureInfo no esté habilitado para esa capa. Usar como contexto visual; confirmar con GAMC |
 
-Comuna confirmada en vivo: **D4 = MOLLE** (además Itocta, Tunari, Valle Hermoso, Tamborada del
-sondeo previo en LOCAL-CONTEXT.md).
+Comunas confirmadas en vivo: **D4 = MOLLE**, **D12 = ADELA ZAMUDIO**, **D9 = ITOCTA** (además
+Itocta, Tunari, Valle Hermoso, Tamborada del sondeo previo en LOCAL-CONTEXT.md).
 
 ---
 
@@ -244,7 +245,10 @@ curl -G "https://serviciosgamc.cochabamba.bo/api/gs/wms" \
 
 ## 10. Pendientes / limitaciones
 
-- [ ] GetFeatureInfo de `drenaje_e_influencia` — probar en más puntos o confirmar con GAMC.
+- [ ] GetFeatureInfo de `drenaje_e_influencia` — 12 puntos probados (todas las zonas: centro,
+  eje Rocha, faldeos) → todos vacíos. Probablemente no está habilitado para esa capa;
+  confirmar con GAMC. MVP: capa solo como contexto visual.
+- [x] Descarga de leyendas/mapas/featureinfo de las 3 capas → [`data/gamc/04/`](../data/gamc/04/README.md) (14/11).
 - [ ] No hay endpoint de descarga vectorial (GeoJSON/WFS) en el catálogo: los datos llegan solo
   como PNG renderizado + FeatureInfo puntual. Si se necesitan geometrías (p. ej. para calcular
   distancias a quebradas), hay que digitalizar o pedir WFS al GAMC.
