@@ -1,0 +1,583 @@
+{
+  "papa": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-04-13",
+      "score": 40.6,
+      "confianza": 0.82,
+      "detalle": {
+        "score": 40.6,
+        "temp": 0.22,
+        "agua": 0.39,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 181.9,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-29",
+      "fin": "2027-04-27",
+      "score": 35.0,
+      "confianza": 0.8,
+      "detalle": {
+        "score": 35.0,
+        "temp": 0.13,
+        "agua": 0.36,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 192.4,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-12",
+      "fin": "2027-05-10",
+      "score": 27.9,
+      "confianza": 0.78,
+      "detalle": {
+        "score": 27.9,
+        "temp": 0.04,
+        "agua": 0.28,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 217.1,
+        "frost_days": 0
+      }
+    }
+  ],
+  "choclo": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-05-13",
+      "score": 41.2,
+      "confianza": 0.8,
+      "detalle": {
+        "score": 41.2,
+        "temp": 0.0,
+        "agua": 0.65,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 207.4,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-29",
+      "fin": "2027-05-27",
+      "score": 39.9,
+      "confianza": 0.78,
+      "detalle": {
+        "score": 39.9,
+        "temp": 0.0,
+        "agua": 0.62,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 225.8,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-12",
+      "fin": "2027-06-09",
+      "score": 38.3,
+      "confianza": 0.76,
+      "detalle": {
+        "score": 38.3,
+        "temp": 0.0,
+        "agua": 0.58,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 251.1,
+        "frost_days": 0
+      }
+    }
+  ],
+  "trigo": [
+    {
+      "inicio": "2026-11-21",
+      "fin": "2027-04-04",
+      "score": 91.3,
+      "confianza": 0.82,
+      "detalle": {
+        "score": 91.3,
+        "temp": 1.0,
+        "agua": 0.78,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 98.3,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-04",
+      "fin": "2027-04-17",
+      "score": 90.6,
+      "confianza": 0.8,
+      "detalle": {
+        "score": 90.6,
+        "temp": 1.0,
+        "agua": 0.76,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 106.1,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-18",
+      "fin": "2027-05-01",
+      "score": 88.2,
+      "confianza": 0.78,
+      "detalle": {
+        "score": 88.2,
+        "temp": 1.0,
+        "agua": 0.7,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 133.1,
+        "frost_days": 0
+      }
+    }
+  ],
+  "papaliza": [
+    {
+      "inicio": "2027-02-03",
+      "fin": "2027-08-16",
+      "score": 66.9,
+      "confianza": 0.68,
+      "detalle": {
+        "score": 66.9,
+        "temp": 0.98,
+        "agua": 0.19,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 526.6,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2027-01-16",
+      "fin": "2027-07-29",
+      "score": 66.7,
+      "confianza": 0.7,
+      "detalle": {
+        "score": 66.7,
+        "temp": 0.89,
+        "agua": 0.29,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 462.8,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2027-01-02",
+      "fin": "2027-07-15",
+      "score": 66.3,
+      "confianza": 0.72,
+      "detalle": {
+        "score": 66.3,
+        "temp": 0.82,
+        "agua": 0.36,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 416.4,
+        "frost_days": 0
+      }
+    }
+  ],
+  "lechuga": [
+    {
+      "inicio": "2027-01-03",
+      "fin": "2027-02-06",
+      "score": 94.5,
+      "confianza": 0.83,
+      "detalle": {
+        "score": 94.5,
+        "temp": 1.0,
+        "agua": 0.86,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 9.7,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2027-01-17",
+      "fin": "2027-02-20",
+      "score": 93.3,
+      "confianza": 0.81,
+      "detalle": {
+        "score": 93.3,
+        "temp": 1.0,
+        "agua": 0.83,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 11.7,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2027-01-31",
+      "fin": "2027-03-06",
+      "score": 88.5,
+      "confianza": 0.79,
+      "detalle": {
+        "score": 88.5,
+        "temp": 1.0,
+        "agua": 0.71,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 20.2,
+        "frost_days": 0
+      }
+    }
+  ],
+  "hortalizas": [
+    {
+      "inicio": "2026-12-27",
+      "fin": "2027-02-24",
+      "score": 92.1,
+      "confianza": 0.82,
+      "detalle": {
+        "score": 92.1,
+        "temp": 1.0,
+        "agua": 0.8,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 23.7,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-13",
+      "fin": "2027-02-10",
+      "score": 89.9,
+      "confianza": 0.84,
+      "detalle": {
+        "score": 89.9,
+        "temp": 1.0,
+        "agua": 0.75,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 30.2,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2027-01-17",
+      "fin": "2027-03-17",
+      "score": 87.7,
+      "confianza": 0.79,
+      "detalle": {
+        "score": 87.7,
+        "temp": 1.0,
+        "agua": 0.69,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 37.0,
+        "frost_days": 0
+      }
+    }
+  ],
+  "alfalfa": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-08-13",
+      "score": 26.1,
+      "confianza": 0.73,
+      "detalle": {
+        "score": 26.1,
+        "temp": 0.12,
+        "agua": 0.14,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 779.5,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-29",
+      "fin": "2027-08-27",
+      "score": 23.0,
+      "confianza": 0.71,
+      "detalle": {
+        "score": 23.0,
+        "temp": 0.07,
+        "agua": 0.12,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 796.9,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-12",
+      "fin": "2027-09-09",
+      "score": 19.8,
+      "confianza": 0.7,
+      "detalle": {
+        "score": 19.8,
+        "temp": 0.02,
+        "agua": 0.09,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 821.4,
+        "frost_days": 0
+      }
+    }
+  ],
+  "haba": [
+    {
+      "inicio": "2026-11-16",
+      "fin": "2027-04-29",
+      "score": 85.9,
+      "confianza": 0.81,
+      "detalle": {
+        "score": 85.9,
+        "temp": 1.0,
+        "agua": 0.65,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 194.5,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-30",
+      "fin": "2027-05-13",
+      "score": 84.7,
+      "confianza": 0.79,
+      "detalle": {
+        "score": 84.7,
+        "temp": 1.0,
+        "agua": 0.62,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 211.0,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-13",
+      "fin": "2027-05-26",
+      "score": 82.7,
+      "confianza": 0.77,
+      "detalle": {
+        "score": 82.7,
+        "temp": 1.0,
+        "agua": 0.57,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 238.3,
+        "frost_days": 0
+      }
+    }
+  ],
+  "tarwi": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-06-12",
+      "score": 73.0,
+      "confianza": 0.78,
+      "detalle": {
+        "score": 73.0,
+        "temp": 1.0,
+        "agua": 0.32,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 283.6,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-29",
+      "fin": "2027-06-26",
+      "score": 71.7,
+      "confianza": 0.76,
+      "detalle": {
+        "score": 71.7,
+        "temp": 1.0,
+        "agua": 0.29,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 297.6,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-12",
+      "fin": "2027-07-09",
+      "score": 69.4,
+      "confianza": 0.74,
+      "detalle": {
+        "score": 69.4,
+        "temp": 1.0,
+        "agua": 0.24,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 320.9,
+        "frost_days": 0
+      }
+    }
+  ],
+  "quinua": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-04-28",
+      "score": 78.5,
+      "confianza": 0.81,
+      "detalle": {
+        "score": 78.5,
+        "temp": 1.0,
+        "agua": 0.46,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 177.5,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-29",
+      "fin": "2027-05-12",
+      "score": 76.6,
+      "confianza": 0.79,
+      "detalle": {
+        "score": 76.6,
+        "temp": 1.0,
+        "agua": 0.42,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 192.9,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-12",
+      "fin": "2027-05-25",
+      "score": 71.5,
+      "confianza": 0.77,
+      "detalle": {
+        "score": 71.5,
+        "temp": 0.96,
+        "agua": 0.34,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 219.3,
+        "frost_days": 0
+      }
+    }
+  ],
+  "avena": [
+    {
+      "inicio": "2026-12-08",
+      "fin": "2027-03-22",
+      "score": 93.8,
+      "confianza": 0.82,
+      "detalle": {
+        "score": 93.8,
+        "temp": 1.0,
+        "agua": 0.84,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 54.6,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-25",
+      "fin": "2027-03-09",
+      "score": 93.0,
+      "confianza": 0.83,
+      "detalle": {
+        "score": 93.0,
+        "temp": 1.0,
+        "agua": 0.83,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 61.2,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-22",
+      "fin": "2027-04-05",
+      "score": 92.2,
+      "confianza": 0.8,
+      "detalle": {
+        "score": 92.2,
+        "temp": 1.0,
+        "agua": 0.8,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 68.4,
+        "frost_days": 0
+      }
+    }
+  ],
+  "durazno": [
+    {
+      "inicio": "2026-11-15",
+      "fin": "2027-11-14",
+      "score": 54.0,
+      "confianza": 0.67,
+      "detalle": {
+        "score": 54.0,
+        "temp": 0.72,
+        "agua": 0.16,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 1019.3,
+        "frost_days": 0
+      }
+    }
+  ],
+  "flores": [
+    {
+      "inicio": "2026-11-30",
+      "fin": "2027-03-29",
+      "score": 81.6,
+      "confianza": 0.82,
+      "detalle": {
+        "score": 81.6,
+        "temp": 1.0,
+        "agua": 0.54,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 110.5,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-12-13",
+      "fin": "2027-04-11",
+      "score": 79.9,
+      "confianza": 0.8,
+      "detalle": {
+        "score": 79.9,
+        "temp": 1.0,
+        "agua": 0.5,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 120.6,
+        "frost_days": 0
+      }
+    },
+    {
+      "inicio": "2026-11-16",
+      "fin": "2027-03-15",
+      "score": 79.7,
+      "confianza": 0.84,
+      "detalle": {
+        "score": 79.7,
+        "temp": 1.0,
+        "agua": 0.49,
+        "helada": 1.0,
+        "erosion": 1.0,
+        "deficit_mm": 121.7,
+        "frost_days": 0
+      }
+    }
+  ]
+}
