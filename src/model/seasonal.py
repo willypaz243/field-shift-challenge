@@ -1,12 +1,12 @@
-"""Modelo de serie temporal: estacionalidad (Fourier, 4 armónicos) + tendencia lineal.
+"""Time-series model: seasonality (Fourier, 4 harmonics) + linear trend.
 
-- Ajuste por mínimos cuadrados (numpy, sin dependencias externas).
-- Proyección N días con banda de incertidumbre que crece con el horizonte:
+- Least-squares fit (numpy, no external dependencies).
+- N-day forecast with an uncertainty band that grows with the horizon:
 
-      banda(h) = 1.96 · σ_residuo · √(1 + h/180)
+      band(h) = 1.96 * sigma_residual * sqrt(1 + h/180)
 
-  (σ = desviación de los residuos; a 180 días la banda se duplica).
-- Backtest: holdout de 2024–2025 → MAE/RMSE por variable (tarea 2.3).
+  (sigma = residual standard deviation; at 180 days the band doubles).
+- Backtest: 2024-2025 holdout -> MAE/RMSE per variable (task 2.3).
 """
 
 from __future__ import annotations
@@ -30,7 +30,9 @@ class Fit:
 
 
 def _design(t: np.ndarray) -> np.ndarray:
+    """Columns: intercept, linear trend, then cos/sin pairs (k=1..N_HARMONICS)."""
     X = np.ones((len(t), 2 + 2 * N_HARMONICS))
+    X[:, 1] = t
     for k in range(1, N_HARMONICS + 1):
         X[:, 2 + 2 * (k - 1)] = np.cos(2 * np.pi * k * t / YEAR_DAYS)
         X[:, 2 + 2 * (k - 1) + 1] = np.sin(2 * np.pi * k * t / YEAR_DAYS)
@@ -38,7 +40,7 @@ def _design(t: np.ndarray) -> np.ndarray:
 
 
 def fit(y: np.ndarray, t: np.ndarray) -> Fit:
-    """Ajusta Fourier(4) + tendencia a y (valores diarios). t = días desde t0."""
+    """Fit Fourier(4) + linear trend to y (daily values). t = days since t0."""
     X = _design(t)
     coef, *_ = np.linalg.lstsq(X, y, rcond=None)
     resid = y - X @ coef
@@ -54,9 +56,9 @@ def predict(fit: Fit, t: np.ndarray) -> np.ndarray:
 def forecast(
     fit: Fit, horizon: int = 365, t_start: float | None = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Proyecta `horizon` días desde `t_start` (por defecto, último día de datos).
+    """Forecast `horizon` days from `t_start` (default: last data day).
 
-    Devuelve (horizons, media, banda). La banda crece con el horizonte desde t_start.
+    Returns (horizons, mean, band). The band grows with the horizon from t_start.
     """
     h = np.arange(1, horizon + 1, dtype=float)
     t0 = fit.t_end if t_start is None else t_start
@@ -72,7 +74,7 @@ def backtest(
     holdout_start: float,
     horizon: int,
 ) -> tuple[float, float]:
-    """MAE/RMSE proyectando `horizon` días desde `holdout_start` (ignora NaN)."""
+    """MAE/RMSE forecasting `horizon` days from `holdout_start` (ignores NaN)."""
     m = ~np.isnan(y)
     y, t = y[m], t[m]
     mask_train = t < holdout_start

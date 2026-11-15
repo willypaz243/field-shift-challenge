@@ -4,23 +4,23 @@
   "metrics": [
     {
       "variable": "tmean",
-      "mae": 1.151,
-      "rmse": 1.459
+      "mae": 1.167,
+      "rmse": 1.466
     },
     {
       "variable": "tmin",
-      "mae": 1.588,
-      "rmse": 1.967
+      "mae": 1.546,
+      "rmse": 1.923
     },
     {
       "variable": "tmax",
-      "mae": 1.904,
-      "rmse": 2.368
+      "mae": 1.942,
+      "rmse": 2.41
     },
     {
       "variable": "pmm",
-      "mae": 3.201,
-      "rmse": 6.919
+      "mae": 3.092,
+      "rmse": 6.955
     }
   ],
   "eda": {

@@ -18,7 +18,7 @@
 | `ws` | m/s | POWER (WS2M) |
 | `sm_surface`, `sm_root` | m³/m³ | SMAP SPL4SMGP v8 (2015+, promedio diario) |
 
-En el MVP, el scoring solo usa `tmean`, `tmin` y `pmm` (las variables con evidencia local
+En el MVP, el scoring usa `tmean`, `tmin`, `pmm` y `et0` (las variables con evidencia local
 por cultivo). Las demás se cargan pero puntúan **neutro** (sin evidencia no se penaliza).
 
 ## Esquema por cultivo
@@ -31,7 +31,7 @@ por cultivo). Las demás se cargan pero puntúan **neutro** (sin evidencia no se
 | `ciclo_dias` | [min, max] | duración siembra→cosecha (ventana L del scoring) |
 | `temp.tmean_opt` | [min, max] \| null | rango óptimo de temperatura media (°C); `null` = neutro |
 | `temp.fuente` | `local` \| `estimado` | **estimado** = valor agronómico general (no fuente local) → validar con experto |
-| `helada.tolerancia` | `alta` \| `media` \| `baja` | peso de penalización por días de helada (`tmin < 0 °C`): 0 / 0.5 / 1.0 |
+| `helada.tolerancia` | `alta` \| `media` \| `baja` | peso de penalización por días de helada (`tmin < 0 °C`): 0.2 / 0.5 / 1.0 |
 | `helada.etapa_critica` | string \| null | etapa sensible (floración, espigazón, granos, todo el ciclo) |
 | `agua.demanda` | `muy alta` \| `alta` \| `media` \| `media-baja` | ranking de necesidad hídrica |
 | `agua.deficit_tol` | `alta` \| `media` \| `baja` | tolerancia a déficit (baja = penaliza fuerte las ventanas secas) |
@@ -41,22 +41,31 @@ por cultivo). Las demás se cargan pero puntúan **neutro** (sin evidencia no se
 | `mercado` / `siembra_local` / `rotacion` | string | contexto para el pitch y el módulo de rotaciones |
 | `fuente` | string | trazabilidad de los valores |
 
-## Reglas de scoring (espec para el motor, tarea 2.4)
+## Reglas de scoring (motor implementado, tarea 2.4)
 
-Para cada ventana de L días (L ∈ `ciclo_dias`) sobre la proyección:
+> Esta sección documenta **lo que implementa `src/model/scoring.py`** (fuente de verdad);
+> el motor idéntico corre en servidor y en el dispositivo móvil.
 
-1. **Helada:** días con `tmin < 0 °C` → penalización = `días_helada / L` × peso(`tolerancia`).
-   Si hay `etapa_critica`, el peso se aplica al sub-rango estimado de la etapa (MVP: ciclo completo).
-2. **Agua:** `pmm_cum` = suma de `pmm` en la ventana → fit = posición del cum. frente al
-   ranking de `demanda` (muy alta=4 … media-baja=1.5), atenuado por `deficit_tol`.
-3. **Temperatura:** fit por día = 1 − |`tmean` − centro(`tmean_opt`)| / (semiancho), truncado
-   a [0,1]; promedio sobre la ventana. `null` → 1.0 (neutro).
-4. **Erosión:** `erosion_sens ≠ baja` y zona con `cerca_drenaje < 200` → −10 pts fijos.
-5. **Score final** = 100 × (0.5·fit_T + 0.3·fit_agua + 0.2·(1 − penal_helada)) − erosión,
-   clip [0,100]. **Confianza** = fracción de días de la ventana cuya banda de incertidumbre
-   de la proyección no cruza el límite de helada/rango óptimo.
+Para cada ventana de L días (L = media de `ciclo_dias`) sobre la proyección:
 
-## Cultivos del catálogo (13)
+1. **Temperatura** (0–1): fracción de días con `tmean` dentro de `tmean_opt`.
+2. **Agua** (0–1): `déficit = Σ max(0, ET₀×Kc_avg − pmm)`, con `Kc_avg` = media de los tres
+   `kc`; mitigado por `drought_tolerant` (no=1.0, poco=0.6, sí=0.3);
+   `agua = 1 − min(1, déficit×mit / (2 mm/día × L))`.
+3. **Helada** (0–1): `helada = 1 − sev × días_helada / L`, con `sev` por `tolerancia`
+   (alta=0.2, media=0.5, baja=1.0) y `días_helada` = días con `tmin + FROST_OFFSET < 0`
+   (`FROST_OFFSET = 0.0`; el tmin observado ya captura heladas reales, ver EDA.md).
+4. **Erosión** (multiplicador 0.5–1.0): si la zona tiene `cerca_drenaje` y
+   `erosion_sens` = alta (0.5) o media (0.75).
+5. **Score final** = 100 × (0.45·temp + 0.40·agua + 0.15·helada) × erosión.
+   **Confianza** = decaimiento heurístico con el horizonte (0.92 → 0.4 según el centro
+   de la ventana dentro de la proyección).
+6. **Top-3**: mejores ventanas separadas ≥ 14 días.
+
+Post-MVP (documentado, no implementado): `etapa_critica` (penalizar solo el sub-rango de la
+etapa sensible) y `tipo_ciclo = perenne` (época de siembra en vez de ventana fija).
+
+## Cultivos del catálogo (14)
 
 | id | Ciclo (días) | T óptima media | Helada | Agua | FixN |
 |---|---|---|---|---|---|
@@ -73,6 +82,7 @@ Para cada ventana de L días (L ∈ `ciclo_dias`) sobre la proyección:
 | avena | 90–120 | 8–18 °C (estimado) | alta | media | — |
 | durazno | perenne (plantar invierno) | 12–24 °C (estimado) | media (floración) | media | ❌ |
 | flores | 60–180 | 12–22 °C (estimado) | baja | alta | ❌ |
+| maiz_forraje | 120–150 | 18–27 °C (estimado) | baja | alta | ❌ |
 
 > Los valores marcados **estimado** son agronómicos generales (FAO/tipos de cultivo), no
 > fuentes locales: validarlos con un agrónomo local si hay tiempo (o descartar el fit_T para

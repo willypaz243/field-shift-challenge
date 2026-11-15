@@ -172,8 +172,8 @@ def do_eda(
         "(2016–2025). POWER (celda 0.5°) subestima la lluvia convectiva andina; "
         "IMERG (0.1°) es la fuente primaria y POWER queda como validación de patrón.",
         f"2. **tmin**: POWER llega a {tmin_min:.1f} °C (may–ago), coherente con heladas "
-        "locales. El scoring sigue aplicando `FROST_OFFSET = -2.0` como heurística "
-        "documentada hasta calibrar con estaciones locales.",
+        "locales. Con tmin real sub-cero, `FROST_OFFSET = 0.0` en el scoring "
+        "(el offset se mantiene como gancho de calibración con estaciones locales).",
         "3. **Outliers pmm > 100 mm/día**: descartados como error de dato (NaN).",
         "",
     ]
@@ -294,7 +294,8 @@ def main() -> None:
             )
 
     # Top-3 scoring per crop (task 2.4)
-    zone = {"cerca_drenaje": False, "elev_m": 3126}
+    # Valley-wide series: no zone-level drainage data in this cut (None = not within 200 m)
+    zone = {"cerca_drenaje": None, "elev_m": 3126}
     top = {
         c["id"]: score_windows(
             c,
