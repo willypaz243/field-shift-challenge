@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -8,7 +9,13 @@ class FeedbackIn(BaseModel):
     crop_id: str
     siembra: date | None = None
     cosecha: date
-    resultado: str
+    resultado: Literal["buena", "regular", "mala"]
+
+
+class PlanIn(BaseModel):
+    zone_id: str
+    rotacion_id: str
+    siembra: date
 
 
 class Created(BaseModel):
