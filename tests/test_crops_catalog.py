@@ -4,12 +4,13 @@ import json
 import unittest
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 CROPS_JSON = ROOT / "data" / "crops" / "crops.json"
 
 
-def load_catalog() -> dict:
+def load_catalog() -> dict[str, Any]:
     return json.loads(CROPS_JSON.read_text())
 
 

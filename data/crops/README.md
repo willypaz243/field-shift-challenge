@@ -1,62 +1,119 @@
-# Catálogo de cultivos — vector de condiciones óptimas
+# Catálogo de cultivos y parámetros agronómicos
 
-> Base: [`docs/CROPS.md`](../../docs/CROPS.md) (investigación 14/11/2026: PROINPA, SITAP/MDRyT,
-> CIPCA, SIIP, EcoRural, prensa local). Zona: Cercado de Cochabamba.
->
-> Este JSON es el **catálogo que sincroniza el móvil** (tarea 0.4 del backlog) y el que
-> alimenta el scoring de ventana (tarea 2.4). La proyección usa **las mismas variables**
-> (§ "Variables comunes"), con dimensión de tiempo: 1 vector por día.
+## Origen y propósito
 
-## Variables comunes (cultivo ↔ proyección)
+[crops.json](crops.json) es el catálogo curado del proyecto para el Cercado de Cochabamba. Reúne información de [CROPS.md](../../docs/CROPS.md) y referencias agronómicas/locales identificadas en cada cultivo. Contiene identidad del cultivo, ciclo, temperatura, sensibilidad al clima, coeficientes de agua y características útiles para comparar rotaciones.
 
-| Variable | Unidad | Proviene de |
+La incorporación de información es manual y documentada; no hay un descargador de API para este catálogo. La procedencia se registra en `fuente` y, para temperatura, `temp.fuente`. Los valores `local` y `estimado` identifican el tipo de referencia del catálogo.
+
+## Scripts y ejecución
+
+- [scoring.py](../../src/model/scoring.py): `load_crops()` lee `crops.json`; `score_windows()` compara ventanas climáticas con sus parámetros.
+- [run_pipeline.py](../../src/model/run_pipeline.py): utiliza `--crops` para generar ventanas por cultivo.
+- [load_db.py](../../src/etl/load_db.py): transforma el catálogo en registros de la tabla `crops`.
+
+Desde la raíz, para consumir el catálogo con la DB consolidada:
+
+```bash
+uv run python -m src.model.run_pipeline --db data/db/valle.db --crops data/crops/crops.json --out data/model --eda docs/EDA.md
+```
+
+Para integrarlo a SQLite: `uv run python -m src.etl.load_db --db data/db/valle.db`. La carga también incorpora las demás fuentes disponibles.
+
+## Diccionario del catálogo
+
+| Campo | Significado | Unidad / tipo |
 |---|---|---|
-| `tmin`, `tmax`, `tmean` | °C | POWER (diario) |
-| `pmm` | mm/día | POWER (PRECTOT) / GPM |
-| `rh` | % | POWER (RH2M) |
-| `sw` | W/m² | POWER (ALLSKY_SFC_SW_DWN) |
-| `ws` | m/s | POWER (WS2M) |
-| `sm_surface`, `sm_root` | m³/m³ | SMAP SPL4SMGP v8 (2015+, promedio diario) |
+| `version`, `actualizado`, `zona` | Versión, fecha de actualización y ámbito del catálogo | Metadatos |
+| `variables`, `leer` | Variables compartidas y documento de lectura | Lista / ruta |
+| `id` | Identificador utilizado por scripts, base y aplicación | Texto estable |
+| `nombre`, `cientifico`, `tipo` | Nombre común, científico y grupo de cultivo | Texto |
+| `tipo_ciclo` | Clasificación anual o perenne | Categoría |
+| `ciclo_dias` | Intervalo de duración del ciclo | Días, `[mínimo, máximo]` |
+| `temp.tmean_opt` | Rango de temperatura media óptima registrado | °C, `[mínimo, máximo]` |
+| `temp.fuente` | Tipo de referencia del rango térmico | `local` / `estimado` |
+| `helada.tolerancia`, `helada.etapa_critica` | Tolerancia cualitativa al frío y fase sensible | Categoría / texto |
+| `agua.demanda`, `agua.deficit_tol` | Demanda de agua y tolerancia cualitativa al déficit | Categorías |
+| `kc.inicial`, `kc.medio`, `kc.final` | Coeficientes de cultivo por etapa, utilizados con ET₀ | Adimensional |
+| `altitud` | Contexto altitudinal del cultivo | Categoría |
+| `erosion_sens`, `granizo_sens` | Sensibilidad cualitativa a erosión y granizo | Categorías |
+| `fix_n` | Capacidad de fijación de nitrógeno registrada | Booleano |
+| `breaks_pest_cycle` | Aporte a interrumpir ciclos de plagas | Booleano |
+| `forage_value`, `drought_tolerant`, `deep_rooting` | Valor forrajero, tolerancia a sequía y raíces profundas | Categorías / booleano |
+| `etapas` | Hitos del desarrollo como pares `[día, código]` | Días y texto |
+| `cosechas_cada_dias` | Intervalo de cortes/cosechas cuando está presente | Días |
+| `mercado`, `siembra_local`, `rotacion` | Contexto comercial, calendario local y secuencia agrícola | Texto |
+| `foto`, `foto_url` | Referencia visual cuando está presente | Ruta / URL |
+| `fuente` | Referencia que respalda la ficha del cultivo | Texto |
 
-En el MVP, el scoring solo usa `tmean`, `tmin` y `pmm` (las variables con evidencia local
+En el MVP, el scoring usa `tmean`, `tmin`, `pmm` y `et0` (las variables con evidencia local
 por cultivo). Las demás se cargan pero puntúan **neutro** (sin evidencia no se penaliza).
 
-## Esquema por cultivo
+## Variables ambientales relacionadas
 
-| Campo | Tipo | Descripción |
+| Variable | Qué representa | Unidad |
 |---|---|---|
-| `id` | string | clave única (usa también la URL de la API) |
-| `nombre` / `cientifico` / `tipo` | string | display; tipo: tuberculo, cereal, hortaliza, leguminosa, forrajero, frutal, flor |
-| `tipo_ciclo` | `anual` \| `perenne` | perenne: el motor usa época de siembra, no ventana fija |
-| `ciclo_dias` | [min, max] | duración siembra→cosecha (ventana L del scoring) |
-| `temp.tmean_opt` | [min, max] \| null | rango óptimo de temperatura media (°C); `null` = neutro |
-| `temp.fuente` | `local` \| `estimado` | **estimado** = valor agronómico general (no fuente local) → validar con experto |
-| `helada.tolerancia` | `alta` \| `media` \| `baja` | peso de penalización por días de helada (`tmin < 0 °C`): 0 / 0.5 / 1.0 |
-| `helada.etapa_critica` | string \| null | etapa sensible (floración, espigazón, granos, todo el ciclo) |
-| `agua.demanda` | `muy alta` \| `alta` \| `media` \| `media-baja` | ranking de necesidad hídrica |
-| `agua.deficit_tol` | `alta` \| `media` \| `baja` | tolerancia a déficit (baja = penaliza fuerte las ventanas secas) |
-| `altitud` | `valle` \| `alta` \| `ambas` | `alta` = sobre cota 2750 m (zona agrícola-forestal GAMC) |
-| `erosion_sens` | `alta` \| `media` \| `baja` | penalización si `zones.cerca_drenaje` < 200 m |
-| `fix_n` | bool | fija nitrógeno (módulo de rotaciones) |
-| `mercado` / `siembra_local` / `rotacion` | string | contexto para el pitch y el módulo de rotaciones |
-| `fuente` | string | trazabilidad de los valores |
+| `tmean`, `tmin`, `tmax` | Temperatura del aire | °C |
+| `pmm` | Precipitación diaria | mm/día |
+| `rh` | Humedad relativa del aire | % |
+| `sw` | Energía solar diaria descendente | MJ/m²/día |
+| `ws` | Velocidad del viento | m/s |
+| `et0` | Evapotranspiración de referencia calculada | mm/día |
+| `sm_surface`, `sm_root` | Humedad volumétrica superficial y radicular | m³/m³ |
 
-## Reglas de scoring (espec para el motor, tarea 2.4)
+El evaluador combina temperatura, agua, heladas y el indicador territorial de drenaje. Usa el promedio de los tres `Kc`, una duración media del ciclo y constantes de puntuación definidas en `scoring.py`. El resultado es un puntaje de aptitud de ventana y una confianza heurística. Los campos de contexto también se conservan para la aplicación y comparación de alternativas.
 
-Para cada ventana de L días (L ∈ `ciclo_dias`) sobre la proyección:
+## Reglas de scoring (motor implementado, tarea 2.4)
 
-1. **Helada:** días con `tmin < 0 °C` → penalización = `días_helada / L` × peso(`tolerancia`).
-   Si hay `etapa_critica`, el peso se aplica al sub-rango estimado de la etapa (MVP: ciclo completo).
-2. **Agua:** `pmm_cum` = suma de `pmm` en la ventana → fit = posición del cum. frente al
-   ranking de `demanda` (muy alta=4 … media-baja=1.5), atenuado por `deficit_tol`.
-3. **Temperatura:** fit por día = 1 − |`tmean` − centro(`tmean_opt`)| / (semiancho), truncado
-   a [0,1]; promedio sobre la ventana. `null` → 1.0 (neutro).
-4. **Erosión:** `erosion_sens ≠ baja` y zona con `cerca_drenaje < 200` → −10 pts fijos.
-5. **Score final** = 100 × (0.5·fit_T + 0.3·fit_agua + 0.2·(1 − penal_helada)) − erosión,
-   clip [0,100]. **Confianza** = fracción de días de la ventana cuya banda de incertidumbre
-   de la proyección no cruza el límite de helada/rango óptimo.
+> Esta sección documenta **lo que implementa `src/model/scoring.py`** (fuente de verdad);
+> el motor idéntico corre en servidor y en el dispositivo móvil.
 
-## Cultivos del catálogo (13)
+Para cada ventana de L días (L = media de `ciclo_dias`) sobre la proyección:
+
+1. **Temperatura** (0–1): fracción de días con `tmean` dentro de `tmean_opt`.
+2. **Agua** (0–1): `déficit = Σ max(0, ET₀×Kc_avg − pmm)`, con `Kc_avg` = media de los tres
+   `kc`; mitigado por `drought_tolerant` (no=1.0, poco=0.6, sí=0.3);
+   `agua = 1 − min(1, déficit×mit / (2 mm/día × L))`.
+3. **Helada** (0–1): `helada = 1 − sev × días_helada / L`, con `sev` por `tolerancia`
+   (alta=0.2, media=0.5, baja=1.0) y `días_helada` = días con `tmin + FROST_OFFSET < 0`
+   (`FROST_OFFSET = 0.0`; el tmin observado ya captura heladas reales, ver EDA.md).
+4. **Erosión** (multiplicador 0.5–1.0): si la zona tiene `cerca_drenaje` y
+   `erosion_sens` = alta (0.5) o media (0.75).
+5. **Score final** = 100 × (0.45·temp + 0.40·agua + 0.15·helada) × erosión (1 decimal).
+   **Confianza** = decaimiento heurístico con el horizonte: `0.92 − 0.5×centro`,
+   recortado a [0.4, 0.9] según el centro de la ventana dentro de la proyección;
+   sin horizonte (ventana suelta) vale 0.7.
+6. **Top-3**: mejores ventanas separadas ≥ 14 días.
+
+Post-MVP (documentado, no implementado): `etapa_critica` (penalizar solo el sub-rango de la
+etapa sensible) y `tipo_ciclo = perenne` (época de siembra en vez de ventana fija).
+
+## Salida de `score_window` (tarea 12a)
+
+`score_window(cultivo, zona, tmean, tmin, pmm, et0, horizonte, pos)` devuelve:
+
+| Campo | Significado |
+|---|---|
+| `score` | 0–100, 1 decimal |
+| `veredicto` | `bueno` (≥ 70) · `con_cuidado` (≥ 40) · `malo`; umbrales configurables (`umbral_bueno`/`umbral_malo`) |
+| `confianza` | 0.4–0.9 (heurística del punto 5) |
+| `motivos` | Códigos (no frases; la app traduce por i18n), en orden fijo |
+| `detalle` | `temp`, `agua`, `helada`, `erosion`, `deficit_mm`, `frost_days` |
+
+Códigos de `motivos` (aparecen solo si el valor mostrado correspondiente es no nulo):
+
+| Código | Condición |
+|---|---|
+| `temp_fuera_rango` | `detalle.temp < 1.0` |
+| `deficit_agua` | `detalle.deficit_mm > 0` |
+| `heladas` | `detalle.frost_days > 0` |
+| `erosion_riesgo` | `detalle.erosion < 1.0` |
+
+**Contrato de portabilidad:** [test_vectors.json](../model/test_vectors.json) publica 16
+vectores (entrada → salida esperada) que la app móvil debe reproducir exactamente
+(issue #37 [T12a]); los tests de `tests/test_scoring.py` los corren contra esta función.
+
+## Cultivos del catálogo (14)
 
 | id | Ciclo (días) | T óptima media | Helada | Agua | FixN |
 |---|---|---|---|---|---|
@@ -73,10 +130,28 @@ Para cada ventana de L días (L ∈ `ciclo_dias`) sobre la proyección:
 | avena | 90–120 | 8–18 °C (estimado) | alta | media | — |
 | durazno | perenne (plantar invierno) | 12–24 °C (estimado) | media (floración) | media | ❌ |
 | flores | 60–180 | 12–22 °C (estimado) | baja | alta | ❌ |
+| maiz_forraje | 120–150 | 18–27 °C (estimado) | baja | alta | ❌ |
 
 > Los valores marcados **estimado** son agronómicos generales (FAO/tipos de cultivo), no
 > fuentes locales: validarlos con un agrónomo local si hay tiempo (o descartar el fit_T para
 > ese cultivo y basarse en helada+agua, que sí tienen evidencia local).
+
+## Cultivos incluidos
+
+- `papa`: Papa (anual).
+- `choclo`: Maíz / choclo (anual).
+- `trigo`: Trigo (anual).
+- `papaliza`: Papaliza / papalisa (anual).
+- `lechuga`: Lechuga (anual).
+- `hortalizas`: Hortalizas (cebolla, zanahoria, repollo, acelga) (anual).
+- `alfalfa`: Alfalfa (perenne).
+- `haba`: Haba (anual).
+- `tarwi`: Tarwi / chocho (anual).
+- `quinua`: Quinua de valle (anual).
+- `avena`: Avena forrajera (anual).
+- `durazno`: Durazno (perenne).
+- `flores`: Flores (margaritas, claveles) (anual).
+- `maiz_forraje`: Maíz forraje (silaje) (anual).
 
 ## Equivalencias de ids con los mockups
 
@@ -88,3 +163,15 @@ La app usa los ids del catálogo. Correspondencia con los ids de los mockups:
 | `forraje` (maíz forraje) | `maiz_forraje` | Agregado en v3 |
 | `cebolla`, `zanahoria` | `hortalizas` | La app los muestra separados |
 | `papa`, `haba`, `avena`, `alfalfa`, `lechuga` | igual | |
+
+## Flujo
+
+```mermaid
+flowchart TD
+    A["Referencias agronómicas y contexto local"] --> B["Curación de crops.json"]
+    B --> C["load_crops / scoring.py"]
+    D["Series o proyecciones ambientales"] --> C
+    C --> E["Ventanas por cultivo: top_windows.json"]
+    B --> F["load_db.py"]
+    F --> G["Tabla crops para la API"]
+```

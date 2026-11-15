@@ -5,7 +5,7 @@
 > **Objetivo del reto (obligatorio):** herramienta de **apoyo a la decisión** que combine datos
 > NASA + información local (suelos, cultivos, prioridades del agricultor) para ayudar a adaptar
 > la granja a condiciones cambiantes. El enunciado exige **comparar al menos 3 estrategias de
-> rotación, incluida la rotación actual** — ver [CHALLENGE.md](./CHALLENGE.md).
+> rotación, incluida la rotación actual** — ver [CHALLENGE.md](./research/CHALLENGE.md).
 > La app **apoya, no reemplaza** el juicio del agricultor (recordatorio visible en UI).
 
 ---
@@ -53,7 +53,7 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 | 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | NetCDF vía Earthdata/CMR (`GPM_3IMERGDL` diario, `GPM_3IMERGHH` 30-min); ✅ **EULA aceptado 14/11** | P1 |
 | 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente (brecha 2026-05/07 ya rellena, verificado)** | HDF5 9 km EASE-Grid (EPSG:6933); descarga directa CMR+token verificada; **granules globales ~148 MB** (~1,3 GB/día) | P1 |
 | 4 | **GAMC WMS** (key p04) | Zonas: periurbanos (mask urbano), distritos/comunas, drenaje | estático | WMS vía proxy (rate limit 10–15 s/peticion) | **P0** (obligatorio) |
-| 5 | **SRTM 30 m** | Elevación + pendiente por zona (erosión, escorrentía) | estático | Tiled GeoTIFF (dwtkns/earthdata) | P2 |
+| 5 | **DEM ~30 m** (nombre "SRTM" por continuidad) | Elevación + pendiente por zona (erosión, escorrentía) | estático | Open-Meteo Elevation (el servidor SRTM dwtkns/earthdata dejó de responder) | P2 |
 | 6 | **Cultivos** (CROPS.md) | Vector de condiciones óptimas por cultivo (T, heladas, agua, ciclo, fixN, mercado, **plagas, forraje, sequía**) | curado | tabla local `crops` | **P0** |
 | 7 | **Eventos históricos** | Fechas de eventos imprevistos (helada/granizo/inundación/sequía) para alertas | curado 10–20 eventos | tabla local `events` | P1 |
 | 8 | **GEOS-FP / GEOS-S2S** (NASA) | **Pronóstico de corto plazo (28 días)** para la app (complementa el modelo estacional) | presente → +28 d | API JSON (GMAO) | P1 |
@@ -120,7 +120,7 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 
 ```sql
 zones(id, nombre, comuna, distrito, lat, lon, elev_m, pendiente,
-      es_agricola bool,            -- mask GAMC periurbanos
+      es_agricola bool,            -- proxy: 1 si no está en la mask periurbana GAMC (una zona periurbana puede ser agrícola)
       cerca_drenaje int,           -- dist. a quebrada (m)
       altitud_alta bool)           -- >2750 m
 
@@ -297,11 +297,11 @@ No bloquean; se mencionan como "próximamente" si el jurado pregunta.
 
 ## 11. Referencias
 
-- Reto oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/> · [CHALLENGE.md](./CHALLENGE.md)
+- Reto oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/> · [CHALLENGE.md](./research/CHALLENGE.md)
 - **API Contract (equipo app):** [API-CONTRACT.md](./API-CONTRACT.md) · **Flujo de app:** [FLUJO-APP.md](./FLUJO-APP.md)
 - SMAP v8: <https://nsidc.org/data/spl4smgp/versions/8> (DOI 10.5067/T5RUATAQREF8)
 - POWER API: <https://power.larc.nasa.gov/api/documents/>
 - Series temporales (ref. equipo): <https://www.ibm.com/mx-es/think/topics/time-series-model>
-- Cultivos y condiciones óptimas: [CROPS.md](./CROPS.md) · Contexto local: [LOCAL-CONTEXT.md](./LOCAL-CONTEXT.md)
+- Cultivos y condiciones óptimas: [CROPS.md](./CROPS.md) · Contexto local: [LOCAL-CONTEXT.md](./research/LOCAL-CONTEXT.md)
 - Acceso GAMC (live): [GAMC-ACCESS.md](./GAMC-ACCESS.md) · Datos descargados: [data/gamc/04/](../data/gamc/04/README.md)
 - Mockup: Figma "Field Shift — App Agricultor (mobile)"

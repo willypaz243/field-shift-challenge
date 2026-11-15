@@ -1,4 +1,5 @@
 from datetime import datetime, time
+from typing import Any
 
 from sqlmodel import Session
 
@@ -13,7 +14,7 @@ def _estado(nivel_pct: float | None) -> str | None:
     return "bajo" if nivel_pct < 40 else "normal"
 
 
-def la_angostura(session: Session) -> dict | None:
+def la_angostura(session: Session) -> dict[str, Any] | None:
     r = repository.get_reservoir(session, "angostura")
     if r is None:
         return None

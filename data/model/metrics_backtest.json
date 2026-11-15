@@ -1,32 +1,40 @@
 {
   "holdout": "2024-01-01 \u2192 2025-12-31",
+  "window": "2016-01-01 \u2192 2025-12-31",
   "metrics": [
     {
       "variable": "tmean",
-      "mae": 1.23,
-      "rmse": 1.561
+      "mae": 1.167,
+      "rmse": 1.466
     },
     {
       "variable": "tmin",
-      "mae": 1.632,
-      "rmse": 2.02
+      "mae": 1.546,
+      "rmse": 1.923
     },
     {
       "variable": "tmax",
-      "mae": 1.898,
-      "rmse": 2.365
+      "mae": 1.942,
+      "rmse": 2.41
     },
     {
       "variable": "pmm",
-      "mae": 1.693,
-      "rmse": 3.695
+      "mae": 3.092,
+      "rmse": 6.955
     }
   ],
   "eda": {
-    "rainy_dec_feb_mm": 3.1,
-    "dry_may_sep_mm": 0.2,
-    "frost_months": [],
-    "checks_passed": 3,
-    "checks_total": 4
+    "rainy_dec_feb_mm": 5.6,
+    "dry_may_sep_mm": 0.7,
+    "frost_months": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "checks_passed": 4,
+    "checks_total": 4,
+    "pmm_imerg_mm_y": 967,
+    "pmm_power_mm_y": 449
   }
 }

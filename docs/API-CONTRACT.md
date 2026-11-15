@@ -6,7 +6,7 @@ Este documento dice **qué datos necesita la app y en qué forma**. Está alinea
 
 - [`BACKLOG.md`](BACKLOG.md): arquitectura offline-first, endpoints `/zones`, `/crops`, `/zones/{id}/forecast`, `/sync`, scoring en el dispositivo.
 - [`data/crops/crops.json`](../data/crops/crops.json): catálogo de 13 cultivos y variables comunes.
-- [`imerg/README.md`](../imerg/README.md): lluvia diaria GPM IMERG 2016–2025.
+- [`src/etl/imerg/README.md`](../src/etl/imerg/README.md): lluvia diaria GPM IMERG 2016–2025.
 - [`FLUJO-APP.md`](FLUJO-APP.md): pantallas y flujos de la app (mockups).
 
 ---
@@ -149,7 +149,7 @@ Con `desde_version`, devolver solo lo que cambió.
 | Lluvia en palabras | `pmm = 0` sin lluvia · `< 4` débil · `< 15` moderada · `≥ 15` fuerte |
 | Icono del día (prioridad) | granizo > helada > lluvia > nublado > sol |
 | Época | seca: abril–septiembre · lluvias: octubre–marzo |
-| Scoring de ventana | El de `data/crops/README.md` ("Reglas de scoring"). Para la app: score ≥ 70 = **bueno** (verde), 40–69 = **con cuidado**, < 40 = **malo** (rojo). *Umbrales a validar.* |
+| Scoring de ventana | El de `data/crops/README.md` ("Reglas de scoring"): `score_window()` en `src/model/scoring.py` devuelve `score` (0–100), `veredicto` (`bueno` ≥ 70 verde · `con_cuidado` ≥ 40 amarillo · `malo` < 40 rojo; umbrales configurables), `confianza` (0.4–0.9), `motivos` (códigos: `temp_fuera_rango`, `deficit_agua`, `heladas`, `erosion_riesgo`) y `detalle`. Contrato de portabilidad para la app: `data/model/test_vectors.json` (issue #37 [T12a]). |
 
 ---
 
@@ -372,7 +372,7 @@ Encabezado obligatorio `Idempotency-Key` (generado en el celular). Respuestas: `
 | `nasa_imerg` | GPM IMERG V07 diario, Final y Late, 2016+ |
 | `nasa_smap` | SMAP L4 SPL4SMGP v8, 2015+ |
 | `nasa_geos` | GEOS-FP (pronóstico corto, si se elige, §12) |
-| `srtm` | SRTM 30 m |
+| `srtm` | Open-Meteo Elevation (DEM global ~30 m; el servidor SRTM original dejó de responder) |
 | `gamc_wms` | GAMC WMS (periurbanos, distritos, drenaje) |
 | `riego_n1` | Asociación de Usuarios del Sistema de Riego N°1 La Angostura |
 | `eventos_historicos` | Tabla `events` (backlog 1.7) |

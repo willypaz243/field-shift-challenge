@@ -1,9 +1,11 @@
+from typing import Any
+
 from sqlmodel import Session
 
 from api.modules.alerts import repository
 
 
-def zone_history(session: Session, zone_id: str) -> list[dict]:
+def zone_history(session: Session, zone_id: str) -> list[dict[str, Any]]:
     rows = (
         {
             "fecha": e.fecha.isoformat(),
@@ -16,5 +18,5 @@ def zone_history(session: Session, zone_id: str) -> list[dict]:
     return [{k: v for k, v in row.items() if v is not None} for row in rows]
 
 
-def active_alerts(session: Session, zone_id: str) -> list[dict]:
+def active_alerts(session: Session, zone_id: str) -> list[dict[str, Any]]:
     return []

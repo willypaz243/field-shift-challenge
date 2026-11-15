@@ -32,6 +32,7 @@ import urllib.parse
 import urllib.request
 from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 API = "https://power.larc.nasa.gov/api/temporal"
 DAILY_PARAMS = (
@@ -55,7 +56,7 @@ COLS = [
 PARAM_TO_COL = {param: col for col, param in COLS}
 
 
-def fetch(url: str, retries: int = 3, wait: int = 5) -> dict:
+def fetch(url: str, retries: int = 3, wait: int = 5) -> dict[str, Any]:
     for attempt in range(1, retries + 1):
         try:
             with urllib.request.urlopen(url, timeout=120) as r:
@@ -63,8 +64,9 @@ def fetch(url: str, retries: int = 3, wait: int = 5) -> dict:
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
             if attempt == retries:
                 raise
-            print(f"  ⚠️ {e} — reintento {attempt}/{retries} en {wait}s", file=sys.stderr)
+            print(f"  WARN {e} — reintento {attempt}/{retries} en {wait}s", file=sys.stderr)
             time.sleep(wait)
+    raise RuntimeError("unreachable: the final attempt always raises")
 
 
 def chunk_years(start: int, end: int):
@@ -94,7 +96,7 @@ def download_daily(lat, lon, start, end):
     return out, elev
 
 
-def derive_minmax(hourly: dict):
+def derive_minmax(hourly: dict[str, Any]):
     """hourly {YYYYMMDDHH: val} → {fecha: (tmin, tmax)}"""
     days = defaultdict(list)
     for k, v in hourly.items():

@@ -1,5 +1,6 @@
 import hashlib
 import os
+from typing import override
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,6 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class ETagMiddleware(BaseHTTPMiddleware):
+    @override
     async def dispatch(self, request: Request, call_next):
         response = await call_next(request)
         if request.method != "GET" or response.status_code != 200:

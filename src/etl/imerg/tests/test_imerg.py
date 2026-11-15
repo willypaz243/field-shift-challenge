@@ -4,15 +4,16 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from typing import override
 from unittest.mock import patch
 
+import imerg
 import numpy as np
 import xarray as xr
 
-import imerg
-
 
 class PipelineTest(unittest.TestCase):
+    @override
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
@@ -36,6 +37,7 @@ class PipelineTest(unittest.TestCase):
         )
         self.db = self.root / "rain.sqlite"
 
+    @override
     def tearDown(self):
         self.temp.cleanup()
 

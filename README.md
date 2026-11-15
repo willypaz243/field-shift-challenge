@@ -32,7 +32,7 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 | Mock | **Prism** (`prism mock api/openapi.yaml`) | The frontend starts against the mock before the API exists. |
 | Scheduled jobs | cron + scripts in `src/` | Regenerate the projection and the forecast. |
 
-### Data and models (`src/`, `imerg/`, `data/`)
+### Data and models (`src/`, `data/`)
 
 | Part | Technology |
 |---|---|
@@ -98,8 +98,7 @@ Rules between modules:
 ```
 app/        Expo app (Android + web)
 api/        FastAPI modular monolith + openapi.yaml
-src/etl/    NASA POWER ETL and other sources
-imerg/      GPM IMERG rainfall pipeline
+src/etl/    ETL scripts (NASA POWER, GPM IMERG, SMAP, GAMC, SRTM, load_db)
 data/       Processed data (crop catalog, POWER, GAMC)
 docs/       API contract, app flows, local context, backlog
 mockups/    Reference HTML mockups

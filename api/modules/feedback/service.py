@@ -22,6 +22,7 @@ def _require_zone(session: Session, zone_id: str) -> None:
 def _reject_duplicate(session: Session, model: type[Feedback] | type[Plan], key: str) -> None:
     existing = repository.find_by_key(session, model, key)
     if existing is not None:
+        assert existing.id is not None
         raise DuplicateKey(existing.id)
 
 

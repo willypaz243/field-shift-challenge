@@ -11,6 +11,7 @@ import sqlite3
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from typing import Any
 
 PRODUCTS = {"final": "GPM_3IMERGDF", "late": "GPM_3IMERGDL"}
 
@@ -232,7 +233,7 @@ def process(folder, polygon, database, run):
                     value = scalar("precipitation")
                     if value is not None and value < 0:
                         raise ValueError("Precipitación negativa no enmascarada")
-                    quality = {
+                    quality: dict[str, Any] = {
                         n: {"value": scalar(n), "unit": ds[n].attrs.get("units")}
                         for n in quality_names
                     }

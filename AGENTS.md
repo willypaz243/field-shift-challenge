@@ -66,7 +66,7 @@ Rules for anyone (human or AI agent) contributing to this repo. Read before writ
 - If a change needs a contract change, update `docs/API-CONTRACT.md` and `api/openapi.yaml` in the same PR and say so in the PR body.
 - The API returns codes, not sentences; the app translates.
 
-### Data (`src/`, `imerg/`, `data/`)
+### Data (`src/`, `data/`)
 
 - Never invent data. Every value has a source (`fuente`) and units.
 - Do not commit large raw files (NetCDF, HDF5, GeoTIFF). Commit scripts and small processed outputs.
