@@ -67,4 +67,4 @@ error-on-warning = false
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["api/tests", "src/etl/tests"]
+testpaths = ["api/tests", "src/etl/tests", "tests"]
