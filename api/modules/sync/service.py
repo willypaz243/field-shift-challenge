@@ -30,7 +30,7 @@ def package(session: Session, zone_id: str) -> dict[str, Any]:
         "corto_plazo": climate.short_forecast(session, zone_id),
         "climatologia": climate.climatology(session, zone_id),
         "alertas": alerts.active_alerts(session, zone_id),
-        "rotaciones": rotations.catalog(),
+        "rotaciones": rotations.catalog(session, zone_id),
         "represa": water.la_angostura(session),
         "historial_zona": alerts.zone_history(session, zone_id),
     }
