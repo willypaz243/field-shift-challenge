@@ -1,0 +1,39 @@
+{
+  "actualizado_en": "2026-11-14T06:00:00-04:00",
+  "rotaciones": [
+    {
+      "id": "choclo-haba",
+      "secuencia": ["choclo", "haba"],
+      "puntaje": {
+        "agua": 1,
+        "tierra": 3,
+        "forraje": 1,
+        "vender": 3
+      },
+      "etiquetas": [
+        ["abona_tierra", "bien"],
+        ["vende_haba", "bien"],
+        ["mas_riego", "mal"]
+      ],
+      "por_que": "fija_nitrogeno",
+      "bueno": ["tierra_fertil", "menos_gusano", "vende_haba_verde"],
+      "riesgos": ["helada_julio_flor", "riego_invierno"],
+      "falta_saber": ["precio_haba"],
+      "evidencia": [
+        {
+          "codigo": "heladas_may_ago",
+          "fuente": "nasa_power"
+        },
+        {
+          "codigo": "poca_lluvia_abr_sep",
+          "fuente": "nasa_imerg"
+        },
+        {
+          "codigo": "angostura_baja",
+          "fuente": "riego_n1"
+        }
+      ],
+      "confianza": "media"
+    }
+  ]
+}

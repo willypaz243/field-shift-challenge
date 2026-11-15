@@ -1,0 +1,30 @@
+{
+  "zone_id": "D9_itocta",
+  "periodo": {
+    "power": "1995-2024",
+    "imerg": "2016-2025"
+  },
+  "meses": [
+    {
+      "mes": 1,
+      "pmm_total": 118,
+      "tmin": 10.4,
+      "tmax": 24.8,
+      "p_helada": 0.0,
+      "p_granizo": 0.35,
+      "p_desborde": 0.3,
+      "p_poca_agua": 0.05
+    },
+    {
+      "mes": 7,
+      "pmm_total": 2,
+      "tmin": -1.6,
+      "tmax": 22.1,
+      "p_helada": 0.85,
+      "p_granizo": 0.0,
+      "p_desborde": 0.0,
+      "p_poca_agua": 0.4
+    }
+  ],
+  "fuente": ["nasa_power", "nasa_imerg", "eventos_historicos"]
+}
