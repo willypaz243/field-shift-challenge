@@ -50,6 +50,7 @@ COLS = [
     ("lw", "ALLSKY_SFC_LW_DWN"),
     ("sw_clear", "CLRSKY_SFC_SW_DWN"),
 ]
+PARAM_TO_COL = {param: col for col, param in COLS}
 
 
 def fetch(url: str, retries: int = 3, wait: int = 5) -> dict:
@@ -84,7 +85,7 @@ def download_daily(lat, lon, start, end):
         if elev is None:
             elev = d["geometry"]["coordinates"][2]
         for key, series in d["properties"]["parameter"].items():
-            col = dict(COLS).get(key)
+            col = PARAM_TO_COL.get(key)
             if col is None:
                 continue
             for f, v in series.items():
