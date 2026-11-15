@@ -55,4 +55,4 @@ for step in $STEPS; do
 done
 
 echo ""
-echo "✅ ETL terminado. DB: data/db/valle.db"
+echo "ETL terminado. DB: data/db/valle.db"

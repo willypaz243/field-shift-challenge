@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 
@@ -22,7 +23,18 @@ import requests
 from PIL import Image
 
 WMS = "https://serviciosgamc.cochabamba.bo/api/gs/wms"
-KEY = "37f574a3292eafd287024269399aafa51b7cf55932603e2f"
+
+
+def _load_key() -> str:
+    """Lee GAMC_API_KEY del .env en la raíz del proyecto."""
+    env = Path(__file__).resolve().parents[2] / ".env"
+    for line in env.read_text().splitlines():
+        if line.startswith("GAMC_API_KEY="):
+            return line.split("=", 1)[1].strip()
+    return os.environ.get("GAMC_API_KEY", "")
+
+
+KEY = _load_key()
 UUIDS = {
     "periurbanos": "c52066a1-32fd-4925-81e0-c2dcb8f4238f",
     "drenaje": "d4cea6e3-fc7f-482a-94ad-bd377df78886",
@@ -106,7 +118,7 @@ def main() -> None:
 
     img = Image.open(DRAIN_PNG).convert("RGBA") if DRAIN_PNG.exists() else None
     if img is None:
-        print("⚠️ PNG drenaje no existe; cerca_drenaje=False para todas")
+        print("WARNING: PNG drenaje no existe; cerca_drenaje=False para todas")
 
     for i, z in enumerate(zones):
         zid = z["zone_id"]

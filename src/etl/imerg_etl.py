@@ -256,7 +256,7 @@ def main():
     log.info(f"Total granules: {len(all_granules)} | Pendientes: {len(pending)}")
 
     if not pending:
-        log.info("Nada que hacer. ✅")
+        log.info("Nada que hacer.")
         return
 
     # Fase 2: Descarga + extracción paralela

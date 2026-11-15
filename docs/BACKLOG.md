@@ -181,12 +181,12 @@ Criterios adicionales: `fix_n`, `breaks_pest_cycle`, `drought_tolerant`, `deep_r
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
 | 1.1 | **POWER** diario 1984–2025-11 para todos los puntos del grid | 2 h | CSV/DB por zona sin huecos (interpolación lineal ≤3 días si los hay) — ✅ **HECHO 14/11**: 10 zonas × 15,342 filas (1984-01-01→2025-12-31), `tmean` 100% completo, `tmin/tmax` 2010+ sin huecos (derivado de hourly), `lw` solo nulo 1984–87. Heladas 2010–25: 194 días, pico may–sep ✅ coherente con CROPS.md. Nota: los 10 puntos caen en la **misma celda POWER 0.5°** (serie idéntica; solo difiere `elev_m`=3126 m) → el refinamiento por zona lo dan GAMC + SRTM |
-| 1.2 | **GPM/IMERG** diario 2010–2025 (bbox valle) | 1,5 h | Serie de precipitación cruzada con POWER (correlación > 0,8 como sanity check) |
-| 1.3 | **SMAP SPL4SMGP v8** 2015–2025: píxeles del valle, 3-h → promedio diario, reproyección EASE→WGS84 (brecha 2026-05/07 ya cubierta; ⚠️ granules globales ~148 MB → decidir ventana/estrategia de descarga) | 1,5 h | `sm_surface`/`sm_root` diarios en DB |
-| 1.4 | **GAMC**: mask periurbanos (binaria), distancias a drenaje, comuna por punto | 1 h (batch con sleeps 12 s) | `zones.es_agricola`, `cerca_drenaje`, `comuna` |
-| 1.5 | **SRTM** elevación/pendiente por zona | 0,5 h | `zones.elev_m`, `pendiente` |
-| 1.6 | Carga a DB + script de re-ejecución idempotente | 1 h | `bash etl.sh` reconstruye todo desde cero |
-| 1.7 | **Eventos históricos** (10–20: heladas, granizadas, inundaciones, sequías del valle; fuentes prensa/BOCU/SNIG) | 1 h (paralelo) | `events` con fecha + zona + tipo |
+| 1.2 | **GPM/IMERG** diario 2016–2025 (bbox valle) | 1,5 h | Serie de precipitación cruzada con POWER (correlación > 0,8 como sanity check) — 🔄 **EN CURSO 38%** (1.401/3.653 días, pausado 15/11; resumible con `bash etl.sh imerg`). Fixes: CMR ya no usa `limit` (usar `page_size=500`), lock NetCDF4 (HDF5 no thread-safe → SIGSEGV con 3 workers) |
+| 1.3 | **SMAP SPL4SMGP v8** 2015–2025: píxeles del valle, 3-h → promedio diario, reproyección EASE→WGS84 (brecha 2026-05/07 ya cubierta; granules globales ~148 MB → 5 workers, 1 granule/día 16:30 UTC) | 1,5 h | `sm_surface`/`sm_root` diarios en DB — 🔄 **EN CURSO 68%** (2.648/3.900 días, pausado 15/11; resumible con `bash etl.sh smap`) |
+| 1.4 | **GAMC**: mask periurbanos (binaria), distancias a drenaje, comuna por punto | 1 h (batch con sleeps 12 s) | `zones.es_agricola`, `cerca_drenaje`, `comuna` — ✅ **HECHO 15/11**: `data/gamc/zones_gamc.json`. Periurbanos: D14, D9. Cerca drenaje: D3, D10, D14 (sampleo PNG; FeatureInfo drenaje deshabilitado en el proxy) |
+| 1.5 | **SRTM** elevación/pendiente por zona | 0,5 h | `zones.elev_m`, `pendiente` — ✅ **HECHO 15/11**: `data/srtm/srtm_zones.json` (servidor USGS/CGIAR caído → Open-Meteo DEM). D13 ladera 3.719 m/20° (altitud_alta), D15 2.871 m (>2750), resto valle 2.544–2.693 m |
+| 1.6 | Carga a DB + script de re-ejecución idempotente | 1 h | `bash etl.sh` reconstruye todo desde cero — ✅ **HECHO 15/11**: `data/db/valle.db` (zones, climate_history 153.420 filas c/ ET₀ + joins SMAP/IMERG, crops 13, events, reservoir, forecasts/reports vacías, sync_version) + `etl.sh` (power\|imerg\|smap\|gamc\|srtm\|db) |
+| 1.7 | **Eventos históricos** (10–20: heladas, granizadas, inundaciones, sequías del valle; fuentes prensa/BOCU/SNIG) | 1 h (paralelo) | `events` con fecha + zona + tipo — ✅ **HECHO 15/11**: `data/events/events.json`, 10 eventos 2002–2025 (sequía Angostura 5% 2002, granizadas/heladas 2017, sequía valle 2023–24, granizo Postrervalle 2024, inundación r.24 2025) |
 
 **Hito 1 (noche del día 1):** DB completa (clima 2010+ por zona, cultivos, eventos, zonas GAMC) → **datos listos para entrenar**.
 
