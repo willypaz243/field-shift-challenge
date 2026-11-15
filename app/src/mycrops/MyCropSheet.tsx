@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Typography } from "../../constants/Theme";
@@ -63,6 +64,7 @@ export function MyCropSheet({
   const { t } = useTranslation();
   const { data } = useOffline();
   const answer = useAnswerHarvest();
+  const router = useRouter();
   const [rating, setRating] = useState(false);
   const [done, setDone] = useState(false);
   const today = laPazToday();
@@ -136,6 +138,21 @@ export function MyCropSheet({
           periodo: clima?.periodo?.power ?? "",
         })}
       </Text>
+      {!crop.planificado && (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            close();
+            router.push({
+              pathname: "/rotar",
+              params: { c: crop.crop_id, h: crop.cosecha },
+            });
+          }}
+          style={styles.ghost}
+        >
+          <Text style={styles.ghostText}>{t("rotar.despues")}</Text>
+        </Pressable>
+      )}
       {!crop.planificado && !done && !rating && (
         <Pressable
           accessibilityRole="button"
