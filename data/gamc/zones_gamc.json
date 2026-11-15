@@ -1,0 +1,102 @@
+{
+  "D10_adela_zamudio": {
+    "lat": -17.392,
+    "lon": -66.166,
+    "elev_m": 3126.04,
+    "comuna": "ADELA ZAMUDIO",
+    "distrito": "D10",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": true
+  },
+  "D12_adela_zamudio": {
+    "lat": -17.374,
+    "lon": -66.157,
+    "elev_m": 3126.04,
+    "comuna": "ADELA ZAMUDIO",
+    "distrito": "D12",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D13_tunari": {
+    "lat": -17.314,
+    "lon": -66.1444,
+    "elev_m": 3126.04,
+    "comuna": "TUNARI",
+    "distrito": "D13",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D14_valle_hermoso": {
+    "lat": -17.437,
+    "lon": -66.112,
+    "elev_m": 3126.04,
+    "comuna": "VALLE HERMOSO",
+    "distrito": "D14",
+    "periurbano": "Periurbanos consolidados",
+    "es_periurbano": true,
+    "cerca_drenaje": true
+  },
+  "D15_tamborada": {
+    "lat": -17.488,
+    "lon": -66.134,
+    "elev_m": 3126.04,
+    "comuna": "TAMBORADA",
+    "distrito": "D15",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D1_tunari": {
+    "lat": -17.368,
+    "lon": -66.13,
+    "elev_m": 3126.04,
+    "comuna": "TUNARI",
+    "distrito": "D1",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D3_molle": {
+    "lat": -17.3707,
+    "lon": -66.1922,
+    "elev_m": 3126.04,
+    "comuna": "MOLLE",
+    "distrito": "D3",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": true
+  },
+  "D4_molle": {
+    "lat": -17.3938,
+    "lon": -66.1984,
+    "elev_m": 3126.04,
+    "comuna": "MOLLE",
+    "distrito": "D4",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D6_valle_hermoso": {
+    "lat": -17.41,
+    "lon": -66.139,
+    "elev_m": 3126.04,
+    "comuna": "VALLE HERMOSO",
+    "distrito": "D6",
+    "periurbano": null,
+    "es_periurbano": false,
+    "cerca_drenaje": false
+  },
+  "D9_itocta": {
+    "lat": -17.4611,
+    "lon": -66.2185,
+    "elev_m": 3126.04,
+    "comuna": "ITOCTA",
+    "distrito": "D9",
+    "periurbano": "Periurbanos consolidados",
+    "es_periurbano": true,
+    "cerca_drenaje": false
+  }
+}

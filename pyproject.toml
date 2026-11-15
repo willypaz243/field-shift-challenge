@@ -1,0 +1,60 @@
+[project]
+name = "field-shift-challenge"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "h5py>=3.16.0",
+    "netcdf4>=1.7.5.1.post1",
+    "pillow>=13.0.0",
+    "requests>=2.34.2",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.17.5",
+    "ty>=0.0.104",
+]
+
+# --- Formato y lint (ruff) ---------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["data", "docs", ".venv"]
+
+[tool.ruff.lint]
+# Conjunto relajado y de bajo ruido:
+# E/W: pycodestyle, F: pyflakes, I: orden de imports,
+# UP: sintaxis moderna (pyupgrade), B: errores comunes (bugbear)
+select = ["E", "W", "F", "I", "UP", "B"]
+# E501 lo gestiona el formateador (líneas largas en strings/comentarios no bloquean)
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+docstring-code-format = true
+
+# --- Comprobación de tipos (ty) ---------------------------------------------
+[tool.ty.src]
+exclude = ["data", "docs", ".venv"]
+
+[tool.ty.environment]
+python-version = "3.13"
+python = ".venv"
+
+[tool.ty.rules]
+# Modo relajado: nada bloquea (todo aviso, nunca error duro por falta de tipado)
+all = "warn"
+# Familia "possibly-*" desactivada: reglas con muchos falsos positivos en código sin anotar
+possibly-missing-attribute = "ignore"
+possibly-missing-import = "ignore"
+possibly-unresolved-reference = "ignore"
+# No avisar de `# ty: ignore` que terminan sin uso
+unused-ignore-comment = "ignore"
+
+[tool.ty.terminal]
+# ty sale con código 0 salvo errores reales; con todo en warn, nunca bloquea
+error-on-warning = false

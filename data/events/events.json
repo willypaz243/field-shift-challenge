@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "actualizado": "2026-11-15",
+  "zona": "Valle de Cochabamba (Cercado + alrededores); eventos trópicos incluidos como referencia regional",
+  "nota": "Curado de prensa/ABI/INSA/CIPCA. zona_id = zona más cercana de las 10; null = fuera del Cercado (referencia).",
+  "events": [
+    {
+      "tipo": "sequia",
+      "fecha": "2002-11-27",
+      "zona_id": null,
+      "descripcion": "Valle Central: ola de calor + falta de lluvias. Embalse de La Angostura al 5% de capacidad (se reservan 1,5 Mm³ para peces). Pérdidas agrícolas > 7 M Bs (maíz choclero, hortalizas, alfalfa).",
+      "fuente": "ANF, 27/11/2002 (noticiasfides.com.bo)"
+    },
+    {
+      "tipo": "inundacion",
+      "fecha": "2013-03-12",
+      "zona_id": null,
+      "descripcion": "Desborde de ríos 24, Chapare, Ichoa y Sajta en el Trópico cochabambino (Villa Tunari, Chimoré, Shinahota, Puerto Villarroel): 46 comunidades afectadas.",
+      "fuente": "Opinión, 12/03/2013"
+    },
+    {
+      "tipo": "granizo",
+      "fecha": "2017-02-02",
+      "zona_id": "D4_molle",
+      "descripcion": "Granizadas en Cliza, Toco y Sacaba: 464 + 277,5 + 127,5 ha de papa, maíz, alfalfa, trigo y arveja dañados; 676 familias afectadas.",
+      "fuente": "ABI / HoyBolivia, 02/02/2017"
+    },
+    {
+      "tipo": "helada",
+      "fecha": "2017-02-02",
+      "zona_id": "D3_molle",
+      "descripcion": "Heladas en Sacaba, Quillacollo y Tiquipaya (verificación técnica en curso; cultivos de papa y frutales).",
+      "fuente": "ABI / HoyBolivia, 02/02/2017"
+    },
+    {
+      "tipo": "sequia",
+      "fecha": "2023-10-18",
+      "zona_id": null,
+      "descripcion": "Sequía severa en Bolivia: Cochabamba en 'emergencia'; 200.871 familias afectadas en 144 municipios. Precipitación del departamento en descenso desde ~2016.",
+      "fuente": "El País América, 18/10/2023"
+    },
+    {
+      "tipo": "sequia",
+      "fecha": "2023-11-08",
+      "zona_id": null,
+      "descripcion": "Escasez de agua para producción 'más intensa en algunos sectores del Valle Central de Cochabamba'.",
+      "fuente": "CENDA, 08/11/2023"
+    },
+    {
+      "tipo": "granizo",
+      "fecha": "2023-11-21",
+      "zona_id": null,
+      "descripcion": "Granizada del 21/11 en Cocapata (región andina) y Omereque (cono sur): ~100 ha perdidas a días de cosecha (papa, uva); 200+ familias. Semanas antes, emergencia por sequía en las mismas zonas.",
+      "fuente": "Opinión, 23/11/2023"
+    },
+    {
+      "tipo": "granizo",
+      "fecha": "2024-08-25",
+      "zona_id": "D3_molle",
+      "descripcion": "Fuerte granizada en la ruta Santa Rosita–Postrervalle (Cercado, Postrerval): daños en cultivos y tinglados en época seca.",
+      "fuente": "El Deber, 25/08/2024"
+    },
+    {
+      "tipo": "sequia",
+      "fecha": "2024-11-15",
+      "zona_id": null,
+      "descripcion": "Crisis hídrica prolongada en los valles interandinos: muchos municipios de Cochabamba en emergencia/desastre. La lluvia del valle pasó de ~500 mm (década 1940) a ~400 mm.",
+      "fuente": "CIPCA, boletín GVA, nov 2024"
+    },
+    {
+      "tipo": "inundacion",
+      "fecha": "2025-11-17",
+      "zona_id": null,
+      "descripcion": "Desborde del río 24 en Villa Tunari (Trópico): 7+ comunidades anegadas, cultivos arrasados, deslizamientos que cortan la ruta Cochabamba–Santa Cruz.",
+      "fuente": "Red Uno, 17–18/11/2025"
+    }
+  ]
+}
