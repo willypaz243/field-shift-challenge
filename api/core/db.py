@@ -1,9 +1,10 @@
 import os
+from collections.abc import Iterator
 from pathlib import Path
 
 from sqlalchemy import Engine, event
 from sqlalchemy.engine import make_url
-from sqlmodel import SQLModel, create_engine
+from sqlmodel import Session, SQLModel, create_engine
 
 DEFAULT_DATABASE_URL = "sqlite:///./data/db/valle.db"
 
@@ -32,3 +33,14 @@ def init_db(engine: Engine) -> None:
     import api.models  # noqa: F401  registers every module's tables
 
     SQLModel.metadata.create_all(engine)
+
+
+_engine: Engine | None = None
+
+
+def get_session() -> Iterator[Session]:
+    global _engine
+    if _engine is None:
+        _engine = make_engine()
+    with Session(_engine) as session:
+        yield session
