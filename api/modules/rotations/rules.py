@@ -82,7 +82,7 @@ def labels(start: Crop, nxt: Crop) -> list[list[str]]:
     if nxt.get("fix_n"):
         found.append(["abona_tierra", "bien"])
     elif nxt.get("breaks_pest_cycle") and nxt.get("tipo") != start.get("tipo"):
-        found.append(["corta_plagas", "bien"])
+        found.append(["menos_plagas", "bien"])
     if nxt.get("forage_value") == "alto":
         found.append(["mucho_forraje", "bien"])
     if SELLS_WELL.get(nxt["id"], 1) == 3:

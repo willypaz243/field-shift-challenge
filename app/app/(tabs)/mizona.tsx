@@ -11,6 +11,7 @@ import { ZoneMap } from "../../src/ui/ZoneMap";
 import { newReport, reportTypes, type ReportType } from "../../src/zone/report";
 import { cleanupPhotos, takePhoto, type Photo } from "../../src/zone/photo";
 import { zones } from "../../src/farm/zones";
+import { nearChannel, parcelFacts } from "../../src/farm/parcel";
 import { shortDate } from "../../src/ui/dates";
 import { Sheet } from "../../src/ui/Sheet";
 
@@ -61,6 +62,7 @@ export default function MiZonaScreen() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [photoError, setPhotoError] = useState(false);
   const center = farm?.parcela ?? zones.find((z) => z.id === zone) ?? { lat: 0, lon: 0 };
+  const facts = farm?.parcela ? parcelFacts(zone, farm.parcela) : null;
   const news = notice(map);
   const items = historyItems(data?.historial_zona);
 
@@ -107,6 +109,18 @@ export default function MiZonaScreen() {
         <Legend color="#E08A72" bg={GAMC.consolidado} label={t("zona.leyenda.consolidado")} />
         <Legend color={GAMC.drenaje} bg={GAMC.drenaje} label={t("zona.leyenda.rios")} />
       </View>
+      {facts && (
+        <View style={styles.parcel}>
+          <Ionicons name="location" size={26} color={Colors.field} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.parcelTitle}>{t("zona.tu_parcela")}</Text>
+            <Text style={styles.noticeSub}>
+              {nearChannel(facts) ? t("zona.canal_cerca", { m: facts.canal_m }) : t("zona.canal_lejos")}
+              {facts.periurbano ? ` · ${t(`zona.periurbano.${facts.periurbano}`)}` : ""}
+            </Text>
+          </View>
+        </View>
+      )}
       {news && (
         <View style={styles.notice}>
           <Ionicons name="water-outline" size={30} color={Colors.nowater} />
@@ -227,6 +241,15 @@ const styles = StyleSheet.create({
   legendRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   swatch: { width: 16, height: 16, borderRadius: 4, borderWidth: 2 },
   legendText: { ...Typography.meta, fontSize: 17, color: Colors.ink },
+  parcel: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    padding: 12,
+    borderRadius: Radius.card,
+    backgroundColor: Colors.fieldSoft,
+  },
+  parcelTitle: { ...Typography.label, fontSize: 19, color: Colors.fieldDeep },
   notice: {
     flexDirection: "row",
     alignItems: "center",

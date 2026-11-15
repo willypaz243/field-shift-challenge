@@ -1,6 +1,7 @@
 import {
   createContext,
   useCallback,
+  useMemo,
   useContext,
   useEffect,
   useState,
@@ -13,6 +14,7 @@ import { useLocalData } from "./use-local-data";
 import { FarmStore } from "../farm/store";
 import type { Farm } from "../farm/types";
 import { setupI18n } from "../i18n";
+import { withParcel } from "./with-parcel";
 
 const DEFAULT_ZONE = process.env.EXPO_PUBLIC_ZONE_ID ?? "D9_itocta";
 
@@ -64,7 +66,11 @@ function useReadyContext() {
 export function useOffline() {
   const { client, farm } = useReadyContext();
   const zone = farm?.zone_id ?? DEFAULT_ZONE;
-  const { data, error } = useLocalData(client, zone);
+  const { data: zoneData, error } = useLocalData(client, zone);
+  const data = useMemo(
+    () => withParcel(zoneData, zone, farm?.parcela),
+    [zoneData, zone, farm?.parcela],
+  );
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   useEffect(() => {
     void client.store

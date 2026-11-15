@@ -71,6 +71,7 @@ export const es = {
       practica_actual: "Lo que haces ahora",
       reglas_catalogo: "Reglas del catálogo de cultivos",
       precio: "Precio de {{cultivo}} este año",
+      parcela_cerca_canal: "Tu parcela está cerca de un canal: cuida la tierra",
       heladas_rango: "Heladas de {{desde}} a {{hasta}}",
       heladas_mes: "Heladas en {{desde}}",
       poca_lluvia_rango: "Poca lluvia de {{desde}} a {{hasta}}",
@@ -207,6 +208,13 @@ export const es = {
   },
   zona: {
     titulo: "Mi zona",
+    tu_parcela: "Tu parcela",
+    canal_cerca: "A {{m}} m de un canal o río.",
+    canal_lejos: "Lejos de canales y ríos.",
+    periurbano: {
+      consolidado: "Zona periurbana consolidada",
+      crecimiento: "Zona periurbana en crecimiento",
+    },
     acercar: "Acercar el mapa",
     alejar: "Alejar el mapa",
     leyenda: {
