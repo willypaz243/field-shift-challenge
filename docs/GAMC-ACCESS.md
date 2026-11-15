@@ -149,6 +149,21 @@ El XML filtrado lista **15 capas reales del GAMC** (workspace `app`) + 3 capas d
 GetCapabilities revela **qué existe en total** — útil para pedir al GAMC ampliar el catálogo
 de la key 04, o para usar keys de otros proyectos si el equipo consigue más de una.
 
+### Catálogo del portal (API doc, verificado 14/11 vía browser)
+
+El portal `https://recursosgamc.cochabamba.bo/api-doc` lista **4 proyectos**:
+
+| # | Proyecto | Servicios |
+|---|---|---|
+| 01 | Be An Earth System Trend Detective — Microclimas Urbanos con IA | 4 servicios · WMS |
+| 02 | Dancing with the SARs — Alerta Temprana de Riesgos en Cuencas | 6 servicios · WMS |
+| 03 | Harmonization of MODIS and VIIRS — Armonización Satelital para Incendios | 3 servicios · WMS |
+| **04** | **Adapting Farms with NASA Data** (el nuestro) | **3 servicios · WMS** |
+
+Confirmado: la key p04 (`37f574a3…`) da acceso a exactamente las 3 capas que usamos
+(Periurbanos, Drenaje, Limite Distritos). **No hay descarga bulk** (GeoJSON/WFS/Excel)
+para el proyecto 04 — solo WMS GetMap/GetFeatureInfo.
+
 ---
 
 ## 6. Esquema de atributos obtenidos por GetFeatureInfo
