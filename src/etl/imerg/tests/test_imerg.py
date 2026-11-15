@@ -6,10 +6,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import imerg
 import numpy as np
 import xarray as xr
-
-import imerg
 
 
 class PipelineTest(unittest.TestCase):
