@@ -18,6 +18,8 @@ class ETagMiddleware(BaseHTTPMiddleware):
             return Response(status_code=304, headers={"ETag": etag})
         headers = {k: v for k, v in response.headers.items() if k.lower() != "content-length"}
         headers["ETag"] = etag
+        if headers.get("content-type") == "application/json":
+            headers["content-type"] = "application/json; charset=utf-8"
         return Response(body, status_code=200, headers=headers, media_type=response.media_type)
 
 

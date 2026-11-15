@@ -94,3 +94,9 @@ def test_cors_preflight_from_the_expo_web_dev_server(client):
     )
 
     assert response.headers["access-control-allow-origin"] in ("*", "http://localhost:8081")
+
+
+def test_json_responses_declare_utf8(client):
+    response = client.get("/crops")
+
+    assert response.headers["content-type"] == "application/json; charset=utf-8"
