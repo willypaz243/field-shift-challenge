@@ -1,0 +1,15 @@
+[
+  {
+    "fecha": "2024-03-10",
+    "tipo": "inundacion",
+    "lugar": "canal_valverde",
+    "fuente": "eventos_historicos"
+  },
+  {
+    "fecha": "2024-07-04",
+    "tipo": "represa_baja",
+    "valor": {
+      "nivel_pct": 18
+    }
+  }
+]

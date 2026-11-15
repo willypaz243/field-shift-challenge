@@ -1,0 +1,13 @@
+{
+  "id": "D9_itocta",
+  "nombre": "Itocta",
+  "comuna": "ITOCTA",
+  "distrito": 9,
+  "lat": -17.4611,
+  "lon": -66.2185,
+  "elev_m": 2590,
+  "pendiente": 2.1,
+  "es_agricola": true,
+  "cerca_drenaje": 140,
+  "altitud_alta": false
+}

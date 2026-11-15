@@ -1,0 +1,25 @@
+[
+  {
+    "id": "al-1",
+    "tipo": "helada",
+    "fecha_evento": "2026-11-21",
+    "momento": "madrugada",
+    "valor": {
+      "tmin": -2
+    },
+    "confianza": "alta",
+    "volver_a_avisar": "2026-11-20",
+    "regla": {
+      "id": "helada-firma-1",
+      "similitud": 0.82,
+      "eventos_parecidos": ["2019-06-12", "2021-07-03"]
+    }
+  },
+  {
+    "id": "al-3",
+    "tipo": "represa_baja",
+    "valor": {
+      "nivel_pct": 34
+    }
+  }
+]
