@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Calendario · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script>var DEMO=(function(){var d=new URLSearchParams(location.search).get("demo");return d?"#"+d:location.hash;})();</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.list{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.item{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:14px 14px;border-top:1px solid var(--line);align-items:start}
+.body{display:flex;flex-direction:column;gap:8px;min-width:0}
+.wt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:104px;border-radius:14px;padding:8px 4px;text-align:center;font-size:15px;font-weight:600;line-height:1.15}
+.wt svg.i.s{width:40px;height:40px;stroke-width:1.8}
+.wt small{font-size:15px;font-weight:700;opacity:.9}
+.wt.sun{background:#FFF3DC;color:#8F5200} .wt.cloud{background:#EEF2F4;color:#45574B} .wt.rain{background:#E8F0FB;color:#1C63B7}
+.wt.storm{background:#1C63B7;color:#fff} .wt.frost{background:#E2F3F7;color:#0B6E8A} .wt.hail{background:#E9ECEE;color:#2B3A33}
+.item:first-child{border-top:0}
+.item.now{background:var(--field-soft)}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 8px}
+.top b{white-space:nowrap}
+.top b{font-size:21px}
+.tag{font-size:15px;font-weight:600;border-radius:999px;padding:3px 9px;background:var(--ink);color:#fff}
+.fiesta{font-size:16px;font-weight:700;color:var(--dry)}
+.wx{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:18px;color:var(--ink-2)}
+.wx span{display:flex;align-items:center;gap:5px;font-weight:600}
+.wx svg.i.s{width:22px;height:22px}
+.wx .fr{color:var(--frost);font-weight:700}
+.wx .wet{color:var(--water);font-weight:700}
+.wx .bad{color:var(--nowater);font-weight:700}
+.ev{display:flex;flex-wrap:wrap;gap:6px}
+.ev span{display:inline-flex;align-items:center;gap:6px;font-size:17px;font-weight:700;background:var(--paper-2);border-radius:999px;padding:6px 10px}
+.ev i{width:10px;height:10px;border-radius:50%}
+.ev .hi{background:#fff;box-shadow:inset 0 0 0 2px var(--field);color:var(--field-deep)}
+h2.sec{font-size:22px;font-weight:600;padding-top:6px}
+details.item{display:block;padding:0}
+details.item>summary{list-style:none;display:grid;grid-template-columns:92px 1fr 24px;gap:12px;padding:14px;align-items:start;cursor:pointer}
+details.item>summary::-webkit-details-marker{display:none}
+details.item>summary>svg{align-self:center;color:var(--field);transition:transform 200ms var(--ease-out)}
+details.item[open]>summary>svg{transform:rotate(90deg)}
+.days7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 12px 14px}
+.d7{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 0;border-radius:12px;background:var(--paper-2);font-size:14px;font-weight:700;color:var(--ink-2)}
+.d7 b{font-size:18px;color:var(--ink)}
+.d7 .r{font-size:12px;color:var(--water);font-weight:600;min-height:15px}
+.d7.fr{background:var(--frost-soft);color:var(--frost)} .d7.fr b{color:var(--frost)}
+.d7 svg.i.s{width:24px;height:24px}
+.nodays{padding:0 16px 16px;font-size:17px;color:var(--ink-2)}
+details.past>summary{list-style:none;display:flex;align-items:center;justify-content:center;gap:6px;min-height:56px;border-radius:999px;background:var(--paper-2);font-size:18px;font-weight:600;color:var(--ink);cursor:pointer}
+details.past>summary::-webkit-details-marker{display:none}
+details.past[open]>summary{margin-bottom:12px}
+details.past[open]>summary svg{transform:rotate(90deg)}
+details.past>summary svg{transition:transform 200ms var(--ease-out)}
+.item.pastw{opacity:.85}
+button.item.wbtn{display:grid;grid-template-columns:92px 1fr 24px;gap:12px;align-items:start;width:100%;text-align:left;font:inherit;color:inherit;background:#fff;border:0;border-top:1px solid var(--line);padding:14px;cursor:pointer}
+button.item.wbtn:first-child{border-top:0}
+button.item.wbtn.now{background:var(--field-soft)}
+button.item.wbtn>svg{align-self:center;color:var(--field)}
+button.item.wbtn:active{background:var(--paper-2)}
+.sheetm{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:430px;max-height:88dvh;padding:0;border:0;border-radius:24px 24px 0 0;background:#fff;color:var(--ink);transform:translateY(0);transition:transform 320ms cubic-bezier(0.32,0.72,0,1),overlay 320ms allow-discrete,display 320ms allow-discrete}
+.sheetm:not([open]){transform:translateY(100%)}
+@starting-style{.sheetm[open]{transform:translateY(100%)}}
+.sheetm::backdrop{background:rgba(10,20,14,.45);transition:background-color 320ms ease,overlay 320ms allow-discrete,display 320ms allow-discrete}
+@starting-style{.sheetm[open]::backdrop{background:rgba(10,20,14,0)}}
+.sh-in{display:flex;flex-direction:column;max-height:88dvh}
+.sh-grab{width:48px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 18px 12px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:26px;font-weight:700}
+.sh-head p{font-size:17px;color:var(--ink-2)}
+.sh-x{width:56px;height:56px;border-radius:50%;background:var(--paper-2);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+.sh-days{list-style:none;overflow-y:auto;padding:8px 14px calc(18px + env(safe-area-inset-bottom))}
+.dr{display:grid;grid-template-columns:92px 52px 1fr auto;gap:10px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line)}
+.dr:last-child{border-bottom:0}
+.dr .dn b{display:block;font-size:19px}
+.dr .dn span{font-size:16px;color:var(--ink-2)}
+.dr .ic svg.i.s{width:46px;height:46px;stroke-width:1.7}
+.dr .dw b{display:block;font-size:19px}
+.dr .dw span{font-size:16px;color:var(--ink-2)}
+.dr .dw em{display:block;font-style:normal;font-size:16px;font-weight:600;color:var(--frost)}
+.dr .dt{text-align:right}
+.dr .dt b{display:block;font-size:28px;font-weight:700;line-height:1}
+.dr .dt span{font-size:17px;color:var(--ink-2)}
+.dr.fr{background:var(--frost-soft);border-radius:14px;border-bottom-color:transparent}
+.dr.ha{background:#EEF1F2;border-radius:14px}
+.nodr{display:flex;gap:14px;align-items:flex-start;padding:16px 6px;font-size:17px}
+.nodr svg.i.s{width:46px;height:46px}
+.nodr b{display:block;font-size:21px}
+.nodr span{color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){.sheetm,.sheetm::backdrop{transition:none}}
+.morebtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:56px;border-radius:999px;background:var(--paper-2);font-size:18px;font-weight:600;color:var(--ink)}
+.morebtn:active{transform:scale(.98)}
+.ms-list{overflow-y:auto;border:0;border-radius:0;margin:0 0 calc(10px + env(safe-area-inset-bottom))}
+.mo{display:grid;grid-template-columns:88px 1fr;gap:14px;align-items:center;height:116px;padding:0 16px;border-top:1px solid var(--line)}
+.mo:first-child{border-top:0}
+.wt.mt{width:88px;height:88px;min-height:0;padding:6px;gap:4px;font-size:15px}
+.wt.mt span{display:block;line-height:1.15}
+.wt.mt svg.i.s{width:34px;height:34px}
+.mb{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mb b{font-size:21px;font-weight:600}
+.mr{display:flex;gap:12px;font-size:17px;white-space:nowrap;overflow:hidden}
+.mr span{display:flex;align-items:center;gap:4px;font-weight:700;color:var(--ink-2)}
+.mr .wet{color:var(--water)} .mr .fr{color:var(--frost)} .mr .bad{color:var(--nowater)}
+.evrow{display:grid;grid-template-columns:92px 1fr 24px;gap:12px;align-items:start;padding:14px;border-top:1px solid var(--line);background:#fff}
+.evrow:first-child{border-top:0}
+.evt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:104px;border-radius:14px;background:var(--field-soft);color:var(--field-deep)}
+.evt svg.i.s{width:40px;height:40px;stroke-width:1.8}
+.evt span{font-size:17px;font-weight:700}
+.wx .ok{color:var(--field-deep);font-weight:700;flex-basis:100%}
+.ms-list .evrow{grid-template-columns:88px 1fr;align-items:center;height:116px;padding:0 16px}
+.ms-list .evt{width:88px;height:88px;min-height:0}
+.evrow.pastw{opacity:.85}
+#mcs .hero{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+#mcs .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#mcs .box{border-radius:16px;padding:14px 16px;background:var(--paper-2)}
+#mcs .box small{display:block;font-size:16px;font-weight:700;color:var(--ink-2)}
+#mcs .box b{display:block;font-size:22px;font-weight:700;margin-top:4px;line-height:1.15}
+#mcs h2.sec{font-size:22px;font-weight:600;padding-top:4px}
+#mcs .tl{list-style:none;position:relative;display:flex;flex-direction:column;gap:10px}
+#mcs .tl::before{content:"";position:absolute;left:27px;top:20px;bottom:20px;width:4px;border-radius:2px;background:var(--line)}
+#mcs .m{position:relative;display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:start}
+#mcs .dot{position:relative;z-index:1;width:58px;height:58px;border-radius:16px;background:#fff;border:2px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--ink-2);line-height:1.1;text-transform:capitalize}
+#mcs .card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+#mcs .card b{font-size:20px;font-weight:600}
+#mcs .chips2{display:flex;flex-wrap:wrap;gap:6px}
+#mcs .chips2 span{display:inline-flex;align-items:center;gap:5px;font-size:16px;font-weight:700;border-radius:999px;padding:5px 10px;background:var(--paper-2)}
+#mcs .chips2 .fr{background:var(--frost-soft);color:var(--frost)} .chips2 .ha{background:#E9ECEE;color:#2B3A33}
+#mcs .chips2 .wa{background:var(--water-soft);color:var(--water)} .chips2 .dr{background:var(--dry-soft);color:var(--dry)}
+#mcs .chips2 .ev{background:var(--field);color:#fff} .chips2 .fi{background:#FFF3DC;color:#8F5200}
+#mcs .m.now .dot{border-color:var(--field);background:var(--field);color:#fff}
+#mcs .m.now .card{border:2px solid var(--field)}
+#mcs .m.done .card{opacity:.7}
+#mcs .nowtag{font-size:15px;font-weight:600;color:var(--field-deep)}
+#mcs{overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:14px 16px calc(18px + env(safe-area-inset-bottom))}
+.ask{background:var(--field-soft);border-radius:14px;padding:14px}
+.ask p{font-weight:600;font-size:19px;color:var(--ink)}
+.ask .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.ask .opts button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:76px;border-radius:12px;background:#fff;font-weight:600;font-size:18px;transition:transform 140ms var(--ease-out),background-color 200ms ease}
+.ask .opts button:active{transform:scale(.96)}
+.ask .opts [aria-pressed="true"]{background:var(--field);color:#fff}
+.ask .opts i{width:22px;height:22px;border-radius:50%}
+.ask[hidden]{display:none}
+#csheet .sh-head h2{font-size:28px}
+button.evrow{width:100%;text-align:left;font:inherit;color:inherit;border:0;border-top:1px solid var(--line);cursor:pointer}
+button.evrow:first-child{border-top:0}
+button.evrow:active{background:var(--paper-2)}
+button.evrow>svg{align-self:center;color:var(--field)}
+.ms-list button.evrow{grid-template-columns:88px 1fr 24px}
+
+.me{display:flex;align-items:center;gap:6px;font-size:16px;font-weight:600;color:var(--field-deep);min-height:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style>
+</head>
+<body>
+<header class="status">
+  <b class="brand"><svg class="i"><use href="icons.svg#corn"/></svg>Choclito</b>
+  <span><svg class="i s"><use href="icons.svg#pin"/></svg><span data-qu="Itocta · musuqchasqa 16 nov, 6:00">Itocta · actualizado 16 nov, 6:00</span></span>
+  <a class="bell" href="avisos.html" aria-label="Avisos: 3 nuevos"><svg class="i"><use href="icons.svg#bell"/></svg><span class="badge">3</span></a>
+</header>
+<main class="wall">
+  <h1 class="title">Calendario</h1>
+
+  <h2 class="sec">Próximas 4 semanas</h2>
+  <div class="list" id="weeks"></div>
+
+  <details class="past">
+    <summary><svg class="i s"><use href="icons.svg#back"/></svg>Ver semanas pasadas</summary>
+    <div class="list" id="past"></div>
+  </details>
+
+  <button class="morebtn" id="openMonths">Ver próximos meses<svg class="i s"><use href="icons.svg#chevron"/></svg></button>
+</main>
+<dialog class="sheetm" id="sheet" aria-labelledby="sh-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><div><h2 id="sh-t"></h2><p id="sh-s"></p></div><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <ul class="sh-days" id="sh-b"></ul>
+    <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Pronóstico: NASA GEOS · Lluvia: NASA IMERG</p>
+  </div>
+</dialog>
+<dialog class="sheetm" id="csheet" aria-labelledby="cs-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><h2 id="cs-t"></h2><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div id="mcs">
+      <img class="hero" id="cs-hero" alt="">
+      <div class="two" id="cs-two"></div>
+      <h2 class="sec">Calendario de tu cultivo</h2>
+      <ol class="tl" id="cs-tl"></ol>
+      <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Riesgos por mes: NASA POWER e IMERG, últimos 30 años.</p>
+      <a class="btn ghost" id="cs-next" href="rotar.html"></a>
+      <button class="btn ghost" id="cs-done"><svg class="i"><use href="icons.svg#check"/></svg>Ya coseché</button>
+      <section class="ask" id="cs-rate" hidden><p>¿Cómo salió?</p><div class="opts" role="group" aria-label="Resultado de la cosecha"><button data-rate="buena"><i style="background:var(--field)"></i>Buena</button><button data-rate="regular"><i style="background:#D99A1E"></i>Regular</button><button data-rate="mala"><i style="background:var(--nowater)"></i>Mala</button></div></section>
+    </div>
+  </div>
+</dialog>
+<dialog class="sheetm" id="msheet" aria-labelledby="ms-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><div><h2 id="ms-t">Próximos meses</h2><p>Estos datos pueden cambiar con el tiempo.</p></div><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div class="list ms-list" id="months"></div>
+    <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Clima típico: NASA POWER e IMERG, últimos 30 años.</p>
+  </div>
+</dialog>
+<nav class="nav" aria-label="Principal">
+  <a href="hoy.html"><span class="pill"><svg class="i"><use href="icons.svg#home"/></svg></span>Hoy</a>
+  <a href="calendario.html" aria-current="page"><span class="pill"><svg class="i"><use href="icons.svg#calendar"/></svg></span>Calendario</a>
+  <a href="sembrar.html"><span class="pill"><svg class="i"><use href="icons.svg#sprout"/></svg></span>Sembrar</a>
+  <a href="zona.html"><span class="pill"><svg class="i"><use href="icons.svg#map"/></svg></span>Mi zona</a>
+</nav>
+<script src="data.js?v=89"></script>
+<script>
+(() => {
+  const { TODAY, perfil, crops, forecast, stageOf, addDays, MES, MES3, WDL, fiestas, tipico, riesgoMes, lluvia } = FS;
+  const I = (id, c) => `<svg class="i s"${c ? ` style="color:${c}"` : ''}><use href="icons.svg#${id}"/></svg>`;
+  const pill = (c, t, hi) => `<span class="${hi ? 'hi' : ''}"><i style="background:${c.color}"></i>${t}</span>`;
+
+  const WEEKS = [];
+  const ICC = { sun: 'var(--dry)', cloud: 'var(--ink-2)', rain: 'var(--water)', frost: 'var(--frost)', hail: 'var(--ink-2)' };
+  const WD3 = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const dayCell = (f) => `<div class="d7${f.mn <= 0 ? ' fr' : ''}">${WD3[f.t.getDay()]}<span>${f.t.getDate()}</span>${I(f.ic, ICC[f.ic])}<b>${f.mx}°</b>${f.mn}°<span class="r">${f.mm ? f.mm + ' mm' : ''}</span></div>`;
+  const tileOf = (fw) => {
+    const mm = fw.reduce((s2, f2) => s2 + f2.mm, 0), mn = Math.min(...fw.map((f2) => f2.mn)), hail = fw.some((f2) => f2.ic === 'hail');
+    const t = hail ? ['hail', 'hail', 'Granizo'] : mn <= 0 ? ['frost', 'frost', 'Helada'] : mm >= 15 ? ['storm', 'rain', 'Lluvia fuerte'] : mm >= 4 ? ['rain', 'rain', 'Lluvia'] : ['sun', 'sun', 'Sin lluvia'];
+    return t;
+  };
+  // Cosechas y cortes como eventos con fecha exacta
+  const EVENTS = [];
+  crops.forEach((c) => {
+    const k0 = { id: c.id, c, k: 'Cosecha', ic: 'check', n: `Cosecha de ${c.n.toLowerCase()}` };
+    if (c.perenne) { if (c.lastCut) EVENTS.push({ ...k0, t: c.lastCut }); for (let k = 0; k < 4; k++) EVENTS.push({ ...k0, t: addDays(c.harvest[0], k * 42) }); }
+    else EVENTS.push({ ...k0, t: c.harvest[0] });
+  });
+  // Siembras que el agricultor ya planificó
+  (FS.planned || []).forEach((pl) => EVENTS.push({ id: pl.id, c: { id: pl.id, n: pl.n, start: pl.t, harvest: [addDays(pl.t, pl.d || 120), addDays(pl.t, (pl.d || 120) + 20)], harvestName: 'cosecha', stages: [[0, 'Siembra'], [20, 'Creciendo'], [70, 'Floración'], [(pl.d || 120) - 10, 'Cosecha']], planned: true }, t: pl.t, k: 'Siembra', ic: 'sprout', n: `Siembra de ${pl.n.toLowerCase()}` }));
+  const evIn = (a, b) => EVENTS.filter((e) => e.t >= a && e.t <= b);
+  const WD3c = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const rel = (t) => { const n = Math.round((t - TODAY) / 864e5); return n === 0 ? 'Hoy' : n === -1 ? 'Ayer' : n === 1 ? 'Mañana' : n < 0 ? `Hace ${-n} días` : `En ${n} días`; };
+  const WDL3 = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const evRow = (e, past) => `<button class="evrow${past ? ' pastw' : ''}" data-ev="${EVENTS.indexOf(e)}"><div class="evt">${I(e.ic)}<span>${e.k}</span></div><div class="body"><div class="top"><b>${WDL3[e.t.getDay()][0].toUpperCase() + WDL3[e.t.getDay()].slice(1)} ${e.t.getDate()} ${MES3[e.t.getMonth()]}</b></div><div class="wx"><span class="ok">${I(e.ic, 'var(--field)')}${e.n}</span></div></div><svg class="i"><use href="icons.svg#chevron"/></svg></button>`;
+  const weekItem = (a, fw, opts = {}) => {
+    const b = addDays(a, 6), has = fw.length >= 4;
+    let wx = '';
+    if (has) {
+      const mm = fw.reduce((s2, f2) => s2 + f2.mm, 0), fr = fw.find((f2) => f2.mn <= 0), hail = fw.find((f2) => f2.ic === 'hail');
+      wx += `<span class="${mm >= 4 ? 'wet' : ''}">${I('drop', 'var(--water)')}${lluvia(mm)}</span>`;
+      if (fr) wx += `<span class="fr">${I('frost', 'var(--frost)')}helada el ${WDL[fr.t.getDay()]}</span>`;
+      if (hail) wx += `<span>${I('hail')}granizo el ${WDL[hail.t.getDay()]}</span>`;
+    } else wx += `<span>${I('drop', 'var(--water)')}${tipico[a.getMonth()]}</span><span>${I('hail')}granizo posible</span>`;
+    const tile = has ? tileOf(fw) : ['rain', 'rain', 'Lluvias', 'típico'];
+    const T = `<div class="wt ${tile[0]}">${I(tile[1])}${tile[2]}${tile[3] ? `<small>${tile[3]}</small>` : ''}</div>`;
+    const tag = opts.now ? '<span class="tag">Esta semana</span>' : '';
+    const key = 'w' + (WEEKS.push({ a, b, fw, has, past: !!opts.past, far: !!opts.far }) - 1);
+    return `<button class="item wbtn${opts.now ? ' now' : ''}${opts.past ? ' pastw' : ''}" data-w="${key}">${T}<div class="body"><div class="top"><b>${a.getDate()} – ${b.getDate()} ${MES3[b.getMonth()]}</b>${tag}</div><div class="wx">${wx}</div></div><svg class="i"><use href="icons.svg#chevron"/></svg></button>`;
+  };
+  // Próximas 4 semanas
+  let h = '';
+  let rows = [];
+  for (let k = 0; k < 4; k++) { const a = addDays(TODAY, k * 7); rows.push({ t: a, h: weekItem(a, forecast.filter((f) => f.t >= a && f.t <= addDays(a, 6)), { now: k === 0, far: k >= 2 }) }); }
+  evIn(TODAY, addDays(TODAY, 27)).forEach((e) => rows.push({ t: e.t, h: evRow(e), e: 1 }));
+  h = rows.sort((x, y) => x.t - y.t || (x.e || 0) - (y.e || 0)).map((r) => r.h).join('');
+  document.getElementById('weeks').innerHTML = h;
+  // Semanas pasadas (medidas; datos de ejemplo)
+  const PAST = [
+    [['sun',27,6,0],['sun',28,7,0],['cloud',26,8,2],['sun',29,7,0],['sun',30,8,0],['cloud',27,9,1],['sun',28,8,0]],
+    [['sun',28,5,0],['sun',29,6,0],['sun',29,4,0],['cloud',25,6,3],['rain',23,8,5],['sun',27,6,0],['sun',28,7,0]],
+    [['sun',26,3,0],['sun',27,2,0],['sun',28,4,0],['sun',29,5,0],['cloud',27,6,1],['sun',28,5,0],['sun',29,6,0]],
+    [['sun',25,1,0],['frost',24,-1,0],['sun',26,2,0],['sun',27,3,0],['sun',28,4,0],['cloud',26,5,2],['sun',27,4,0]],
+  ];
+  h = '';
+  rows = [];
+  PAST.forEach((wk, k) => { const a = addDays(TODAY, -(k + 1) * 7); rows.push({ t: a, h: weekItem(a, wk.map(([ic, mx, mn, mm], i) => ({ t: addDays(a, i), ic, mx, mn, mm })), { past: true }) }); });
+  evIn(addDays(TODAY, -28), addDays(TODAY, -1)).forEach((e) => rows.push({ t: e.t, h: evRow(e, true), e: 1 }));
+  h = rows.sort((x, y) => y.t - x.t || (y.e || 0) - (x.e || 0)).map((r) => r.h).join('');
+  document.getElementById('past').innerHTML = h;
+
+  // Hoja con el detalle de la semana
+  const WORD = { sun: 'Soleado', cloud: 'Nublado', rain: 'Lluvia', frost: 'Helada', hail: 'Granizo' };
+  const WDL2 = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const sheet = document.getElementById('sheet');
+  const fmtRain = (mm) => { const t = lluvia(mm); return t[0].toUpperCase() + t.slice(1); };
+  // Ventana del cultivo (la misma de Hoy)
+  const csheet = document.getElementById('csheet');
+  function openCrop(c) {
+    const { stageOf, fmt, part } = FS;
+    const Ic = (id) => `<svg class="i s"><use href="icons.svg#${id}"/></svg>`;
+    const hero = document.getElementById('cs-hero'); hero.src = `img/${c.id}.webp`; hero.alt = c.n;
+    document.getElementById('cs-t').textContent = c.n;
+    const [h0, h1] = c.harvest;
+    document.getElementById('cs-two').innerHTML = c.perenne
+      ? `<div class="box"><small>Última cosecha</small><b>${fmt(c.lastCut)}</b></div><div class="box"><small>Próxima cosecha</small><b>${part(h0)}</b></div>`
+      : `<div class="box"><small>${c.planned ? 'Siembra' : 'Sembraste'}</small><b>${fmt(c.start)}</b></div><div class="box"><small>Cosecha</small><b>${MES[h0.getMonth()]}${h1.getMonth() !== h0.getMonth() ? ' a ' + MES[h1.getMonth()] : ''}</b></div>`;
+    const first = c.perenne ? new Date(TODAY.getFullYear(), TODAY.getMonth() - 1, 1) : new Date(c.start.getFullYear(), c.start.getMonth(), 1);
+    const lastD = c.perenne ? new Date(TODAY.getFullYear(), TODAY.getMonth() + 4, 1) : h1;
+    const cuts = c.perenne ? [c.lastCut, addDays(c.lastCut, 42), addDays(c.lastCut, 84), addDays(c.lastCut, 126)] : [];
+    const R = { helada: ['fr', 'frost', 'Heladas'], granizo: ['ha', 'hail', 'Granizo'], desbordes: ['wa', 'waves', 'Desbordes'], 'poca agua': ['dr', 'nowater', 'Poca agua'] };
+    let hh = '';
+    for (let m0 = first; m0 <= lastD; m0 = new Date(m0.getFullYear(), m0.getMonth() + 1, 1)) {
+      const m1 = new Date(m0.getFullYear(), m0.getMonth() + 1, 0), m = m0.getMonth();
+      const isNow = m === TODAY.getMonth() && m0.getFullYear() === TODAY.getFullYear(), done = m1 < TODAY;
+      const mid = new Date(m0.getFullYear(), m, 15);
+      let stage = c.perenne ? 'Rebrote' : stageOf(c, mid < c.start ? c.start : mid);
+      const ev = [];
+      if (!c.perenne && c.start >= m0 && c.start <= m1) { ev.push(`<span class="ev">${Ic('sprout')}Siembra ${fmt(c.start)}</span>`); stage = 'Siembra'; }
+      if (!c.perenne && h0 <= m1 && h1 >= m0) { ev.push(`<span class="ev">${Ic('check')}Cosecha</span>`); stage = 'Cosecha'; }
+      cuts.filter((t) => t >= m0 && t <= m1).forEach((t) => { ev.push(`<span class="ev">${Ic('check')}Cosecha ${fmt(t)}</span>`); stage = 'Cosecha'; });
+      const rk = riesgoMes[m].map((x) => `<span class="${R[x][0]}">${Ic(R[x][1])}${R[x][2]}</span>`);
+      hh += `<li class="m${isNow ? ' now' : ''}${done ? ' done' : ''}"><span class="dot">${MES3[m]}</span><div class="card">${isNow ? '<span class="nowtag">Ahora</span>' : ''}<b>${stage}</b><div class="chips2">${[...ev, ...rk].join('')}</div></div></li>`;
+    }
+    document.getElementById('cs-tl').innerHTML = hh;
+    const nb = document.getElementById('cs-next'), pr = (FS.planned || []).find((x) => x.rot);
+    nb.hidden = !!c.perenne || !!c.planned; nb.href = `rotar.html?c=${c.id}`;
+    nb.innerHTML = pr && c.id === 'maiz' ? `<svg class="i"><use href="icons.svg#sprout"/></svg>Después: ${pr.n.toLowerCase()}, ${FS.fmt(pr.t)}` : '<svg class="i"><use href="icons.svg#refresh"/></svg>¿Qué sembrar después?';
+    document.getElementById('cs-done').hidden = !!c.planned; document.getElementById('cs-rate').hidden = true;
+    document.getElementById('cs-rate').dataset.crop = c.n;
+    document.getElementById('cs-rate').querySelectorAll('[data-rate]').forEach((o) => o.setAttribute('aria-pressed', 'false'));
+    csheet.showModal(); document.getElementById('mcs').scrollTop = 0;
+  }
+  document.addEventListener('click', (e) => {
+    const evb = e.target.closest('[data-ev]'); if (evb) { openCrop(EVENTS[Number(evb.dataset.ev)].c); return; }
+    if (e.target.closest('#cs-done')) { document.getElementById('cs-done').hidden = true; document.getElementById('cs-rate').hidden = false; return; }
+    const rt = e.target.closest('[data-rate]');
+    if (rt) { const box = rt.closest('.ask'); box.querySelectorAll('[data-rate]').forEach((o) => o.setAttribute('aria-pressed', String(o === rt))); window.say && say(`Guardado: ${rt.dataset.rate === 'buena' ? 'buena cosecha' : rt.dataset.rate === 'mala' ? 'mala cosecha' : 'cosecha regular'} de ${box.dataset.crop.toLowerCase()}.`); return; }
+    const btn = e.target.closest('[data-w]');
+    if (btn) {
+      const w = WEEKS[Number(btn.dataset.w.slice(1))];
+      document.getElementById('sh-t').textContent = `${w.a.getDate()} – ${w.b.getDate()} ${MES3[w.b.getMonth()]}`;
+      document.getElementById('sh-s').textContent = w.past ? 'Lo que pasó (medido)' : w.far ? 'Pronóstico · más lejos, puede cambiar' : w.has ? 'Pronóstico' : 'Clima típico, todavía no hay pronóstico';
+      document.getElementById('sh-b').innerHTML = w.has
+        ? w.fw.map((f) => `<li class="dr${f.mn <= 0 ? ' fr' : ''}${f.ic === 'hail' ? ' ha' : ''}"><div class="dn"><b>${WDL2[f.t.getDay()]}</b><span>${f.t.getDate()} ${MES3[f.t.getMonth()]}</span></div><span class="ic">${I(f.ic, ICC[f.ic])}</span><div class="dw"><b>${WORD[f.ic]}</b><span>${fmtRain(f.mm)}</span>${f.mn <= 0 ? '<em>Helada en la madrugada</em>' : f.ic === 'hail' ? '<em>Puede granizar</em>' : ''}</div><div class="dt"><b>${f.mx}°</b><span>${f.mn}°</span></div></li>`).join('')
+        : `<li class="nodr">${I('rain', 'var(--water)')}<div><b>${tipico[w.a.getMonth()][0].toUpperCase() + tipico[w.a.getMonth()].slice(1)}</b><span>El pronóstico día por día llega 2 semanas antes. Puede granizar.</span></div></li>`;
+      sheet.showModal();
+      return;
+    }
+    if (e.target.closest('#openMonths')) { document.getElementById('msheet').showModal(); return; }
+    const dlg = e.target.closest('dialog') || (e.target.tagName === 'DIALOG' ? e.target : null);
+    if (e.target.tagName === 'DIALOG') e.target.close();
+    else if (e.target.closest('[data-close]')) e.target.closest('dialog').close();
+  });
+
+  if (DEMO.startsWith('#demo')) setTimeout(() => document.querySelectorAll('#weeks [data-w]')[Number(DEMO.slice(5)) || 0].click(), 50);
+  if (DEMO.startsWith('#ev=')) setTimeout(() => openCrop(EVENTS.find((x) => x.id === DEMO.slice(4)).c), 60);
+  if (DEMO === '#meses') setTimeout(() => document.getElementById('openMonths').click(), 50);
+
+  // Próximos meses (tarjetas del mismo tamaño)
+  rows = [];
+  for (let k = 1; k <= 5; k++) {
+    const m0 = new Date(TODAY.getFullYear(), TODAY.getMonth() + k, 1), m1 = new Date(m0.getFullYear(), m0.getMonth() + 1, 0), m = m0.getMonth();
+    const MT = [['storm','rain','Lluvia fuerte'],['storm','rain','Lluvia fuerte'],['rain','rain','Lluvias'],['sun','sun','Seco'],['frost','frost','Frío'],['frost','frost','Heladas'],['frost','frost','Heladas'],['frost','frost','Heladas'],['sun','sun','Seco'],['sun','sun','Calor'],['cloud','cloud','Primeras lluvias'],['rain','rain','Lluvias']][m];
+    const rs = riesgoMes[m].map((r) => r === 'helada' ? `<span class="fr">${I('frost', 'var(--frost)')}heladas</span>` : r === 'granizo' ? `<span>${I('hail')}granizo</span>` : r === 'desbordes' ? `<span class="wet">${I('waves', 'var(--water)')}desbordes</span>` : `<span class="bad">${I('nowater', 'var(--nowater)')}poca agua</span>`).join('');
+    rows.push({ t: m0, h: `<div class="mo"><div class="wt mt ${MT[0]}">${I(MT[1])}<span>${MT[2]}</span></div><div class="mb"><b>${MES[m][0].toUpperCase() + MES[m].slice(1)}</b><div class="mr">${rs || '<span>Sin riesgos grandes</span>'}</div></div></div>` });
+    evIn(m0, m1).forEach((e) => rows.push({ t: e.t, h: evRow(e), e: 1 }));
+  }
+  document.getElementById('months').innerHTML = rows.sort((x, y) => x.t - y.t || (x.e || 0) - (y.e || 0)).map((r) => r.h).join('');
+})();
+</script>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#check"/></svg><span class="toast-msg"></span></div>
+<script src="app.js?v=89"></script>
+</body>
+</html>

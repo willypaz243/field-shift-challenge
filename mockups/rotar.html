@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Qué sembrar después · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script>var DEMO=(function(){var d=new URLSearchParams(location.search).get("demo");return d?"#"+d:location.hash;})();</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.wall{gap:14px;padding-bottom:110px}
+.next{display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:var(--r);background:var(--dry-soft);color:var(--dry)}
+.next svg{flex:none;width:32px;height:32px}
+.next b{display:block;font-size:19px;color:var(--ink)}
+.next span{font-size:16px;font-weight:600}
+.goal h2{font-size:19px;font-weight:700;margin-bottom:8px}
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.goals button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:0 10px;border-radius:var(--r);border:1px solid var(--line);background:#fff;font-size:17px;font-weight:600;transition:transform 140ms var(--ease-out),background-color 200ms ease,color 200ms ease}
+.goals button:active{transform:scale(.96)}
+.goals button[aria-pressed="true"]{background:var(--field);border-color:var(--field);color:#fff}
+.why2{display:flex;gap:8px;align-items:flex-start;margin-top:8px;font-size:16px;font-weight:600;color:var(--ink-2)}
+.why2 svg{flex:none;width:20px;height:20px;margin-top:1px}
+.plan{display:flex;flex-direction:column;gap:12px;width:100%;text-align:left;font:inherit;color:inherit;padding:14px;border:1px solid var(--line);border-radius:var(--r);background:#fff;transition:transform 140ms var(--ease-out),background-color 160ms ease}
+.plan:active{transform:scale(.99);background:var(--paper-2)}
+.plan.best{border:2px solid var(--field)}
+.pics{display:grid;grid-template-columns:1fr 28px 1fr;align-items:center;gap:6px}
+.pics img,.pics .none{display:block;width:100%;height:84px;object-fit:cover;border-radius:12px;background:var(--paper-2)}
+.pics .none{display:grid;place-items:center;background:repeating-linear-gradient(-45deg,#F1F4EF 0 8px,#E3E8E0 8px 16px);font-size:17px;font-weight:700;color:var(--ink-2)}
+.pics>svg{color:var(--ink-2);justify-self:center}
+.dts{display:grid;grid-template-columns:1fr 28px 1fr;gap:6px;margin-top:-6px}
+.dts span{font-size:16px;font-weight:600;color:var(--ink-2);line-height:1.25}
+.dts b{display:block;font-size:17px;color:var(--ink)}
+.pb .dts{margin-top:-4px}
+.plan .hd{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.plan .hd b{font-size:22px;font-weight:700;line-height:1.2}
+.plan .hd svg{flex:none;color:var(--field)}
+.tag{align-self:flex-start;font-size:15px;font-weight:600;border-radius:999px;padding:4px 10px;background:var(--paper-2);color:var(--ink-2)}
+.tag.bt{background:var(--field);color:#fff}
+.chips3{display:flex;flex-wrap:wrap;gap:6px}
+.chips3 span{display:inline-flex;align-items:center;gap:6px;font-size:17px;font-weight:600;border-radius:999px;padding:6px 12px;background:var(--paper-2)}
+.chips3 .g{background:var(--field-soft);color:var(--field-deep)}
+.chips3 .w{background:var(--dry-soft);color:var(--dry)}
+.chips3 svg{width:20px;height:20px}
+/* hoja de detalle */
+.sheetm{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:430px;max-height:92dvh;padding:0;border:0;border-radius:24px 24px 0 0;background:#fff;color:var(--ink);transform:translateY(0);transition:transform 320ms cubic-bezier(0.32,0.72,0,1),overlay 320ms allow-discrete,display 320ms allow-discrete}
+.sheetm:not([open]){transform:translateY(100%)}
+@starting-style{.sheetm[open]{transform:translateY(100%)}}
+.sheetm::backdrop{background:rgba(10,20,14,.45);transition:background-color 320ms ease,overlay 320ms allow-discrete,display 320ms allow-discrete}
+@starting-style{.sheetm[open]::backdrop{background:rgba(10,20,14,0)}}
+.sh-in{display:flex;flex-direction:column;max-height:92dvh}
+.sh-grab{width:48px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 18px 12px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:26px;font-weight:700;line-height:1.15}
+.sh-x{flex:none;width:56px;height:56px;border-radius:50%;background:var(--paper-2);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+.pb{overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:14px 18px calc(18px + env(safe-area-inset-bottom))}
+.pb .why{font-size:19px;font-weight:600}
+.pb h3{font-size:18px;font-weight:700;color:var(--ink-2)}
+.pb ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.pb li{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:600;line-height:1.3}
+.pb li svg{flex:none;width:26px;height:26px}
+@media (prefers-reduced-motion:reduce){.sheetm,.sheetm::backdrop{transition:none}}
+</style>
+</head>
+<body>
+<header class="status">
+  <a class="back" id="back" href="calendario.html"><svg class="i"><use href="icons.svg#back"/></svg>Calendario</a>
+  <span><svg class="i s"><use href="icons.svg#pin"/></svg><span>Itocta · actualizado 16 nov, 6:00</span></span>
+</header>
+<main class="wall">
+  <h1 class="title">¿Qué sembrar después?</h1>
+  <section class="goal">
+    <h2>¿Qué buscas?</h2>
+    <div class="goals" role="group" aria-label="Qué buscas">
+      <button data-g="agua"><svg class="i s"><use href="icons.svg#drop"/></svg>Ahorrar agua</button>
+      <button data-g="tierra"><svg class="i s"><use href="icons.svg#sprout"/></svg>Mejor tierra</button>
+      <button data-g="forraje"><svg class="i s"><use href="icons.svg#corn"/></svg>Forraje</button>
+      <button data-g="vender"><svg class="i s"><use href="icons.svg#store"/></svg>Vender</button>
+    </div>
+    <p class="why2" id="why2"></p>
+  </section>
+  <div id="plans" style="display:flex;flex-direction:column;gap:12px"></div>
+</main>
+
+<dialog class="sheetm" id="psheet" aria-labelledby="ps-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><h2 id="ps-t"></h2><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div class="pb" id="ps-b"></div>
+  </div>
+</dialog>
+
+<nav class="nav" aria-label="Principal">
+  <a href="hoy.html"><span class="pill"><svg class="i"><use href="icons.svg#home"/></svg></span>Hoy</a>
+  <a href="calendario.html" aria-current="page"><span class="pill"><svg class="i"><use href="icons.svg#calendar"/></svg></span>Calendario</a>
+  <a href="sembrar.html"><span class="pill"><svg class="i"><use href="icons.svg#sprout"/></svg></span>Sembrar</a>
+  <a href="zona.html"><span class="pill"><svg class="i"><use href="icons.svg#map"/></svg></span>Mi zona</a>
+</nav>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#check"/></svg><span class="toast-msg"></span></div>
+<script src="data.js?v=89"></script>
+<script>
+(() => {
+  const I = (id, c) => `<svg class="i s"${c ? ` style="color:${c}"` : ''}><use href="icons.svg#${id}"/></svg>`;
+  // Datos de ejemplo. sc = puntaje por prioridad (3 = mejor).
+  const PLANS = [
+    { id: 'actual', n: 'Solo maíz', now: true, a: 'maiz', b: null,
+      chips: [['drop', 'Poco riego', 'g'], ['sprout', 'La tierra se cansa', 'w'], ['alert', '6 meses sin cultivo', 'w']],
+      sc: { agua: 3, tierra: 1, forraje: 2, vender: 2 },
+      why: 'Sin cambiar de cultivo.',
+      good: ['Poco riego', 'Ya lo conoces'],
+      bad: ['Más gusano cada año', 'Sin cultivo, el viento se lleva la tierra'],
+      gap: ['Cuánto rinde tu parcela'],
+      src: 'NASA IMERG · Landsat' },
+    { id: 'haba', n: 'Maíz y luego haba', a: 'maiz', b: 'haba', d: 120,
+      chips: [['sprout', 'Abona la tierra', 'g'], ['store', 'Vendes haba', 'g'], ['drop', 'Más riego', 'w']],
+      sc: { agua: 1, tierra: 3, forraje: 1, vender: 3 },
+      why: 'La haba abona la tierra.',
+      good: ['Tierra más fértil', 'Menos gusano en el maíz', 'Vendes haba verde'],
+      bad: ['Helada en julio daña la flor', 'Necesita riego en invierno'],
+      gap: ['Precio de la haba este año'],
+      src: 'NASA POWER · NASA IMERG · La Angostura 34 %' },
+    { id: 'avena', n: 'Maíz y luego avena', a: 'maiz', b: 'avena', d: 120,
+      chips: [['corn', 'Mucho forraje', 'g'], ['sprout', 'Cuida la tierra', 'g'], ['drop', 'Riego medio', '']],
+      sc: { agua: 2, tierra: 3, forraje: 3, vender: 1 },
+      why: 'Forraje en la época seca.',
+      good: ['Forraje para tus animales', 'Tierra cubierta, menos polvo', 'La vicia abona la tierra'],
+      bad: ['Necesita riego al sembrar'],
+      gap: ['Cuántos animales tienes'],
+      src: 'NASA SMAP · NASA POWER · Landsat' },
+    { id: 'papa', n: 'Maíz y luego papa', a: 'maiz', b: 'papa', d: 140,
+      chips: [['store', 'Vendes papa', 'g'], ['drop', 'Mucho riego', 'w'], ['frost', 'Sufre helada', 'w']],
+      sc: { agua: 1, tierra: 2, forraje: 1, vender: 3 },
+      why: 'Papa de invierno para vender.',
+      good: ['Buen precio en invierno', 'Corta las plagas del maíz'],
+      bad: ['Helada de junio y julio', 'Mucho riego en época seca'],
+      gap: ['Precio de la papa este año'],
+      src: 'NASA POWER · NASA IMERG · La Angostura 34 %' },
+  ];
+
+  // Cultivo de partida (?c=): por defecto maíz
+  const NAME = { maiz: 'maíz', forraje: 'maíz', papa: 'papa', haba: 'haba', avena: 'avena', alfalfa: 'alfalfa', cebolla: 'cebolla', zanahoria: 'zanahoria', lechuga: 'lechuga' };
+  const qc = new URLSearchParams(location.search).get('c');
+  const base = NAME[qc] ? qc : 'maiz', bn = NAME[base];
+  if (qc) { const bk = document.getElementById('back'); bk.href = `cultivo.html?c=${qc}`; bk.lastChild.textContent = 'Atrás'; }
+  PLANS.forEach((p) => { p.a = base; p.n = p.now ? `Solo ${bn}` : `${bn[0].toUpperCase() + bn.slice(1)} y luego ${NAME[p.b]}`; });
+  for (let i = PLANS.length - 1; i > 0; i--) if (PLANS[i].b === base || (base === 'forraje' && PLANS[i].b === 'maiz')) PLANS.splice(i, 1);
+  // Fechas: cosecha del cultivo actual y siembra siguiente (5 del mes, ~1 mes después)
+  const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const M3 = (t) => MES[t.getMonth()].slice(0, 3);
+  const qh = new URLSearchParams(location.search).get('h');
+  const mine = FS.crops.find((x) => x.id === base);
+  const H = qh ? new Date(...qh.split('-').map((v, i) => i === 1 ? v - 1 : +v)) : mine ? mine.harvest[mine.harvest.length - 1] : new Date(2027, 1, 28);
+  const NEXT = new Date(H.getFullYear(), H.getMonth() + 2, 5);
+  const addD = (t, n) => new Date(t.getTime() + n * 864e5);
+  const dry = NEXT.getMonth() >= 3 && NEXT.getMonth() <= 8; // abril–septiembre
+  const endDry = new Date(NEXT.getFullYear(), Math.min(8, NEXT.getMonth() + 4), 1);
+  const WHY = {
+    agua: dry ? ['check', `De ${MES[NEXT.getMonth()]} a ${MES[endDry.getMonth()]} casi no llueve y La Angostura está al 34 %.`] : ['info', `En ${MES[NEXT.getMonth()]} llueve: el riego importa menos.`],
+    tierra: ['check', 'Sin cultivo, el viento y la lluvia se llevan la tierra.'],
+    forraje: dry ? ['check', 'En época seca casi no hay pasto para los animales.'] : ['info', 'Con lluvias hay pasto para los animales.'],
+    vender: ['info', 'Todavía no tenemos precios del mercado.'],
+  };
+  PLANS.forEach((p) => { if (p.b) { p.s = NEXT; p.h = addD(NEXT, p.d); } });
+  const dts = (p) => `<div class="dts"><span>Cosecha<b>${H.getDate()} ${M3(H)}</b></span><span></span><span>${p.b ? `Siembra<b>${p.s.getDate()} ${M3(p.s)} → ${M3(p.h)}</b>` : `Vacío hasta<b>${M3(new Date(H.getFullYear(), H.getMonth() + 8, 1))}</b>`}</span></div>`;
+  let prio = dry ? 'agua' : 'tierra';
+  try { prio = localStorage.getItem('prio') || prio; } catch (e) {}
+  const pic = (c) => c ? `<img src="img/${c}.webp" alt="">` : '<span class="none">Nada</span>';
+  function draw() {
+  document.querySelectorAll('[data-g]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.g === prio)));
+  document.getElementById('why2').innerHTML = `${I(WHY[prio][0], WHY[prio][0] === 'check' ? 'var(--field)' : 'var(--ink-2)')}${WHY[prio][1]}`;
+  const best = PLANS.filter((x) => !x.now).sort((a, b) => b.sc[prio] - a.sc[prio])[0];
+  const order = [PLANS[0], best, ...PLANS.filter((x) => !x.now && x !== best)];
+  document.getElementById('plans').innerHTML = order.map((p) => `<button class="plan${p === best ? ' best' : ''}" data-plan="${p.id}">
+      <div class="pics">${pic(p.a)}${I('chevron')}${pic(p.b)}</div>
+      ${dts(p)}
+      <div class="hd"><b>${p.n}</b><svg class="i"><use href="icons.svg#chevron"/></svg></div>
+      ${p === best ? '<span class="tag bt">Mejor para ti</span>' : p.now ? `<span class="tag">${qc ? 'Sin rotar' : 'Lo que haces ahora'}</span>` : ''}
+      <div class="chips3">${p.chips.map(([ic, t, c]) => `<span class="${c}">${I(ic)}${t}</span>`).join('')}</div>
+    </button>`).join('');
+  }
+  draw();
+
+  const sheet = document.getElementById('psheet');
+  function open(id) {
+    const p = PLANS.find((x) => x.id === id);
+    document.getElementById('ps-t').textContent = p.n;
+    const L = (a, ic, c) => `<ul>${a.map((x) => `<li>${I(ic, c)}${x}</li>`).join('')}</ul>`;
+    document.getElementById('ps-b').innerHTML = `
+      <div class="pics">${pic(p.a)}${I('chevron')}${pic(p.b)}</div>
+      ${dts(p)}
+      <p class="why">${p.why}</p>
+      ${L(p.good, 'check', 'var(--field)')}
+      <h3>Revisa con tu técnico</h3>
+      ${L(p.bad, 'alert', 'var(--dry)')}
+      ${L(p.gap, 'info', 'var(--ink-2)')}
+      <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Datos: ${p.src}</p>
+      ${p.now ? '' : `<button class="btn primary" data-pick="${p.id}">${I('check')}Quiero este plan</button>`}`;
+    sheet.showModal(); document.getElementById('ps-b').scrollTop = 0;
+  }
+  document.addEventListener('click', (e) => {
+    const g = e.target.closest('[data-g]'); if (g) { prio = g.dataset.g; try { localStorage.setItem('prio', prio); } catch (er) {} draw(); return; }
+    const pl = e.target.closest('[data-plan]'); if (pl) { open(pl.dataset.plan); return; }
+    const pk = e.target.closest('[data-pick]'); if (pk) { try { localStorage.setItem('plan', pk.dataset.pick); localStorage.setItem('planDate', `${NEXT.getFullYear()}-${NEXT.getMonth() + 1}-${NEXT.getDate()}`); } catch (er) {} sheet.close(); window.say && say(`Guardado. Lo verás en tu Calendario: siembra el ${NEXT.getDate()} de ${MES[NEXT.getMonth()]}.`); return; }
+    if (e.target === sheet || e.target.closest('[data-close]')) sheet.close();
+  });
+  if (DEMO.startsWith('#plan=')) setTimeout(() => open(DEMO.slice(6)), 60);
+})();
+</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>

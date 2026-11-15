@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Cultivo · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script>var DEMO=(function(){var d=new URLSearchParams(location.search).get("demo");return d?"#"+d:location.hash;})();</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.hero{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.box small{font-size:16px;font-weight:700}
+.box b{font-size:23px;line-height:1.15;font-weight:700}
+.box.sow{background:var(--field);color:#fff}
+.box.sow small{color:#D6EEDC}
+.box.har{background:var(--paper-2)}
+.box.har small{color:var(--ink-2)}
+.now h2{font-size:22px}
+.verdict{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:10px 16px;font-weight:700;font-size:20px;margin-top:12px}
+.verdict.g{background:var(--field-soft);color:var(--field-deep)}
+.verdict.c{background:var(--dry-soft);color:var(--dry)}
+.verdict.x{background:var(--nowater-soft);color:var(--nowater)}
+.reason{font-size:19px;margin-top:12px}
+.risks{list-style:none;display:grid;gap:10px;margin-top:14px}
+.risks li{display:flex;gap:12px;align-items:center;font-size:18px;font-weight:700}
+.risks .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center}
+details.more{border:1px solid var(--line);border-radius:16px;background:#fff}
+details.more summary{list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:64px;padding:0 18px;font-size:19px;font-weight:600;color:var(--field-deep);cursor:pointer}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary svg{transition:transform 200ms var(--ease-out)}
+details.more[open] summary svg{transform:rotate(90deg)}
+.in{padding:0 18px 18px;display:flex;flex-direction:column;gap:18px}
+.in h3{font-size:19px;font-weight:600}
+.months{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.months button{min-height:60px;border-radius:12px;border:1px solid var(--line);font-weight:600;font-size:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform 140ms var(--ease-out),background-color 200ms ease,color 200ms ease}
+.months button:active{transform:scale(.95)}
+.months button i{width:10px;height:10px;border-radius:50%}
+.months button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.info{display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border-radius:12px;padding:14px;font-size:17px}
+.info b{display:block;font-size:18px}
+.sheetm{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:430px;max-height:88dvh;padding:0;border:0;border-radius:24px 24px 0 0;background:#fff;color:var(--ink);transform:translateY(0);transition:transform 320ms cubic-bezier(0.32,0.72,0,1),overlay 320ms allow-discrete,display 320ms allow-discrete}
+.sheetm:not([open]){transform:translateY(100%)}
+@starting-style{.sheetm[open]{transform:translateY(100%)}}
+.sheetm::backdrop{background:rgba(10,20,14,.45);transition:background-color 320ms ease,overlay 320ms allow-discrete,display 320ms allow-discrete}
+@starting-style{.sheetm[open]::backdrop{background:rgba(10,20,14,0)}}
+.sh-in{display:flex;flex-direction:column;max-height:88dvh}
+.sh-grab{width:48px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 18px 12px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:26px;font-weight:700}
+.sh-head p{font-size:17px;color:var(--ink-2)}
+.sh-x{width:56px;height:56px;border-radius:50%;background:var(--paper-2);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+.ds-body{overflow-y:auto;padding:12px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px}
+.mnav{display:flex;align-items:center;justify-content:space-between}
+.mnav b{font-size:22px;font-weight:700}
+.mbtn{width:52px;height:52px;border-radius:50%;background:var(--paper-2);display:grid;place-items:center}
+.wkh,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;justify-items:center}
+.wkh span{font-size:15px;font-weight:600;color:var(--ink-2)}
+.dd{width:44px;height:44px;border-radius:50%;font-size:18px;font-weight:700;color:var(--ink);background:none;position:relative;transition:transform 120ms var(--ease-out),background-color 160ms ease}
+.dd:active{transform:scale(.9)}
+.dd.good{background:var(--field-soft);color:var(--field-deep);box-shadow:inset 0 0 0 2px var(--field)}
+.dd.past{color:#8A968E}
+.dd.today{outline:2px solid var(--ink);outline-offset:2px}
+.dd.sel{background:var(--field);color:#fff;box-shadow:none;font-weight:700}
+.dd.har{background:#C9A227;color:#fff;box-shadow:none;font-weight:700}
+.lg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:15px;color:var(--ink-2);justify-content:center}
+.lg span{display:flex;align-items:center;gap:6px}
+.lg i{width:16px;height:16px;border-radius:50%}
+.lg i.g{background:var(--field-soft);box-shadow:inset 0 0 0 2px var(--field)} .lg i.s{background:var(--field)} .lg i.h{background:#C9A227}
+.hint2{text-align:center;font-size:18px;color:var(--ink-2);padding:8px 0}
+.res{border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.res b{font-size:21px;font-weight:700}
+.res span{font-size:17px}
+.res.ok{background:var(--field-soft);color:var(--field-deep)}
+.res.mid{background:var(--dry-soft);color:var(--dry)}
+.res.bad{background:var(--nowater-soft);color:var(--nowater)}
+.dates2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dates2>div,.dates2>button{border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-align:left;font:inherit;color:inherit;background:#fff}
+.dates2 small{display:block;font-size:15px;color:var(--ink-2);font-weight:700}
+.dates2 b{display:block;font-size:22px;font-weight:700}
+.dates2 .hj{border-color:#C9A227;box-shadow:inset 0 0 0 1px #C9A227}
+.dates2 .hj span{font-size:15px;font-weight:600;color:#8A6D10}
+.extra{display:flex;flex-direction:column;gap:10px}
+.sheetm#dsheet{height:92dvh;max-height:92dvh}
+#dsheet .sh-in{height:100%;max-height:none}
+#dsheet .sh-head{padding-bottom:8px}
+#dsheet .ds-body{flex:1;overflow-y:auto;gap:8px;padding-top:8px}
+.grid{grid-template-rows:repeat(6,42px);gap:3px 4px}
+.dd,.grid .pad{width:42px;height:42px}
+#pickres{min-height:212px;display:flex;flex-direction:column;gap:8px}
+.res{padding:8px 12px}
+.res b{font-size:19px}
+.res span{font-size:15px}
+.dates2>div,.dates2>button{padding:8px 12px}
+.dates2 b{font-size:20px}
+#pickres .btn{min-height:58px}
+.dates2 .sj{border-color:var(--field)}
+.dates2 .sj span{font-size:15px;font-weight:600;color:var(--field-deep)}
+.dates2 .on{background:var(--paper-2)}
+.dates2 .on span{visibility:hidden}
+.hint2{margin:auto 0}
+.about{display:flex;flex-direction:column;gap:12px;border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:#fff}
+.about p{font-size:18px;line-height:1.4}
+.facts2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.facts2>div{display:flex;gap:10px;align-items:center;background:var(--paper-2);border-radius:12px;padding:10px 12px}
+.facts2 svg{color:var(--field);flex:none}
+.facts2 small{display:block;font-size:15px;font-weight:700;color:var(--ink-2)}
+.facts2 b{display:block;font-size:17px;line-height:1.2}
+.about .mk{display:flex;gap:10px;align-items:flex-start;font-size:16px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
+.about .mk svg{color:var(--dry);flex:none}
+.now{padding:16px}
+.now .nh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.now .nh h2{font-size:20px}
+.now .verdict{margin-top:0;font-size:17px;padding:6px 12px}
+.now .reason{font-size:18px;margin-top:10px}
+.now .risks{list-style:none;margin-top:12px;display:flex;flex-direction:column}
+.now .risks li{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:700;padding:8px 0;border-top:1px solid var(--line)}
+.now .risks .ic{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;flex:none}
+.dd.bad{background:var(--nowater-soft);color:var(--nowater);box-shadow:inset 0 0 0 2px var(--nowater)}
+.lg i.b{background:var(--nowater-soft);box-shadow:inset 0 0 0 2px var(--nowater)}
+.about{padding:0;overflow:hidden;gap:0}
+.about .hero{border-radius:0;aspect-ratio:16/9}
+.about-in{display:flex;flex-direction:column;gap:12px;padding:14px 16px}
+.wall h1.title{padding-top:2px}
+.box b .rg{display:block;white-space:nowrap}
+.box .or{display:block;font-size:15px;font-weight:700;opacity:.8;margin:2px 0}
+.box b{font-size:18px;letter-spacing:-.01em}
+.box{padding:14px 12px}
+.pickfix{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom));width:calc(100% - 32px);max-width:398px;z-index:9;box-shadow:0 8px 20px -8px rgba(20,60,35,.55)}
+.pickfix:active{transform:translateX(-50%) scale(.97)}
+.wall{padding-bottom:180px}
+.about-out{display:flex;flex-direction:column;gap:10px}
+.about-out .mk{display:flex;gap:10px;align-items:flex-start;font-size:16px;color:var(--ink-2)}
+.about-out .mk svg{color:var(--dry);flex:none}
+.about-out .facts2>div{background:#fff;border:1px solid var(--line)}
+.status>span{grid-column:2/5;grid-row:1;justify-self:end}
+.status{min-height:81px}
+.dd.grow::after{content:"";position:absolute;bottom:3px;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:var(--ink)}
+.lg i.gr{width:7px!important;height:7px!important;background:var(--ink)}
+.act2{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.act2 .btn{min-height:58px;font-size:17px;padding:0 8px;white-space:nowrap}
+.dd.sel.sel{background:var(--field);color:#fff;box-shadow:none;font-weight:700}
+.dd.har.har{background:#C9A227;color:#fff;box-shadow:none;font-weight:700}
+.dd.sel.sel::after,.dd.har.har::after{display:none}
+.lg{gap:4px 12px;font-size:15px}
+.lg i{width:14px;height:14px}
+.grid{gap:4px 0;touch-action:pan-y;user-select:none}
+.cell{position:relative;width:100%;height:46px;display:grid;place-items:center}
+.cell.band::before{display:none}
+.cell.band .dd{border-radius:11px}
+.cell.band.bs::before{left:50%}
+.cell.band.be::before{right:50%}
+.cell.band.rl::before{left:2px;border-radius:21px 0 0 21px}
+.cell.band.rr::before{right:2px;border-radius:0 21px 21px 0}
+.cell.band.rl.rr::before{border-radius:21px}
+.cell.band.bs.rr::before{border-radius:0 21px 21px 0}
+.cell.band.be.rl::before{border-radius:21px 0 0 21px}
+.cell .dd{position:relative;z-index:1;width:44px;height:44px}
+.dd.grow::after{display:none}
+.lg i.bd{width:14px!important;height:14px!important;border-radius:4px!important;background:#fff;box-shadow:inset 0 0 0 2px var(--ink-2)}
+.mswipe{font-size:15px;color:var(--ink-2);text-align:center}
+.dur{display:flex;align-items:center;gap:8px;font-size:17px;white-space:nowrap;color:var(--ink);padding:0 2px}
+.dur svg{color:var(--field);flex:none}
+.dur b{font-weight:700}
+#pickres{gap:6px}
+.span2{flex:none;display:grid;grid-template-columns:1fr 64px 1fr;align-items:stretch;border:2px solid var(--line);border-radius:18px;overflow:hidden}
+.span2>button{display:flex;flex-direction:column;gap:2px;padding:12px 14px;text-align:left;font:inherit;color:inherit;background:#fff}
+.span2>button:active{background:var(--paper-2)}
+.span2 small{font-size:16px;font-weight:600;color:var(--ink-2)}
+.span2 b{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-.01em}
+.span2 .sj b{color:var(--field-deep)}
+.span2 .hj b{color:#8A6D10}
+.span2 em{font-style:normal;font-size:15px;font-weight:600;color:var(--field-deep)}
+.span2 .hj em{color:#8A6D10}
+.span2 .on em{visibility:hidden}
+.span2 .on{background:var(--paper-2)}
+.span2 .mid{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--paper-2);border-inline:1px solid var(--line)}
+.span2 .mid svg{width:22px;height:22px;color:var(--ink-2)}
+.span2 .mid b{font-size:24px;color:var(--ink)}
+.span2 .mid small{font-size:15px;color:var(--ink-2)}
+.res b{font-size:22px!important}
+.res span{font-size:18px!important}
+.res{padding:10px 14px!important}
+#pickres{gap:10px!important;min-height:0!important}
+#pickres>*{flex:none}
+#dsheet .ds-body>*{flex:none}
+.span2 b{font-size:28px}
+.lg{font-size:15px!important}
+.span3{flex:none;display:grid;grid-template-columns:minmax(0,1fr) 88px;grid-template-rows:auto auto;border:2px solid var(--line);border-radius:18px;overflow:hidden}
+.span3>button{display:grid;grid-template-columns:86px 1fr 16px;align-items:center;gap:4px;min-height:58px;padding:6px 12px;text-align:left;font:inherit;color:inherit;background:#fff}
+.span3>button+button{border-top:1px solid var(--line)}
+.span3>button:active,.span3>button.on{background:var(--paper-2)}
+.span3 small{font-size:17px;font-weight:600;color:var(--ink-2)}
+.span3 button b{font-size:28px;font-weight:700;line-height:1;white-space:nowrap}
+.span3 .sj b{color:var(--field-deep)}
+.span3 .hj b{color:#8A6D10}
+.span3 em{font-style:normal;font-size:26px;font-weight:600;color:var(--ink-2);text-align:right}
+.span3 .on em{visibility:hidden}
+.span3 .mid{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--field-soft);border-left:1px solid var(--line)}
+.span3 .mid b{font-size:36px;font-weight:700;color:var(--field-deep);line-height:1}
+.span3 .mid small{font-size:17px;font-weight:600;color:var(--field-deep)}
+</style>
+</head>
+<body>
+<header class="status">
+  <a class="back" href="sembrar.html"><svg class="i"><use href="icons.svg#back"/></svg>Sembrar</a>
+  <span><svg class="i s"><use href="icons.svg#pin"/></svg><span>Itocta · actualizado 16 nov, 6:00</span></span>
+</header>
+<main class="wall">
+  <h1 class="title" id="t"></h1>
+  <section class="about">
+    <img class="hero" id="hero" alt="" src="img/maiz.webp">
+  </section>
+  <div class="about-out" id="extra"></div>
+
+  <div class="two">
+    <div class="box sow"><small>Siembra</small><b id="sowTxt"></b></div>
+    <div class="box har"><small>Cosecha</small><b id="harTxt"></b></div>
+  </div>
+
+  <section class="sheet now" id="now"></section>
+
+  <button class="btn primary pickfix" id="pick"><svg class="i"><use href="icons.svg#calendar"/></svg>Elegir fecha de siembra</button>
+
+
+</main>
+<dialog class="sheetm" id="dsheet" aria-labelledby="ds-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><div><h2 id="ds-t">Fecha de siembra</h2><p id="ds-s"></p></div><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div class="ds-body">
+      <div class="mnav"><button class="mbtn" id="mprev" aria-label="Mes anterior"><svg class="i"><use href="icons.svg#back"/></svg></button><b id="mtitle"></b><button class="mbtn" id="mnext" aria-label="Mes siguiente"><svg class="i"><use href="icons.svg#chevron"/></svg></button></div>
+      <div class="wkh"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+      <div class="grid" id="grid" role="grid"></div>
+      <div class="lg" style="row-gap:4px" id="lg"></div>
+      <div id="pickres"></div>
+      <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Días buenos y malos: NASA POWER e IMERG, últimos 30 años.</p>
+    </div>
+  </div>
+</dialog>
+<nav class="nav" aria-label="Principal">
+  <a href="hoy.html"><span class="pill"><svg class="i"><use href="icons.svg#home"/></svg></span>Hoy</a>
+  <a href="calendario.html"><span class="pill"><svg class="i"><use href="icons.svg#calendar"/></svg></span>Calendario</a>
+  <a href="sembrar.html" aria-current="page"><span class="pill"><svg class="i"><use href="icons.svg#sprout"/></svg></span>Sembrar</a>
+  <a href="zona.html"><span class="pill"><svg class="i"><use href="icons.svg#map"/></svg></span>Mi zona</a>
+</nav>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#check"/></svg><span class="toast-msg"></span></div>
+<script>
+const MES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const NOW=10;
+const H={
+ helada:{n:'Heladas de mayo a agosto',ic:'frost',col:'var(--frost)',soft:'var(--frost-soft)',v:[0,0,0,.5,1.5,2.5,3,2,.5,0,0,0]},
+ granizo:{n:'Granizo de noviembre a febrero',ic:'hail',col:'var(--ink)',soft:'var(--paper-2)',v:[2,2,1,0,0,0,0,0,0,.5,2,2]},
+ inund:{n:'Desbordes de enero a marzo',ic:'waves',col:'var(--water)',soft:'var(--water-soft)',v:[2,2,2.5,.5,0,0,0,0,0,0,.5,1.5]},
+ sequia:{n:'Poca agua de agosto a noviembre',ic:'nowater',col:'var(--dry)',soft:'var(--dry-soft)',v:[.5,.5,.5,1,1.5,2,2.5,2.5,3,3,2.5,1]}
+};
+const W={alta:1,media:.5,baja:.15};
+const C={
+ alfalfa:{n:'Alfalfa',d:120,kc:.95,sed:1,win:'ccggccccgcxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'alta'},note:'Dura varios años. La primera cosecha llega a los 3–4 meses; después se cosecha cada 5–6 semanas en verano y cada 2 meses en invierno. Le afecta el salitre.',agua:'Mucha',frio:'Aguanta helada',harvestTxt:'Primer corte',sal:'media'},
+ forraje:{n:'Maíz para forraje',d:130,kc:.95,sed:1,win:'xxxxxxxcgggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'Para ensilar o dar verde a las vacas. Necesita agua en la floración.',agua:'Mucha en floración',frio:'No aguanta helada',harvestTxt:'Corte para forraje'},
+ maiz:{n:'Maíz choclo',d:110,kc:.95,sed:1,win:'xxxxxxxcgggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'Necesita calor y agua en la floración (enero–febrero).',agua:'Mucha en floración',frio:'No aguanta helada',harvestTxt:'Choclo',market:'Mucha gente saca choclo para Carnaval: ese mes suele haber más oferta.'},
+ papa:{n:'Papa',d:140,kc:.9,sed:1,win:'xxxxxxcggggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'La helada quema las hojas y el granizo en floración baja la cosecha. La semilla es cara: cuida que tengas agua.',agua:'Media',frio:'No aguanta helada',harvestTxt:'Cosecha'},
+ avena:{n:'Avena forrajera',d:120,kc:.8,sed:0,win:'xcggggccxxxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'baja'},note:'Forraje de invierno: cubre el suelo en la época seca y aguanta el frío.',agua:'Poca',frio:'Aguanta helada',harvestTxt:'Corte'},
+ haba:{n:'Haba',d:150,kc:.85,sed:0,win:'ccgggccgcxxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'media'},note:'Aguanta el frío y deja nitrógeno en el suelo para el siguiente cultivo.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ cebolla:{n:'Cebolla',d:150,kc:.85,sed:0,win:'xcgggccccxxx',s:{helada:'baja',granizo:'media',inund:'alta',sequia:'media'},note:'Se pudre con exceso de agua; prefiere la época seca con riego.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ zanahoria:{n:'Zanahoria',d:110,kc:.85,sed:0,win:'xcggggcccxxx',s:{helada:'baja',granizo:'baja',inund:'alta',sequia:'media'},note:'Aguanta el frío; con suelo encharcado la raíz se deforma.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ lechuga:{n:'Lechuga',d:80,kc:.9,sed:1,win:'xcggcccggcxx',s:{helada:'media',granizo:'alta',inund:'alta',sequia:'alta'},note:'Hoja tierna: el granizo la rompe y el exceso de agua la pudre. Necesita riego frecuente. No la riegues con agua del río.',agua:'Frecuente',frio:'Aguanta helada leve',harvestTxt:'Cosecha',market:'Si todos cosechan la misma semana, el precio en La Cancha baja: escalonar ayuda.'}
+};
+const SECO=true;
+const SV=(id)=>`<svg class="i"><use href="icons.svg#${id}"/></svg>`;
+let crop=new URLSearchParams(location.search).get('c')||'alfalfa'; if(!C[crop])crop='alfalfa';
+let sow=NOW;
+
+function months(m,d){const out=[];const n=Math.max(1,Math.round(d/30));for(let k=0;k<=n;k++)out.push((m+k)%12);return out;}
+function ranges(win){const out=[];let a=-1;for(let i=0;i<=12;i++){if(i<12&&win[i]==='g'){if(a<0)a=i;}else if(a>=0){out.push([a,i-1]);a=-1;}}return out;}
+const rtxt=([a,b])=>a===b?MES[a]:`${MES[a]} a ${MES[b]}`;
+function verdict(c,m){let w=c.win[m];const dry=SECO&&c.sed&&w==='g'&&[7,8,9,10,11].includes(m);if(dry)w='c';return{w,dry};}
+function risks(c,m){const ms=months(m,c.d);return Object.entries(H).map(([k,z])=>({z,r:Math.max(...ms.map(x=>z.v[x]))*W[c.s[k]]})).filter(x=>x.r>=.7).sort((a,b)=>b.r-a.r).slice(0,2);}
+
+function render(){
+  const c=C[crop], rg=ranges(c.win);
+  document.getElementById('hero').src='img/'+crop+'.webp'; document.getElementById('hero').alt=c.n;
+  document.getElementById('t').textContent=c.n;
+  const M3=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const DIMX=[31,28,31,30,31,30,31,31,30,31,30,31];
+  const fd=(d)=>`${d.getDate()} ${M3[d.getMonth()]}`;
+  const sep='<span class="or">o también</span>';
+  const rgN=rg.filter(([a,b])=>NOW>=a&&NOW<=b).concat(rg.filter(([a])=>a>NOW),rg).slice(0,1);
+  document.getElementById('sowTxt').innerHTML=rgN.map(([a,b])=>`<span class="rg">${1} ${M3[a]} – ${DIMX[b]} ${M3[b]}</span>`).join(sep);
+  document.getElementById('harTxt').innerHTML=rgN.map(([a,b])=>{const s0=new Date(2026,a,1),s1=new Date(2026,b,DIMX[b]);return `<span class="rg">${fd(new Date(s0.getTime()+c.d*864e5))} – ${fd(new Date(s1.getTime()+c.d*864e5))}</span>`;}).join(sep);
+  const {w,dry}=verdict(c,sow), rs=risks(c,sow);
+  const lab={g:['Buena época','check'],c:['Con cuidado','alert'],x:['No es buena época','alert']}[w];
+  let reason = w==='g' ? 'Es buena época en tu zona.' : dry ? 'Es buena época, pero este año hay poca agua en La Angostura.' : w==='c' ? 'Se puede, pero con riesgo.' : `Mejor espera a ${MES[rg[0]?.[0]??0]}.`;
+  document.getElementById('now').innerHTML=`<div class="nh"><h2>${sow===NOW?'Si siembras ahora':'Si siembras en '+MES[sow]}</h2><span class="verdict ${w}">${SV(lab[1])}${lab[0]}</span></div>
+    <p class="reason">${reason}</p>
+    ${rs.length?`<ul class="risks">${rs.map(x=>`<li><span class="ic" style="background:${x.z.soft};color:${x.z.col}">${SV(x.z.ic)}</span>${x.z.n}</li>`).join('')}</ul>`:''}`;
+  if(document.getElementById('months'))document.getElementById('months').innerHTML=MES.map((m,i)=>{const v=verdict(c,i).w;const col=v==='g'?'var(--field)':v==='c'?'#E0A21B':'var(--nowater)';return `<button aria-pressed="${i===sow}" data-m="${i}"><i style="background:${col}"></i>${m.slice(0,3)}</button>`;}).join('');
+  document.getElementById('extra').innerHTML=`<div class="facts2"><div>${SV('drop')}<span><small>Agua</small><b>${c.agua}</b></span></div><div>${SV('frost')}<span><small>Frío</small><b>${c.frio}</b></span></div></div>
+    ${c.market?`<p class="mk">${SV('store')}<span>${c.market}</span></p>`:''}`;
+}
+// ---------- calendario para elegir fecha ----------
+function shiftMonth(dir){
+  const gEl=document.getElementById('grid');
+  view=new Date(view.getFullYear(),view.getMonth()+dir,1);
+  gEl.style.transition='none';gEl.style.transform=`translateX(${dir*40}%)`;gEl.style.opacity='0';
+  drawCal();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{gEl.style.transition='transform 260ms cubic-bezier(0.23,1,0.32,1),opacity 200ms ease';gEl.style.transform='';gEl.style.opacity='';}));
+}
+(()=>{let x0=null,y0=0,t0=0;const area=()=>document.getElementById('grid');
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('#grid'))return;x0=e.clientX;y0=e.clientY;t0=performance.now();});
+  document.addEventListener('pointermove',e=>{if(x0===null)return;const dx=e.clientX-x0;if(Math.abs(dx)>Math.abs(e.clientY-y0))area().style.transform=`translateX(${dx*.35}px)`;});
+  const end=e=>{if(x0===null)return;const dx=e.clientX-x0,v=Math.abs(dx)/(performance.now()-t0);x0=null;
+    if(Math.abs(dx)>60||(Math.abs(dx)>20&&v>.3)){window._swiped=true;setTimeout(()=>window._swiped=false,50);shiftMonth(dx<0?1:-1);}else{area().style.transition='transform 200ms ease';area().style.transform='';}};
+  document.addEventListener('pointerup',end);document.addEventListener('pointercancel',end);
+})();
+const TODAYD=new Date(2026,10,16);
+let view=new Date(2026,10,1), start=null;
+const dsheet=document.getElementById('dsheet');
+const MESC=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const sameDay=(a,b)=>a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();
+const harvestOf=(d)=>new Date(d.getTime()+C[crop].d*864e5);
+function dayVerdict(d){const c=C[crop];let w=c.win[d.getMonth()];const dry=SECO&&c.sed&&w==='g'&&[7,8,9,10,11].includes(d.getMonth());return{w,dry};}
+function drawCal(){
+  const c=C[crop],y=view.getFullYear(),m=view.getMonth();
+  document.getElementById('ds-s').textContent=c.n;
+  document.getElementById('mtitle').textContent=`${MESC[m][0].toUpperCase()+MESC[m].slice(1)} ${y}`;
+  const first=(new Date(y,m,1).getDay()+6)%7, days=new Date(y,m+1,0).getDate(), h=start?harvestOf(start):null;
+  let g='';for(let i=0;i<first;i++)g+='<span class="cell"></span>';
+  for(let d=1;d<=days;d++){const t=new Date(y,m,d),past=t<TODAYD,{w}=dayVerdict(t);
+    const isS=sameDay(t,start),isH=sameDay(t,h),inR=start&&h&&t>=start&&t<=h;
+    const col=(first+d-1)%7;
+    const band=inR?['cell','band',isS?'bs':'',isH?'be':'',col===0&&!isS?'rl':'',col===6&&!isH?'rr':'',d===1&&!isS?'rl':'',d===days&&!isH?'rr':''].filter(Boolean).join(' '):'cell';
+    const cls=['dd',w==='g'&&!past?'good':'',w==='x'&&!past?'bad':'',past?'past':'',isS?'sel':'',isH?'har':'',sameDay(t,TODAYD)?'today':''].filter(Boolean).join(' ');
+    g+=`<span class="${band}"><button class="${cls}" data-day="${d}" ${past?'disabled':''} aria-label="${d} de ${MESC[m]}${w==='g'?', día bueno':w==='x'?', día malo':''}">${d}</button></span>`;}
+  for(let k=first+days;k<42;k++)g+='<span class="cell"></span>';
+  document.getElementById('grid').innerHTML=g;
+  document.getElementById('lg').innerHTML='<span><i class="g"></i>Buenos</span><span><i class="b"></i>Malos</span>'+(start?'<span><i class="bd"></i>Tu cultivo</span>':'');
+  const r=document.getElementById('pickres');
+  if(!start){r.innerHTML='<p class="hint2">Toca el día en que quieres sembrar.</p>';return;}
+  const v=dayVerdict(start),lab=v.w==='g'?(v.dry?['ok','Buena fecha','Este año hay poca agua en La Angostura.']:['ok','Buena fecha','Es buena época para sembrar en tu zona.']):v.w==='c'?['mid','Con cuidado','Se puede, pero hay riesgo de clima en esos meses.']:['bad','Mala fecha','Mejor elige un día en verde.'];
+  r.innerHTML=`<div class="res ${lab[0]}"><b>${lab[1]}</b><span>${lab[2]}</span></div>
+    <div class="span3">
+      <button class="sj${view.getMonth()===start.getMonth()&&view.getFullYear()===start.getFullYear()?' on':''}" id="tosow"><small>Siembra</small><b>${start.getDate()} ${MESC[start.getMonth()].slice(0,3)}</b><em>›</em></button>
+      <button class="hj${view.getMonth()===h.getMonth()&&view.getFullYear()===h.getFullYear()?' on':''}" id="tohar"><small>Cosecha</small><b>${h.getDate()} ${MESC[h.getMonth()].slice(0,3)}</b><em>›</em></button>
+      <div class="mid"><b>${C[crop].d}</b><small>días</small></div>
+    </div>
+    <button class="btn primary" id="plan"><svg class="i"><use href="icons.svg#plus"/></svg>Agregar a mis cultivos</button>
+    <a class="btn ghost" href="rotar.html?c=${crop}&h=${h.getFullYear()}-${h.getMonth()+1}-${h.getDate()}"><svg class="i"><use href="icons.svg#refresh"/></svg>Planificar rotación</a>`;
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#pick')){view=new Date(TODAYD.getFullYear(),TODAYD.getMonth(),1);start=new Date(TODAYD);drawCal();dsheet.showModal();return;}
+  if(e.target.closest('#mprev')){shiftMonth(-1);return;}
+  if(e.target.closest('#mnext')){shiftMonth(1);return;}
+  const dd=e.target.closest('[data-day]');if(dd&&!dd.disabled&&!window._swiped){start=new Date(view.getFullYear(),view.getMonth(),Number(dd.dataset.day));drawCal();return;}
+  if(e.target.closest('#reset')){start=null;view=new Date(TODAYD.getFullYear(),TODAYD.getMonth(),1);drawCal();return;}
+  if(e.target.closest('#tosow')){view=new Date(start.getFullYear(),start.getMonth(),1);drawCal();return;}
+  if(e.target.closest('#tohar')){const h=harvestOf(start);view=new Date(h.getFullYear(),h.getMonth(),1);drawCal();return;}
+  if(e.target===dsheet||e.target.closest('#dsheet [data-close]')){dsheet.close();return;}
+  if(e.target.closest('#plan')){const c=C[crop],h=harvestOf(start);dsheet.close();window.say&&say(`${c.n} agregada: siembra ${start.getDate()} ${MESC[start.getMonth()].slice(0,3)}, cosecha aprox. ${h.getDate()} ${MESC[h.getMonth()].slice(0,3)}.`);return;}
+
+  const m=e.target.closest('[data-m]'); if(m){sow=Number(m.dataset.m);render();document.getElementById('now').scrollIntoView({behavior:'smooth',block:'start'});return;}
+});
+render();
+if(DEMO==='#fecha'){view=new Date(2026,10,1);start=new Date(2026,10,20);drawCal();dsheet.showModal();}
+</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>

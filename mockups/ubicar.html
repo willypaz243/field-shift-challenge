@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Ubicar parcela · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<style>
+body{height:100dvh}
+.wall{flex:1;min-height:0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+.steps{display:flex;gap:6px;align-items:center;color:var(--ink-2);font-size:15px;font-weight:600}
+.steps i{width:40px;height:6px;border-radius:3px;background:var(--line)}
+.steps i.on{background:var(--field)}
+.map{position:relative;flex:1;min-height:300px;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:#EEF3EC}
+.map>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.map [data-p]{fill:#fff;stroke:#DCE6DB;stroke-width:1.5;cursor:pointer;transition:fill 160ms ease}
+.map [data-p]:active{fill:#F4F7F3}
+.map [data-p].sel{fill:#1B6E3A;fill-opacity:.2;stroke:#1B6E3A;stroke-width:3}
+.map .pin{transition:transform 220ms cubic-bezier(0.23,1,0.32,1);pointer-events:none}
+.hint{position:absolute;left:10px;right:10px;top:10px;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.95);box-shadow:0 1px 0 var(--line);font-size:17px;font-weight:600;pointer-events:none}
+.hint svg{color:var(--field);flex:none}
+.zone{position:absolute;left:10px;bottom:10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.95);font-size:16px;font-weight:600;pointer-events:none}
+</style>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+</head>
+<body>
+<header class="status">
+  <b class="brand"><svg class="i"><use href="icons.svg#corn"/></svg>Choclito</b>
+  <div class="lang" role="group" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="qu" aria-pressed="false">QU</button></div>
+</header>
+<main class="wall">
+  <div class="steps"><i class="on"></i><i></i><span>Paso 1 de 2</span></div>
+  <h1 class="title" data-qu="Chakraykiqa kaypichu?">¿Tu parcela está aquí?</h1>
+  <section class="map" aria-label="Mapa de Itocta. Toca tu parcela para marcarla.">
+    <svg viewBox="0 0 340 520" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Parcelas de Itocta">
+      <rect width="340" height="520" fill="#EEF3EC"/>
+      <path d="M-10 500 C 70 470, 110 420, 180 400 S 290 372, 350 362" stroke="#1C63B7" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <g id="parcels">
+        <rect data-p="0" x="10" y="14" width="120" height="70" rx="6"/>
+        <rect data-p="1" x="140" y="10" width="80" height="60" rx="6"/>
+        <rect data-p="2" x="234" y="14" width="96" height="70" rx="6"/>
+        <rect data-p="3" x="14" y="96" width="90" height="80" rx="6"/>
+        <rect data-p="4" x="140" y="80" width="80" height="96" rx="6"/>
+        <rect data-p="5" x="230" y="96" width="102" height="64" rx="6"/>
+        <rect data-p="6" x="8" y="190" width="104" height="70" rx="6"/>
+        <rect data-p="7" x="122" y="190" width="100" height="72" rx="6" class="sel"/>
+        <rect data-p="8" x="240" y="172" width="92" height="72" rx="6"/>
+        <rect data-p="9" x="16" y="272" width="100" height="72" rx="6"/>
+        <rect data-p="10" x="128" y="272" width="92" height="84" rx="6"/>
+        <rect data-p="11" x="232" y="256" width="100" height="62" rx="6"/>
+        <rect data-p="12" x="10" y="356" width="104" height="52" rx="6"/>
+        <rect data-p="13" x="248" y="408" width="84" height="44" rx="6"/>
+        <rect data-p="14" x="236" y="462" width="96" height="50" rx="6"/>
+        <rect data-p="15" x="140" y="456" width="86" height="56" rx="6"/>
+      </g>
+      <g class="pin" id="pin" style="transform:translate(172px,226px)"><circle r="26" fill="#1B6E3A" fill-opacity=".16"/><circle r="13" fill="#1B6E3A" stroke="#fff" stroke-width="4"/></g>
+    </svg>
+    <div class="hint"><svg class="i s"><use href="icons.svg#pin"/></svg><span data-qu="Mana kaychu chayqa, chakraykita llamiy">Si no es esta, toca tu parcela</span></div>
+    <span class="zone">Itocta · Distrito 9</span>
+  </section>
+  <a class="btn primary" href="agua.html"><svg class="i"><use href="icons.svg#check"/></svg><span data-qu="Arí, kaypi">Sí, aquí está</span></a>
+</main>
+<script>
+document.getElementById('parcels').addEventListener('click', (e) => {
+  const r = e.target.closest('[data-p]'); if (!r) return;
+  document.querySelectorAll('[data-p].sel').forEach((o) => o.classList.remove('sel'));
+  r.classList.add('sel');
+  const b = r.getBBox(); document.getElementById('pin').style.transform = `translate(${b.x + b.width / 2}px,${b.y + b.height / 2}px)`;
+});
+</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>

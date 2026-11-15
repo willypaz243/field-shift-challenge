@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Tu parcela · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.wall{padding-bottom:32px}
+.steps{display:flex;gap:6px;align-items:center;color:var(--ink-2);font-size:15px;font-weight:600}
+.steps i{width:40px;height:6px;border-radius:3px;background:var(--field)}
+.q{display:flex;flex-direction:column;gap:10px}
+.q h2{font-size:22px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts.days{grid-template-columns:repeat(4,1fr)}
+.opts button{min-height:64px;border-radius:var(--r);border:1px solid var(--line);background:#fff;font-weight:600;font-size:19px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 8px;text-align:center;transition:transform 140ms var(--ease-out),background-color 200ms ease,color 200ms ease}
+.opts button:active{transform:scale(.96)}
+.opts button[aria-pressed="true"]{background:var(--field);border-color:var(--field);color:#fff}
+</style>
+</head>
+<body>
+<header class="status">
+  <a class="back" href="ubicar.html"><svg class="i"><use href="icons.svg#back"/></svg>Atrás</a>
+  <div class="lang" role="group" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="qu" aria-pressed="false">QU</button></div>
+</header>
+<main class="wall">
+  <div class="steps"><i></i><i></i><span data-qu="2 kaq paso, 2 manta">Paso 2 de 2</span></div>
+  <h1 class="title" data-qu="Chakrayki">Tu parcela</h1>
+
+  <section class="sheet q">
+    <h2 data-qu="Maymanta yakuyki hamun?">¿De dónde sale tu agua para regar?</h2>
+    <div class="opts">
+      <button data-one-tap data-group="src" aria-pressed="true" data-msg="Guardado: La Angostura.">La Angostura</button>
+      <button data-one-tap data-group="src" aria-pressed="false" data-msg="Guardado: Misicuni.">Misicuni</button>
+      <button data-one-tap data-group="src" aria-pressed="false" data-msg="Guardado: pozo.">Pozo</button>
+      <button data-one-tap data-group="src" aria-pressed="false" data-msg="Guardado: agua del río o canal.">Río o canal</button>
+      <button data-one-tap data-group="src" aria-pressed="false" data-msg="Guardado: solo lluvia.">Solo lluvia</button>
+      <button data-one-tap data-group="src" aria-pressed="false" data-msg="Guardado: no sé.">No sé</button>
+    </div>
+  </section>
+
+  <section class="sheet q">
+    <h2 data-qu="Imataq astawan yanapasunki?">¿Qué te importa más?</h2>
+    <div class="opts">
+      <button data-one-tap data-group="prio" data-prio="agua" aria-pressed="true" data-msg="Guardado: gastar poca agua."><svg class="i s"><use href="icons.svg#drop"/></svg>Gastar poca agua</button>
+      <button data-one-tap data-group="prio" data-prio="tierra" aria-pressed="false" data-msg="Guardado: cuidar la tierra."><svg class="i s"><use href="icons.svg#sprout"/></svg>Cuidar la tierra</button>
+      <button data-one-tap data-group="prio" data-prio="forraje" aria-pressed="false" data-msg="Guardado: forraje para tus animales."><svg class="i s"><use href="icons.svg#corn"/></svg>Forraje</button>
+      <button data-one-tap data-group="prio" data-prio="vender" aria-pressed="false" data-msg="Guardado: vender."><svg class="i s"><use href="icons.svg#store"/></svg>Vender</button>
+    </div>
+  </section>
+
+  <a class="btn primary" href="hoy.html"><svg class="i"><use href="icons.svg#check"/></svg><span data-qu="Tukuy">Listo</span></a>
+</main>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#check"/></svg><span class="toast-msg"></span></div>
+<script>document.addEventListener('click', (e) => { const b = e.target.closest('[data-prio]'); if (b) try { localStorage.setItem('prio', b.dataset.prio); } catch (er) {} });</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>
