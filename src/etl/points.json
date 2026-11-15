@@ -1,0 +1,12 @@
+[
+  {"id": "D9_itocta",        "lat": -17.4611, "lon": -66.2185, "nombre": "Itocta (D9) — principal zona agrícola del valle", "comuna": "ITOCTA",     "distrito": "D9",  "verificado_gamc": true},
+  {"id": "D15_tamborada",    "lat": -17.4880, "lon": -66.1340, "nombre": "Tamborada (D15) — zona agrícola sur", "comuna": "TAMBORADA",  "distrito": "D15", "verificado_gamc": false},
+  {"id": "D4_molle",         "lat": -17.3938, "lon": -66.1984, "nombre": "Molle (D4)", "comuna": "MOLLE",        "distrito": "D4",  "verificado_gamc": true},
+  {"id": "D3_molle",         "lat": -17.3707, "lon": -66.1922, "nombre": "Molle (D3)", "comuna": "MOLLE",        "distrito": "D3",  "verificado_gamc": false},
+  {"id": "D10_adela_zamudio","lat": -17.3920, "lon": -66.1660, "nombre": "Adela Zamudio (D10)", "comuna": "ADELA ZAMUDIO", "distrito": "D10", "verificado_gamc": false},
+  {"id": "D12_adela_zamudio","lat": -17.3740, "lon": -66.1570, "nombre": "Adela Zamudio (D12) — valle central", "comuna": "ADELA ZAMUDIO", "distrito": "D12", "verificado_gamc": true},
+  {"id": "D6_valle_hermoso", "lat": -17.4100, "lon": -66.1390, "nombre": "Valle Hermoso (D6)", "comuna": "VALLE HERMOSO", "distrito": "D6", "verificado_gamc": false},
+  {"id": "D14_valle_hermoso","lat": -17.4370, "lon": -66.1120, "nombre": "Valle Hermoso (D14)", "comuna": "VALLE HERMOSO", "distrito": "D14", "verificado_gamc": false},
+  {"id": "D1_tunari",        "lat": -17.3680, "lon": -66.1300, "nombre": "Tunari (D1)", "comuna": "TUNARI",       "distrito": "D1",  "verificado_gamc": false},
+  {"id": "D13_tunari",       "lat": -17.3140, "lon": -66.1444, "nombre": "Tunari (D13) — piedemonte norte, floricultura", "comuna": "TUNARI",  "distrito": "D13", "verificado_gamc": false}
+]
