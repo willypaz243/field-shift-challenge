@@ -34,7 +34,9 @@ flowchart LR
 
 The model is a per-variable **Fourier series with 4 harmonics plus a linear
 trend**, fitted by least squares (numpy, no external fit library). See
-[`seasonal.py`](seasonal.py).
+[`seasonal.py`](seasonal.py). A step-by-step reference of the training,
+validation and forecast, with diagrams, is in
+[TRAINING.md](TRAINING.md).
 
 - Time base: `t = days since the first date` (`np.arange(len(dates))`);
   the year constant is 365.25 days.
