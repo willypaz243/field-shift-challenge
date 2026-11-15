@@ -1,6 +1,6 @@
 import { initialize } from "../../offline/schema";
 import { testDatabase } from "../../offline/__tests__/database";
-import { fetchZoneMap, MapCache } from "../fetch";
+import { fetchHistory, fetchZoneMap, MapCache } from "../fetch";
 import { floodMarks, historyItems, notice, projectCells } from "../map";
 
 const center = { lat: -17.4611, lon: -66.2185 };
@@ -86,4 +86,22 @@ test("a failed request gives no map instead of an error", async () => {
   expect(
     await fetchZoneMap("https://api.test", "D9_itocta", offline),
   ).toBeNull();
+});
+
+test("history is asked for the exact range", async () => {
+  const request = jest
+    .fn()
+    .mockResolvedValue({ ok: true, json: async () => ({ dias: [] }) });
+  expect(
+    await fetchHistory(
+      "https://api.test",
+      "D9_itocta",
+      "2026-10-19",
+      "2026-11-15",
+      request,
+    ),
+  ).toEqual({ dias: [] });
+  expect(request).toHaveBeenCalledWith(
+    "https://api.test/zones/D9_itocta/history?desde=2026-10-19&hasta=2026-11-15",
+  );
 });

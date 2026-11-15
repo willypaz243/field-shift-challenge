@@ -240,6 +240,9 @@ export const es = {
     helada_el: "helada el {{dia}}",
     granizo_el: "granizo el {{dia}}",
     ver_meses: "Ver próximos meses",
+    ver_pasadas: "Ver semanas pasadas",
+    ocultar_pasadas: "Ocultar semanas pasadas",
+    medido: "Lo que pasó (medido)",
     meses_titulo: "Próximos meses",
     meses_nota: "Estos datos pueden cambiar con el tiempo.",
     mes: {

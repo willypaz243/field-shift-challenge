@@ -1,4 +1,4 @@
-import { buildWeeks, monthsAhead, sourceLine } from "../calendar";
+import { buildWeeks, monthsAhead, pastWeeks, sourceLine } from "../calendar";
 
 function days(from: string, count: number, extra: object = {}) {
   const start = new Date(`${from}T00:00:00Z`);
@@ -94,4 +94,30 @@ test("the source line names the NASA datasets", () => {
     "NASA POWER · NASA IMERG",
   );
   expect(sourceLine(["nasa_geos", "otro"])).toBe("NASA GEOS · otro");
+});
+
+test("past weeks come from the measured history, newest first", () => {
+  const history = {
+    dias: [
+      { fecha: "2026-11-10", tmin: -1.2, tmax: 25, pmm: 2 },
+      { fecha: "2026-11-11", tmin: 4, tmax: 26 },
+      { fecha: "2026-11-12", tmin: 5, tmax: 27, pmm: 3 },
+      { fecha: "2026-11-13", tmin: 5, tmax: 27, pmm: 0 },
+      { fecha: "2026-11-14", tmin: 6, tmax: 28, pmm: 0 },
+    ],
+  };
+  const weeks = pastWeeks(history, "2026-11-16");
+  expect(weeks.map((w) => w.inicio)).toEqual([
+    "2026-11-09",
+    "2026-11-02",
+    "2026-10-26",
+    "2026-10-19",
+  ]);
+  expect([
+    weeks[0].dias.length,
+    weeks[0].pmm,
+    weeks[0].tile,
+    weeks[0].helada,
+  ]).toEqual([5, 5, "helada", "2026-11-10"]);
+  expect(weeks[1].tile).toBe("sin_datos");
 });

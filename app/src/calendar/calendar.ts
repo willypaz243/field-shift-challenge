@@ -83,19 +83,60 @@ export function buildWeeks(snapshot: unknown, today: string): Week[] {
         proyeccion: !fromShort,
       });
     }
-    const pmm = Math.round(dias.reduce((sum, d) => sum + d.pmm, 0) * 10) / 10;
-    const helada = dias.find((d) => d.tmin < 0)?.fecha;
-    const granizo = dias.find((d) => d.granizo)?.fecha;
-    return {
+    return weekOf(
       inicio,
-      fin: addDays(inicio, 6),
       dias,
-      lejos: k >= SHORT_WEEKS || dias.some((d) => d.proyeccion),
-      tile: tileOf(dias, pmm),
-      pmm,
-      ...(helada ? { helada } : {}),
-      ...(granizo ? { granizo } : {}),
-    };
+      k >= SHORT_WEEKS || dias.some((d) => d.proyeccion),
+    );
+  });
+}
+
+function weekOf(inicio: string, dias: CalendarDay[], lejos: boolean): Week {
+  const pmm = Math.round(dias.reduce((sum, d) => sum + d.pmm, 0) * 10) / 10;
+  const helada = dias.find((d) => d.tmin < 0)?.fecha;
+  const granizo = dias.find((d) => d.granizo)?.fecha;
+  return {
+    inicio,
+    fin: addDays(inicio, 6),
+    dias,
+    lejos,
+    tile: tileOf(dias, pmm),
+    pmm,
+    ...(helada ? { helada } : {}),
+    ...(granizo ? { granizo } : {}),
+  };
+}
+
+type MeasuredDay = {
+  fecha?: string;
+  tmin?: number;
+  tmax?: number;
+  pmm?: number;
+};
+
+// Measured weeks (GET /zones/{id}/history), newest first. A day without IMERG
+// rain is not counted as dry: it is left out of the rain total.
+export function pastWeeks(history: unknown, today: string, count = 4): Week[] {
+  const days = new Map(
+    ((history as { dias?: MeasuredDay[] } | null)?.dias ?? [])
+      .filter((d) => d.fecha)
+      .map((d) => [d.fecha!, d]),
+  );
+  return Array.from({ length: count }, (_, k) => {
+    const inicio = addDays(today, -(k + 1) * 7);
+    const dias: CalendarDay[] = [];
+    for (let i = 0; i < 7; i++) {
+      const day = days.get(addDays(inicio, i));
+      if (day?.tmin == null || day.tmax == null) continue;
+      dias.push({
+        fecha: day.fecha!,
+        tmin: Math.round(day.tmin),
+        tmax: Math.round(day.tmax),
+        pmm: day.pmm == null ? 0 : Math.round(day.pmm * 10) / 10,
+        proyeccion: false,
+      });
+    }
+    return weekOf(inicio, dias, false);
   });
 }
 
