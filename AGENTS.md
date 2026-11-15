@@ -14,17 +14,19 @@ Rules for anyone (human or AI agent) contributing to this repo. Read before writ
 
 - Every change starts from an issue. One issue, one branch, one PR.
 - Base branch is `develop`. Never commit directly to `main` or `develop`. Never force-push them.
-- Name: `<type>/<scope>/<issue>-<short-slug>`, in English, lowercase, hyphens.
-  - Example: `feat/backend/13-db-schema`, `fix/frontend/21-hoy-offline-date`.
+- Name: `<type>-<scope>-<issue>-<short-slug>`, in English, lowercase, only hyphens (no `/`, no `:`; git does not allow `:` in branch names).
+  - Example: `feat-backend-13-db-schema`, `fix-frontend-21-hoy-offline-date`.
 - Create it linked to the issue:
   `gh issue develop <issue> --base develop --name <branch> --checkout`
 
 ## Commits and pull requests
 
-- Conventional Commits, in English: `<type>(<scope>): <summary>`.
+- Format, in English: `<type>:<scope>-<short-summary>`. No `/`, no parentheses.
   - Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`.
   - Scopes: `backend`, `data`, `frontend`.
-  - Summary: imperative, lowercase, no period, ≤ 72 characters. Example: `feat(backend): add GET /zones endpoint`.
+  - Summary: lowercase words joined with hyphens, imperative, ≤ 72 characters in total.
+  - Examples: `feat:backend-add-get-zones-endpoint`, `fix:frontend-hoy-offline-date`.
+  - Optional body after a blank line, in English, to explain why.
 - PRs target `develop`. Title follows the same format.
 - PR body in English with these sections: **Summary**, **Changes**, **How to test**, **Screenshots** (frontend only), and `Closes #<issue>`.
 - Open as draft until tests and linters pass. Request review from the reviewer (Gaambaa).
