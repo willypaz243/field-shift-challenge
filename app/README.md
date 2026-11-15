@@ -25,6 +25,19 @@ Desde la raíz del directorio `app/`, inicializar el entorno:
 ```bash
 npm install
 
+## Connecting to the API
+
+The app talks to the real API when `EXPO_PUBLIC_API_URL` is set and uses the offline mock otherwise:
+
+```bash
+make api                                   # repo root, port 8000
+EXPO_PUBLIC_API_URL=http://<your-LAN-IP>:8000 npx expo start   # phone with Expo Go
+```
+
+`EXPO_PUBLIC_ZONE_ID` picks the zone until onboarding stores the farmer's choice (default `D9_itocta`). The header shows the zone and the last successful sync.
+
+Web: `expo-sqlite` needs cross-origin isolation and the offline store's exclusive transactions are not supported there yet, so the web build stays on "Buscando datos…". Test integration on a phone.
+
 ## Offline data (`src/offline`)
 
 Issue #49. Data modules for the Expo app; screen implementation is separate.
