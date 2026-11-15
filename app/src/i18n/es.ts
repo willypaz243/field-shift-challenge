@@ -191,6 +191,9 @@ export const es = {
       sin_agua: "Sin agua",
       inunda: "Se inunda",
       parcela: "Tu parcela",
+      crecimiento: "Periurbano en crecimiento",
+      consolidado: "Periurbano consolidado",
+      rios: "Ríos y canales",
     },
     vecinos_one: "A {{count}} vecino no le llegó el agua",
     vecinos_other: "A {{count}} vecinos no les llegó el agua",
@@ -293,7 +296,12 @@ export const es = {
     resumen:
       "{{dia}} {{fecha}}. {{cielo}}, {{lluvia}}. Máxima {{tmax}} grados, mínima {{tmin}}.",
   },
-  comun: { atras: "Atrás", listo: "Listo", cerrar: "Cerrar" },
+  comun: {
+    atras: "Atrás",
+    listo: "Listo",
+    cerrar: "Cerrar",
+    mapa_gamc: "Mapa: GAMC Cochabamba",
+  },
   ubicar: {
     paso: "Paso 1 de 2",
     titulo: "¿Tu parcela está aquí?",

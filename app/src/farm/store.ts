@@ -15,6 +15,9 @@ export class FarmStore {
   }
 
   async save(answers: Farm) {
+    const { lat, lon } = answers.parcela ?? { lat: 0, lon: 0 };
+    if (!Number.isFinite(lat) || !Number.isFinite(lon))
+      throw new Error("Invalid plot coordinates");
     for (const [key, value] of Object.entries(answers))
       await this.db.runAsync(
         "INSERT OR REPLACE INTO farm (key, value) VALUES (?, ?)",

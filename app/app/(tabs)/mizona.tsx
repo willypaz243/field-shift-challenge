@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Touch, Typography } from "../../constants/Theme";
 import { useFarm, useOffline } from "../../src/offline/provider";
 import mockMap from "../../src/offline/fixtures/mapa.json";
 import { fetchZoneMap, MapCache } from "../../src/zone/fetch";
-import { floodMarks, historyItems, notice, projectCells } from "../../src/zone/map";
+import { historyItems, notice } from "../../src/zone/map";
+import { ZoneMap } from "../../src/ui/ZoneMap";
 import { newReport, reportTypes, type ReportType } from "../../src/zone/report";
 import { cleanupPhotos, takePhoto, type Photo } from "../../src/zone/photo";
 import { zones } from "../../src/farm/zones";
 import { shortDate } from "../../src/ui/dates";
 import { Sheet } from "../../src/ui/Sheet";
 
-const VIEW = { width: 340, height: 520 };
-const PARCELS = [
-  [10, 14, 120, 70], [140, 10, 80, 60], [234, 14, 96, 70], [14, 96, 90, 80], [140, 80, 80, 96],
-  [230, 96, 102, 64], [8, 190, 104, 70], [240, 172, 92, 72], [16, 272, 100, 72], [128, 272, 92, 84],
-  [232, 256, 100, 62], [10, 356, 104, 52], [248, 408, 84, 44], [236, 462, 96, 50], [140, 456, 86, 56],
-] as const;
+// Colours of the GAMC layers (from their WMS legends), so the legend matches the map.
+const GAMC = { crecimiento: "#A2FF70", consolidado: "#FFA58E", drenaje: "#398BFF" };
 type Icon = keyof typeof Ionicons.glyphMap;
 const EVENT_ICON: Record<string, { icon: Icon; color: string; bg: string }> = {
   sin_agua: { icon: "water-outline", color: Colors.nowater, bg: Colors.nowaterSoft },
@@ -65,8 +61,6 @@ export default function MiZonaScreen() {
   const [photo, setPhoto] = useState<Photo | null>(null);
   const [photoError, setPhotoError] = useState(false);
   const center = farm?.parcela ?? zones.find((z) => z.id === zone) ?? { lat: 0, lon: 0 };
-  const cells = projectCells(map, center, VIEW);
-  const floods = floodMarks(map, center, VIEW);
   const news = notice(map);
   const items = historyItems(data?.historial_zona);
 
@@ -93,27 +87,24 @@ export default function MiZonaScreen() {
 
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.wall}>
-      <View style={styles.map} accessibilityLabel={t("zona.titulo")}>
-        <Svg viewBox={`0 0 ${VIEW.width} ${VIEW.height}`} preserveAspectRatio="xMidYMid slice" style={StyleSheet.absoluteFill}>
-          <Rect width={VIEW.width} height={VIEW.height} fill="#EEF3EC" />
-          {PARCELS.map(([x, y, w, h], i) => (
-            <Rect key={i} x={x} y={y} width={w} height={h} rx={6} fill={Colors.paper} stroke="#DCE6DB" />
-          ))}
-          {cells.map((c, i) => (
-            <Rect key={i} x={c.x} y={c.y} width={c.w} height={c.h} rx={6} fill={Colors.nowater} fillOpacity={0.14} stroke={Colors.nowater} strokeWidth={2} />
-          ))}
-          {floods.map((f, i) => (
-            <Circle key={i} cx={f.cx} cy={f.cy} r={28} fill={Colors.water} fillOpacity={0.18} stroke={Colors.water} strokeWidth={2} />
-          ))}
-          <Path d="M-10 500 C 70 470, 110 420, 180 400 S 290 372, 350 362" stroke={Colors.water} strokeWidth={6} fill="none" strokeLinecap="round" />
-          <Circle cx={VIEW.width / 2} cy={VIEW.height / 2} r={26} fill={Colors.field} fillOpacity={0.16} />
-          <Circle cx={VIEW.width / 2} cy={VIEW.height / 2} r={13} fill={Colors.field} stroke={Colors.paper} strokeWidth={4} />
-        </Svg>
-        <View style={styles.legend} pointerEvents="none">
-          <Legend color={Colors.nowater} bg="#FBE3E0" label={t("zona.leyenda.sin_agua")} />
-          <Legend color={Colors.water} bg="#D3E1F3" label={t("zona.leyenda.inunda")} />
-          <Legend color={Colors.field} bg="#D2E7D8" label={t("zona.leyenda.parcela")} />
-        </View>
+      <View style={styles.map}>
+        <ZoneMap
+          zoneId={zone}
+          center={center}
+          pin={farm?.parcela ?? center}
+          layers={map}
+          credit={t("comun.mapa_gamc")}
+          accessibilityLabel={t("zona.titulo")}
+        >
+          <View style={styles.legend} pointerEvents="none">
+            <Legend color={Colors.nowater} bg="#FBE3E0" label={t("zona.leyenda.sin_agua")} />
+            <Legend color={Colors.water} bg="#D3E1F3" label={t("zona.leyenda.inunda")} />
+            <Legend color={Colors.field} bg="#D2E7D8" label={t("zona.leyenda.parcela")} />
+            <Legend color="#7FCC5A" bg={GAMC.crecimiento} label={t("zona.leyenda.crecimiento")} />
+            <Legend color="#E08A72" bg={GAMC.consolidado} label={t("zona.leyenda.consolidado")} />
+            <Legend color={GAMC.drenaje} bg={GAMC.drenaje} label={t("zona.leyenda.rios")} />
+          </View>
+        </ZoneMap>
       </View>
       {news && (
         <View style={styles.notice}>

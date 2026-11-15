@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Typography } from "../constants/Theme";
@@ -10,7 +11,7 @@ import { zoneLabel, zones } from "../src/farm/zones";
 import type { Point, Zone } from "../src/farm/types";
 import { useFarm } from "../src/offline/provider";
 import { LangToggle } from "../src/ui/LangToggle";
-import { ParcelMap } from "../src/ui/ParcelMap";
+import { ZoneMap } from "../src/ui/ZoneMap";
 import { PrimaryButton } from "../src/ui/PrimaryButton";
 import { Steps } from "../src/ui/Steps";
 
@@ -23,13 +24,17 @@ export default function UbicarScreen() {
   const router = useRouter();
   const { saveFarm } = useFarm();
   const [place, setPlace] = useState<Place | null>(null);
+  const [pin, setPin] = useState<Point | null>(null);
   const [choosing, setChoosing] = useState(false);
   const [locating, setLocating] = useState(true);
 
   useEffect(() => {
     void locatePhone().then((point) => {
       const zone = point && nearestZone(zones, point);
-      if (point && zone) setPlace({ zone, point });
+      if (point && zone) {
+        setPlace({ zone, point });
+        setPin(point);
+      }
       else setChoosing(true);
       setLocating(false);
     });
@@ -37,9 +42,10 @@ export default function UbicarScreen() {
 
   const confirm = async () => {
     if (!place) return;
+    const plot = pin ?? place.point;
     await saveFarm({
       zone_id: place.zone.id,
-      parcela: { lat: round3(place.point.lat), lon: round3(place.point.lon) },
+      parcela: { lat: round3(plot.lat), lon: round3(plot.lon) },
     });
     router.push("/agua");
   };
@@ -67,6 +73,7 @@ export default function UbicarScreen() {
                   accessibilityRole="button"
                   onPress={() => {
                     setPlace({ zone, point: zone });
+                    setPin(zone);
                     setChoosing(false);
                   }}
                   style={({ pressed }) => [styles.row, pressed && styles.pressed]}
@@ -79,7 +86,22 @@ export default function UbicarScreen() {
         ) : (
           <>
             <Text style={styles.title}>{t("ubicar.titulo")}</Text>
-            <ParcelMap hint={t("ubicar.pista")} zone={zoneLabel(place.zone)} />
+            <ZoneMap
+              zoneId={place.zone.id}
+              center={place.point}
+              pin={pin ?? place.point}
+              onTap={setPin}
+              credit={t("comun.mapa_gamc")}
+              accessibilityLabel={t("ubicar.pista")}
+            >
+              <View style={styles.hint} pointerEvents="none">
+                <Ionicons name="location" size={20} color={Colors.field} />
+                <Text style={styles.hintText}>{t("ubicar.pista")}</Text>
+              </View>
+              <Text style={styles.zone} pointerEvents="none">
+                {zoneLabel(place.zone)}
+              </Text>
+            </ZoneMap>
             <Pressable accessibilityRole="button" onPress={() => setChoosing(true)} style={styles.link}>
               <Text style={styles.linkText}>{t("ubicar.otra_zona")}</Text>
             </Pressable>
@@ -117,5 +139,31 @@ const styles = StyleSheet.create({
   rowText: { ...Typography.label, fontSize: 19, color: Colors.ink },
   pressed: { backgroundColor: Colors.paper2 },
   link: { minHeight: 56, justifyContent: "center", alignItems: "center" },
+  hint: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+    right: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.95)",
+  },
+  hintText: { ...Typography.label, color: Colors.ink, flexShrink: 1 },
+  zone: {
+    position: "absolute",
+    left: 10,
+    bottom: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    overflow: "hidden",
+    backgroundColor: "rgba(255,255,255,0.95)",
+    ...Typography.meta,
+    fontSize: 16,
+    color: Colors.ink,
+  },
   linkText: { ...Typography.label, color: Colors.fieldDeep, textDecorationLine: "underline" },
 });
