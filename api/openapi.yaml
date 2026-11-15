@@ -212,6 +212,7 @@ paths:
                   tmax: 24.6
                   tmean: 17.1
                   pmm: 4.8
+                  et0: 3.5
                   rh: 71
                   sw: 21.6
                   ws: 2.1
@@ -689,6 +690,7 @@ paths:
                     tmax: 24.6
                     tmean: 17.1
                     pmm: 4.8
+                    et0: 3.5
                     rh: 71
                     sw: 21.6
                     ws: 2.1
@@ -1194,6 +1196,8 @@ components:
         tmean:
           type: number
         pmm:
+          type: number
+        et0:
           type: number
         rh:
           type: number
