@@ -1,4 +1,35 @@
 export const es = {
+  calendario: {
+    titulo: "Calendario",
+    proximas: "Próximas 4 semanas",
+    esta_semana: "Esta semana",
+    pronostico: "Pronóstico",
+    lejos: "Pronóstico · más lejos, puede cambiar",
+    semana: {
+      granizo: "Granizo",
+      helada: "Helada",
+      lluvia_fuerte: "Lluvia fuerte",
+      lluvia: "Lluvia",
+      sin_lluvia: "Sin lluvia",
+      sin_datos: "Sin datos",
+    },
+    helada_el: "helada el {{dia}}",
+    granizo_el: "granizo el {{dia}}",
+    ver_meses: "Ver próximos meses",
+    meses_titulo: "Próximos meses",
+    meses_nota: "Estos datos pueden cambiar con el tiempo.",
+    mes: {
+      helada: "Heladas",
+      lluvia_fuerte: "Lluvia fuerte",
+      lluvia: "Lluvias",
+      poca_lluvia: "Pocas lluvias",
+      seco: "Seco",
+    },
+    riesgo_helada: "heladas",
+    sin_riesgos: "Sin riesgos grandes",
+    fuente: "Fuente: {{fuentes}}",
+    clima_tipico: "Clima típico: {{fuentes}}, {{periodo}}",
+  },
   hoy: {
     titulo: "Hoy",
     escuchar: "Escuchar",
@@ -35,7 +66,7 @@ export const es = {
     resumen:
       "{{dia}} {{fecha}}. {{cielo}}, {{lluvia}}. Máxima {{tmax}} grados, mínima {{tmin}}.",
   },
-  comun: { atras: "Atrás", listo: "Listo" },
+  comun: { atras: "Atrás", listo: "Listo", cerrar: "Cerrar" },
   ubicar: {
     paso: "Paso 1 de 2",
     titulo: "¿Tu parcela está aquí?",

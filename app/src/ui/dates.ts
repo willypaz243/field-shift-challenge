@@ -44,3 +44,12 @@ export function longDate(iso: string) {
 export function weekday(iso: string) {
   return WEEKDAYS[civil(iso).getUTCDay()];
 }
+
+export function monthName(month: number) {
+  return MONTHS[month - 1];
+}
+
+export function shortDate(iso: string) {
+  const date = civil(iso);
+  return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()].slice(0, 3)}`;
+}
