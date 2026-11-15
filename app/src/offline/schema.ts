@@ -25,5 +25,8 @@ export async function initialize(db: SQLiteDatabase) {
       id TEXT PRIMARY KEY, crop_id TEXT NOT NULL, siembra TEXT NOT NULL,
       cosecha TEXT NOT NULL, planificado INTEGER NOT NULL DEFAULT 0
     );
+    CREATE TABLE IF NOT EXISTS harvests (
+      id TEXT PRIMARY KEY, resultado TEXT, preguntar_desde TEXT
+    );
   `);
 }

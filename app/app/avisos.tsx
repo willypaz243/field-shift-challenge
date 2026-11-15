@@ -9,6 +9,9 @@ import { alertRows } from "../src/alerts/alerts";
 import { alertDetail, alertTitle, alertWhen } from "../src/alerts/text";
 import { useSeenAlerts } from "../src/alerts/use-seen";
 import { useOffline } from "../src/offline/provider";
+import { recentReminders } from "../src/mycrops/mycrops";
+import { cropName, useMyCrops } from "../src/mycrops/use-my-crops";
+import { laPazToday, shortDate } from "../src/ui/dates";
 
 type Icon = keyof typeof Ionicons.glyphMap;
 const LOOK: Record<string, { icon: Icon; color: string; bg: string }> = {
@@ -28,6 +31,13 @@ export default function AvisosScreen() {
   const { seen, markSeen } = useSeenAlerts();
   // Freeze "Nuevo" for this visit, then mark everything shown as seen.
   const rows = alertRows(data?.alertas, seen);
+  const { crops, states } = useMyCrops();
+  const today = laPazToday();
+  const yesterday = new Date(Date.parse(today) - 86_400_000).toISOString().slice(0, 10);
+  const reminders = recentReminders(
+    crops.filter((c) => !states.get(c.id)?.resultado),
+    today,
+  );
   useEffect(() => {
     const ids = alertRows(data?.alertas, new Set()).map((a) => a.id);
     if (ids.length) {
@@ -70,7 +80,36 @@ export default function AvisosScreen() {
         </View>
         <Text style={styles.section}>{t("avisos.recordatorios")}</Text>
         <View style={styles.list}>
-          <Text style={styles.empty}>{t("avisos.sin_recordatorios")}</Text>
+          {reminders.length === 0 && <Text style={styles.empty}>{t("avisos.sin_recordatorios")}</Text>}
+          {reminders.map((r, i) => {
+            const cultivo = cropName(data, r.crop.crop_id);
+            const when =
+              r.fecha === today ? t("cultivos.hoy") : r.fecha === yesterday ? t("cultivos.ayer") : shortDate(r.fecha);
+            return (
+              <Pressable
+                key={r.id}
+                accessibilityRole="button"
+                disabled={r.tipo !== "como_salio"}
+                onPress={() => router.replace("/")}
+                style={[styles.row, i > 0 && styles.divider]}
+              >
+                <View style={[styles.icon, { backgroundColor: Colors.fieldSoft }]}>
+                  <Ionicons name="checkmark" size={26} color={Colors.field} />
+                </View>
+                <View style={{ flex: 1, gap: 2 }}>
+                  <View style={styles.head}>
+                    <Text style={styles.rowTitle}>
+                      {t(`cultivos.recordatorio.${r.tipo}`, { cultivo, cultivo_min: cultivo.toLowerCase() })}
+                    </Text>
+                    <Text style={styles.when}>{when}</Text>
+                  </View>
+                  <Text style={styles.detail}>
+                    {t(`cultivos.recordatorio_detalle.${r.tipo}`, { fecha: shortDate(r.crop.cosecha) })}
+                  </Text>
+                </View>
+              </Pressable>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>

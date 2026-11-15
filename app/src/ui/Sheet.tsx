@@ -16,6 +16,8 @@ type Props = {
   closeLabel: string;
   onClose: () => void;
   children: ReactNode;
+  // A required question (the harvest one) closes only by answering.
+  dismissable?: boolean;
 };
 
 export function Sheet({
@@ -25,19 +27,24 @@ export function Sheet({
   closeLabel,
   onClose,
   children,
+  dismissable = true,
 }: Props) {
   return (
     <Modal
       visible={visible}
       transparent
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={dismissable ? onClose : () => undefined}
     >
-      <Pressable
-        style={styles.backdrop}
-        onPress={onClose}
-        accessibilityLabel={closeLabel}
-      />
+      {dismissable ? (
+        <Pressable
+          style={styles.backdrop}
+          onPress={onClose}
+          accessibilityLabel={closeLabel}
+        />
+      ) : (
+        <View style={styles.backdrop} />
+      )}
       <View style={styles.sheet}>
         <View style={styles.grab} />
         <View style={styles.head}>
@@ -45,14 +52,16 @@ export function Sheet({
             <Text style={styles.title}>{title}</Text>
             {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
           </View>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={closeLabel}
-            onPress={onClose}
-            style={styles.close}
-          >
-            <Text style={styles.closeText}>×</Text>
-          </Pressable>
+          {dismissable && (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={closeLabel}
+              onPress={onClose}
+              style={styles.close}
+            >
+              <Text style={styles.closeText}>×</Text>
+            </Pressable>
+          )}
         </View>
         <ScrollView contentContainerStyle={styles.body}>{children}</ScrollView>
       </View>

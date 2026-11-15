@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useOffline } from "../offline/provider";
 import { alertRows } from "./alerts";
-import { scheduleAlerts } from "./notify";
+import { scheduleLocal } from "./notify";
 import { notificationPlan } from "./plan";
 import { notificationText } from "./text";
 
@@ -12,9 +12,12 @@ export function AlertScheduler() {
   useEffect(() => {
     if (!data) return;
     const plan = notificationPlan(alertRows(data.alertas, new Set()));
-    void scheduleAlerts(plan, (p) => notificationText(p.alert, t)).catch(
-      () => undefined,
-    );
+    const items = plan.map((p) => ({
+      id: p.id,
+      at: p.at,
+      ...notificationText(p.alert, t),
+    }));
+    void scheduleLocal("alerta:", items).catch(() => undefined);
   }, [data, t]);
   return null;
 }
