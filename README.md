@@ -203,3 +203,7 @@ All contribution rules live in [AGENTS.md](AGENTS.md). The short version:
 ## Acknowledgements
 
 NASA (POWER, GPM IMERG, SMAP via Earthdata), GAMC Cochabamba (zone grid and parcel maps), Open-Meteo (short forecast), and the local farmers and agronomists of Cercado who provided the crop parameters and historical events.
+
+## License
+
+This project is open source and released under the **Apache License 2.0**. See [LICENSE](LICENSE) for the full text.
