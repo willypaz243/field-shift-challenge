@@ -1,4 +1,40 @@
 export const es = {
+  hoy: {
+    titulo: "Hoy",
+    escuchar: "Escuchar",
+    minima: "mín {{t}}°",
+    cielo: {
+      granizo: "Granizo",
+      helada: "Helada",
+      lluvia: "Lluvia",
+      sol: "Soleado",
+    },
+    lluvia: {
+      sin_lluvia: "Sin lluvia",
+      debil: "Lluvia débil",
+      moderada: "Lluvia moderada",
+      fuerte: "Lluvia fuerte",
+    },
+    aviso_helada: "Helada en la madrugada",
+    aviso_granizo: "Puede granizar",
+    proyeccion: "Aproximado, puede cambiar",
+    sin_datos: "Todavía no hay clima para hoy.",
+    alerta: {
+      helada: "Helada el {{dia}}",
+      granizo: "Granizo el {{dia}}",
+      lluvia_fuerte: "Lluvia fuerte el {{dia}}",
+      desborde: "Desborde el {{dia}}",
+      sequia: "Poca lluvia desde el {{dia}}",
+      temporada: "Aviso de temporada",
+      represa_baja: "La Angostura baja: {{nivel}} %",
+    },
+    mis_cultivos: "Mis cultivos",
+    agregar: "Agregar",
+    sin_cultivos: "Todavía no agregaste cultivos.",
+    represa: "La Angostura {{nivel}} %",
+    resumen:
+      "{{dia}} {{fecha}}. {{cielo}}, {{lluvia}}. Máxima {{tmax}} grados, mínima {{tmin}}.",
+  },
   comun: { atras: "Atrás", listo: "Listo" },
   ubicar: {
     paso: "Paso 1 de 2",
