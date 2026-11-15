@@ -1,36 +1,71 @@
-# Datos NASA POWER descargados (ETL tarea 1.1)
+# NASA POWER: clima por zona
 
-> Generados el **14/11/2026** con [`src/etl/power_etl.py`](../../src/etl/power_etl.py)
-> (API v2.10.3, **sin token**, `community=ag`).
+## Fuente y propósito
 
-## Contenido
+Serie meteorológica para los puntos de Cercado definidos en [points.json](../../src/etl/points.json). Aporta temperatura, humedad del aire, viento, presión, lluvia y radiación para caracterizar campañas y calcular indicadores agroclimáticos.
 
-Por cada zona de [`src/etl/points.json`](../../src/etl/points.json) (10 zonas):
+- Proveedor: NASA POWER; comunidad `ag`.
+- API: `https://power.larc.nasa.gov/api/temporal/daily/point` y `https://power.larc.nasa.gov/api/temporal/hourly/point`.
+- Acceso público, sin token.
+- [Documentación diaria](https://power.larc.nasa.gov/docs/services/api/temporal/daily/) y [metodología](https://power.larc.nasa.gov/docs/methodology/data/sources_meteorology/).
 
-- `{zone_id}_daily.csv` — serie diaria 1984-01-01 → 2025-12-31 (15,342 filas)
-- `{zone_id}_meta.json` — lat/lon/elev_m, rangos, n.º de filas
+## Scripts y consulta
 
-Columnas CSV: `fecha, tmean, tmin, tmax, t2mdew, rh, ws, ps, pmm, sw, sw_clear, lw, ts`
+[power_etl.py](../../src/etl/power_etl.py) lee la lista de puntos (`id`, `lat`, `lon`, `nombre`) y consulta cada zona por bloques anuales. Envía coordenadas, `parameters`, `community=ag`, `format=JSON`, `start` y `end` en formato `YYYYMMDD`.
 
-| Columna | Fuente API | Nota |
-|---|---|---|
-| `tmean` | T2M | completo 1984+ |
-| `tmin`, `tmax` | derivado de hourly T2M | **solo 2010+** (nulo antes) |
-| `pmm` | PRECTOTCORR | lluvia diaria (mm) |
-| `rh`, `ws`, `ps`, `t2mdew`, `ts` | RH2M, WS2M, PS, T2MDEW, TS | |
-| `sw`, `lw`, `sw_clear` | ALLSKY_SFC_SW_DWN, ALLSKY_SFC_LW_DWN, CLRSKY_SFC_SW_DWN | radiación; `lw` nulo 1984–87 |
+`download_daily()` obtiene las variables diarias; `download_hourly_t2m()` obtiene `T2M` horario. `derive_minmax()` agrupa las horas por fecha y calcula sus extremos. `write_zone()` une ambas series por fecha y escribe los resultados ordenados. El valor de relleno `-999` se convierte en ausente.
 
-## Verificación (14/11)
+Las peticiones actuales no fijan `time-standard`: la convención del servicio POWER es tiempo solar local (LST). Conservar esa referencia al relacionar las fechas con otras fuentes. Cada bloque va desde el 1 de enero del año al 1 de enero siguiente; la unión por fecha resuelve los extremos compartidos.
 
-- 10 zonas × 15,342 filas; `tmean` 100% completo; `tmin/tmax` sin huecos 2010+.
-- **Heladas 2010–25: 194 días, pico may–sep** (may 22, jun 53, jul 75, ago 38) →
-  coherente con CROPS.md (estación de heladas may–ago).
-- ⚠️ **Los 10 puntos caen en la misma celda POWER 0.5°** → serie idéntica; solo difiere
-  `elev_m` (3126 m). El refinamiento por zona lo aportan GAMC + SRTM/pendiente.
+## Ejecución
 
-## Regenerar
+Desde la raíz del repositorio, con Python 3.13 y el entorno del proyecto:
 
 ```bash
-python3 src/etl/power_etl.py --points src/etl/points.json \
-  --start 1984 --end 2025 --hstart 2010 --hend 2025 --out data/power
+uv run python src/etl/power_etl.py --points src/etl/points.json --start 1984 --end 2025 --hstart 2010 --hend 2025 --out data/power
+```
+
+`--start/--end` controlan los años diarios; `--hstart/--hend`, los horarios. Para trabajar en una salida separada se puede cambiar `--out`. Cada ejecución descarga el rango indicado y vuelve a escribir los CSV y metadatos de los puntos elegidos. `bash etl.sh power` ejecuta el preset del orquestador.
+
+## Datos guardados
+
+| Columna CSV | Variable o cálculo | Qué mide | Unidad |
+|---|---|---|---|
+| `fecha` | Fecha de la serie | Día al que corresponde la observación | `YYYY-MM-DD` |
+| `tmean` | `T2M` diario | Temperatura media del aire a 2 m | °C |
+| `tmin` | Mínimo de `T2M` horario por fecha | Temperatura mínima de las horas disponibles | °C |
+| `tmax` | Máximo de `T2M` horario por fecha | Temperatura máxima de las horas disponibles | °C |
+| `t2mdew` | `T2MDEW` | Temperatura de punto de rocío a 2 m | °C |
+| `rh` | `RH2M` | Humedad relativa del aire a 2 m | % |
+| `ws` | `WS2M` | Velocidad del viento a 2 m | m/s |
+| `ps` | `PS` | Presión atmosférica superficial | kPa |
+| `pmm` | `PRECTOTCORR` | Precipitación corregida del día; la solicitud usa `PRECTOT` | mm/día |
+| `sw` | `ALLSKY_SFC_SW_DWN` | Energía solar de onda corta descendente con nubosidad | MJ/m²/día |
+| `sw_clear` | `CLRSKY_SFC_SW_DWN` | Energía de onda corta descendente para cielo despejado | MJ/m²/día |
+| `lw` | `ALLSKY_SFC_LW_DWN` | Energía de onda larga descendente con nubosidad | MJ/m²/día |
+
+`TS` se solicita en la consulta diaria como temperatura de superficie; las columnas exportadas son las de la tabla anterior.
+
+- `{zone_id}_daily.csv`: una fila por fecha; una celda vacía representa un valor ausente.
+- `{zone_id}_meta.json`: `zone_id`, `nombre`, `lat`, `lon`, `elev_m`, `start`, `end`, `hstart`, `hend` y `filas`. La elevación procede de la geometría devuelta por POWER.
+- Los archivos conservados se generaron para diez zonas; el rango horario se identifica en cada metadato.
+
+## Uso posterior
+
+[load_db.py](../../src/etl/load_db.py) incorpora las series a `climate_history`. [run_pipeline.py](../../src/model/run_pipeline.py) recibe un CSV POWER mediante `--power`. Las coordenadas son puntos de consulta sobre la resolución de origen del producto; el contexto de cada zona se complementa con GAMC y relieve.
+
+## Flujo
+
+```mermaid
+flowchart TD
+    A["points.json: zonas y coordenadas"] --> B["power_etl.py"]
+    B --> C["API diaria: variables meteorológicas"]
+    B --> D["API horaria: T2M"]
+    D --> E["Extremos por fecha: tmin y tmax"]
+    C --> F["Unión por fecha y tratamiento de ausentes"]
+    E --> F
+    F --> G["CSV diario por zona"]
+    B --> H["Metadatos por zona"]
+    G --> I["load_db.py / run_pipeline.py"]
+    H --> I
 ```
