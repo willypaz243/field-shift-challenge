@@ -1,66 +1,102 @@
 # Choclito · Field Shift (NASA Space Apps 2026)
 
-App para agricultores del Cercado de Cochabamba que combina datos NASA con información local para decidir cuándo sembrar, qué rotar y cómo protegerse de heladas, granizo y falta de agua.
+App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data with local information to help them decide when to sow, which crop to rotate into, and how to prepare for frost, hail and water shortages.
 
 ## Stack
 
-**Mobile-first con un solo código para Android y web.** La app se diseña para celular. Si el APK no llega a tiempo, el mismo código se publica como web (PWA) para la demo.
+**Mobile-first, one codebase for Android and web.** The app is designed for phones. If the APK is not ready in time, the same code is published as a web app for the demo.
 
 ### App (`app/`)
 
-| Pieza | Tecnología | Por qué |
+| Part | Technology | Why |
 |---|---|---|
-| Framework | **Expo** (React Native + TypeScript) | Android nativo y, con el mismo código, web vía `react-native-web`. Se prueba al instante en el celular con Expo Go. |
-| Navegación | **Expo Router** | Tabs Hoy / Calendario / Sembrar / Mi zona y ventanas (bottom sheets) por archivo. |
-| Datos offline | **expo-sqlite** | Base local con el paquete de `/sync`; la app funciona sin señal. |
-| Notificaciones | **expo-notifications** (locales) | Alertas y recordatorios de cosecha a las 6:00 sin depender del servidor. |
-| Ubicación | **expo-location** | GPS para encontrar la zona. |
-| Voz | **expo-speech** | Botón "Escuchar". |
-| Mapas y gráficos | **react-native-svg** | Mapas de parcela y zona dibujados en SVG: funcionan igual en Android y web. |
-| Estado | **Zustand** | Simple y liviano para un celular de gama baja. |
-| Textos | **i18next** | Español y quechua desde el inicio. |
-| Diseño | Tokens de `mockups/app.css` | Colores, fuente Atkinson Hyperlegible Next, texto ≥ 17 px, toques ≥ 56 px. |
+| Framework | **Expo** (React Native + TypeScript) | Native Android and, from the same code, web via `react-native-web`. Instant testing on a phone with Expo Go. |
+| Navigation | **Expo Router** | Hoy / Calendario / Sembrar / Mi zona tabs and bottom sheets, file-based. |
+| Offline data | **expo-sqlite** | Local database with the `/sync` package; the app works without signal. |
+| Notifications | **expo-notifications** (local) | Alerts and harvest reminders at 6:00 without depending on the server. |
+| Location | **expo-location** | GPS to find the farmer's zone. |
+| Voice | **expo-speech** | "Escuchar" (listen) button. |
+| Maps and charts | **react-native-svg** | Plot and zone maps drawn in SVG: same result on Android and web. |
+| State | **Zustand** | Simple and light for low-end phones. |
+| Text | **i18next** | Spanish and Quechua from day one. |
+| Design | Tokens from `mockups/app.css` | Colors, Atkinson Hyperlegible Next font, text ≥ 17 px, touch targets ≥ 56 px. |
 
 ### API (`api/`)
 
-| Pieza | Tecnología | Por qué |
+| Part | Technology | Why |
 |---|---|---|
-| Framework | **FastAPI** (Python 3.12) | OpenAPI automático y el mismo lenguaje que el ETL y los modelos. |
-| ORM | **SQLModel** | Modelos que sirven a la vez como tablas y como esquemas de respuesta. Las tablas se crean con `SQLModel.metadata.create_all()`. |
-| Base de datos | **SQLite** (un archivo) | Cero configuración. |
-| Contrato | `api/openapi.yaml` desde [`docs/API-CONTRACT.md`](docs/API-CONTRACT.md) | Front y back trabajan en paralelo. |
-| Mock | **Prism** (`prism mock api/openapi.yaml`) | El front arranca contra el mock antes de que exista la API. |
-| Tareas programadas | cron + scripts de `src/` | Regenerar la proyección y el pronóstico. |
+| Framework | **FastAPI** (Python 3.13) | Automatic OpenAPI and the same language as the ETL and models. |
+| ORM | **SQLModel** | Models are both tables and response schemas. Tables are created with `SQLModel.metadata.create_all()`. |
+| Database | **SQLite** (single file) | Zero setup. |
+| Contract | `api/openapi.yaml` from [`docs/API-CONTRACT.md`](docs/API-CONTRACT.md) | Frontend and backend work in parallel. |
+| Mock | **Prism** (`prism mock api/openapi.yaml`) | The frontend starts against the mock before the API exists. |
+| Scheduled jobs | cron + scripts in `src/` | Regenerate the projection and the forecast. |
 
-### Datos y modelos (`src/`, `imerg/`, `data/`)
+### Data and models (`src/`, `imerg/`, `data/`)
 
-| Pieza | Tecnología |
+| Part | Technology |
 |---|---|
-| Lenguaje | Python 3.12 |
-| Acceso NASA | `earthaccess` (Earthdata), API de NASA POWER |
-| Archivos | `xarray` + `netCDF4` (IMERG), `h5py` (SMAP) |
-| Geometría | `shapely` |
-| Análisis | `pandas`, `numpy` |
-| Series de tiempo | `statsmodels` (SARIMA) o `prophet` |
-| Scoring de ventana | Referencia en Python + vectores de prueba en JSON que la app (TypeScript) debe reproducir |
+| Language | Python 3.13 (single `uv` project at the repo root: `pyproject.toml`) |
+| NASA access | `earthaccess` (Earthdata), NASA POWER API |
+| Files | `xarray` + `netCDF4` (IMERG), `h5py` (SMAP) |
+| Geometry | `shapely` |
+| Analysis | `pandas`, `numpy` |
+| Time series | `statsmodels` (SARIMA) or `prophet` |
+| Window scoring | Python reference + JSON test vectors that the app (TypeScript) must reproduce |
 
-### Herramientas
+### Tooling
 
-| Uso | Herramienta |
+| Use | Tool |
 |---|---|
-| Python | `uv` (entornos y dependencias) |
+| Python | `uv` (environments and dependencies) |
 | JS | `npm` + Expo CLI |
-| Tests | `pytest` (API y datos), `jest` (app) |
-| Formato | `ruff` (Python), `prettier` + `eslint` (TS) |
+| Tests | `pytest` (API and data), `jest` (app) |
+| Formatting | `ruff` (Python), `prettier` + `eslint` (TS) |
 
-## Estructura
+## Architecture
+
+The API is a **modular monolith**: one FastAPI process and one SQLite database, split into modules by domain. Each module owns its tables and exposes a service; other modules only talk to it through that service.
 
 ```
-app/        App Expo (Android + web)
-api/        FastAPI + SQLModel + openapi.yaml
-src/etl/    ETL de NASA POWER y otras fuentes
-imerg/      Pipeline de lluvia GPM IMERG
-data/       Datos procesados (catálogo de cultivos, POWER, GAMC)
-docs/       Contrato de API, flujos, contexto local, backlog
-mockups/    Mockups HTML de referencia
+api/
+  main.py             App factory, mounts every module router
+  core/               Config, DB engine/session, errors, shared utils
+  modules/
+    zones/            Agricultural zones (GAMC grid)
+    crops/            Crop catalog
+    climate/          Short forecast, yearly projection, climatology, history
+    alerts/           Alert rules and active alerts
+    rotations/        Rotation plans and scores
+    reports/          Farmer reports and zone map
+    feedback/         Harvest results and chosen plans
+    sync/             /sync package for the app (composes other services)
+```
+
+Every module has the same files:
+
+| File | Responsibility |
+|---|---|
+| `router.py` | HTTP only: parse the request, call the service, return the schema. No business logic, no queries. |
+| `service.py` | Business logic. The only public entry point of the module. |
+| `repository.py` | Database access with SQLModel sessions. Used only by its own service. |
+| `models.py` | SQLModel tables owned by the module. |
+| `schemas.py` | Request/response models that match `docs/API-CONTRACT.md`. |
+
+Rules between modules:
+
+- `router → service → repository`. Never skip a layer.
+- A module may call another module's `service`, never its `repository` or `models`.
+- `sync` only composes services; it owns no tables.
+- Data jobs in `src/` write through the service of the module that owns the table.
+
+## Structure
+
+```
+app/        Expo app (Android + web)
+api/        FastAPI modular monolith + openapi.yaml
+src/etl/    NASA POWER ETL and other sources
+imerg/      GPM IMERG rainfall pipeline
+data/       Processed data (crop catalog, POWER, GAMC)
+docs/       API contract, app flows, local context, backlog
+mockups/    Reference HTML mockups
 ```
