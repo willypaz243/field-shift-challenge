@@ -1,22 +1,22 @@
-"""Pipeline de modelos (Fase 2): EDA + backtest + proyección 365 d + scoring.
+"""Model pipeline (Phase 2): EDA + backtest + 365-day forecast + scoring.
 
-El histórico se lee de la DB consolidada (valle.db), no de CSVs sueltos: el
-rango común de todas las fuentes (POWER 1984+, IMERG 2016+, SMAP 2015+) es
-2016-01-01 → 2025-12-31 y es la ventana de entrenamiento. `pmm` usa IMERG
-(`pmm_sat`) como fuente primaria — POWER subestima la precipitación
-convectiva andina — y `pmm` de POWER como fallback.
+History is read from the consolidated DB (valle.db), not from loose CSVs:
+the common range of all sources (POWER 1984+, IMERG 2016+, SMAP 2015+) is
+2016-01-01 to 2025-12-31 and is the training window. `pmm` uses IMERG
+(`pmm_sat`) as the primary source (the 0.5 deg POWER cell underestimates
+Andean convective rain) with POWER `pmm` as fallback.
 
-Uso:
+Usage:
     .venv/bin/python -m src.model.run_pipeline \
         --db data/db/valle.db \
         --crops data/crops/crops.json \
         --out data/model --eda docs/EDA.md
 
-Salidas:
-    data/model/metrics_backtest.json   MAE/RMSE holdout 2024–25
-    data/model/forecast_valle.csv      proyección 365 d (tmean,tmin,tmax,pmm,et0 + bandas)
-    data/model/top_windows.json        top-3 ventanas por cultivo
-    docs/EDA.md                        validación contra conocimiento local
+Outputs:
+    data/model/metrics_backtest.json   MAE/RMSE holdout 2024-25
+    data/model/forecast_valle.csv      365-day forecast (tmean,tmin,tmax,pmm,et0 + bands)
+    data/model/top_windows.json        top-3 windows per crop
+    docs/EDA.md                        validation against local knowledge
 """
 
 from __future__ import annotations
@@ -43,10 +43,10 @@ HISTORY_END = "2025-12-31"
 def load_history(
     db: Path, zone_id: str, start: str, end: str
 ) -> tuple[list[str], dict[str, np.ndarray]]:
-    """Lee `climate_history` de la DB consolidada para una zona.
+    """Read `climate_history` from the consolidated DB for one zone.
 
-    `pmm` = `pmm_sat` (IMERG, primaria) con `pmm` de POWER como fallback;
-    valores > 100 mm/día se tratan como error de dato (NaN).
+    `pmm` = `pmm_sat` (IMERG, primary) with POWER `pmm` as fallback; values
+    above 100 mm/day are treated as data errors (NaN).
     """
     con = sqlite3.connect(db)
     try:
@@ -82,7 +82,7 @@ def valid_mask(arr: np.ndarray) -> np.ndarray:
 def do_eda(
     db: Path, zone_id: str, dates: list[str], data: dict[str, np.ndarray], out: Path
 ) -> dict:
-    """Validación contra conocimiento local (lluvia dic–feb, heladas may–ago, seca may–sep)."""
+    """Validation against local knowledge (Dec-Feb rain, May-Aug frost, May-Sep dry season)."""
     monthly: dict[int, dict] = {}
     for m in range(1, 13):
         sel = [i for i, d in enumerate(dates) if int(d[5:7]) == m]
@@ -202,7 +202,7 @@ def main() -> None:
     ap.add_argument("--out", default="data/model")
     ap.add_argument("--eda", default="docs/EDA.md")
     ap.add_argument("--horizon", type=int, default=365)
-    ap.add_argument("--today", default=None, help="fecha ISO; default = fecha del sistema")
+    ap.add_argument("--today", default=None, help="ISO date; default = system date")
     args = ap.parse_args()
 
     out = Path(args.out)
@@ -211,10 +211,10 @@ def main() -> None:
     n = len(dates)
     t = np.arange(n, dtype=float)
 
-    # EDA (tarea 2.1)
+    # EDA (task 2.1)
     eda = do_eda(ROOT / args.db, args.zone, dates, data, Path(args.eda))
 
-    # Backtest 2024–25 (tarea 2.3)
+    # Backtest 2024-25 (task 2.3)
     i2024 = next(i for i, d in enumerate(dates) if d == "2024-01-01")
     t_hold = float(t[i2024])
     horizon_bt = 731
@@ -231,11 +231,11 @@ def main() -> None:
         )
     )
 
-    # Proyección 365 d desde hoy (tarea 2.2)
+    # 365-day forecast from today (task 2.2)
     today = date.fromisoformat(args.today) if args.today else date.today()
     t_today = (today - date.fromisoformat(dates[0])).days
     fits = {}
-    # Enmascarar NaN por variable
+    # Mask NaN per variable
     for v in VARIABLES:
         m = valid_mask(data[v])
         fits[v] = fit(data[v][m], t[m])
@@ -293,7 +293,7 @@ def main() -> None:
                 ]
             )
 
-    # Scoring top-3 por cultivo (tarea 2.4)
+    # Top-3 scoring per crop (task 2.4)
     zone = {"cerca_drenaje": False, "elev_m": 3126}
     top = {
         c["id"]: score_windows(
@@ -315,9 +315,9 @@ def main() -> None:
     for cid, wins in top.items():
         if wins:
             w0 = wins[0]
-            print(f"  {cid}: mejor ventana {w0['inicio']} → {w0['fin']} (score {w0['score']})")
+            print(f"  {cid}: best window {w0['inicio']} -> {w0['fin']} (score {w0['score']})")
     print(
-        f"Salidas: {out}/ (forecast_valle.csv, top_windows.json, metrics_backtest.json), {args.eda}"
+        f"Outputs: {out}/ (forecast_valle.csv, top_windows.json, metrics_backtest.json), {args.eda}"
     )
 
 
