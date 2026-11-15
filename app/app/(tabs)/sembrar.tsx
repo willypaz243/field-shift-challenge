@@ -3,7 +3,7 @@ import { Colors, Typography } from '../../constants/Theme';
 
 export default function SembrarScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: Colors.paper2, padding: 16 }}>
+    <View style={{ flex: 1, backgroundColor: Colors.paper, padding: 16 }}>
       <Text style={{ ...Typography.body, color: Colors.ink }}>Pantalla Sembrar</Text>
     </View>
   );

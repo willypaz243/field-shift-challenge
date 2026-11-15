@@ -7,7 +7,7 @@ import { Colors } from '../../constants/Theme';
 export class TabConfig {
   static getOptions(): any {
     const style = { height: 80, paddingBottom: 12, paddingTop: 8, backgroundColor: Colors.paper, borderTopColor: Colors.line };
-    const label = { fontSize: 17, fontFamily: 'AtkinsonHyperlegibleNext-Bold', marginTop: 4 };
+    const label = { fontSize: 16, fontFamily: 'AtkinsonHyperlegibleNext-Bold', marginTop: 4 };
     return { header: () => <GlobalHeader />, tabBarActiveTintColor: Colors.fieldDeep, 
              tabBarInactiveTintColor: Colors.ink2, tabBarStyle: style, tabBarLabelStyle: label, 
              tabBarItemStyle: { minHeight: 56 } };

@@ -6,7 +6,7 @@ import { Colors, Typography } from '../../../constants/Theme';
 export class HeaderLeft extends Component {
   private renderBrand() {
     return <View style={styles.row}>
-      <MaterialCommunityIcons name="rocket-launch-outline" size={24} color={Colors.fieldDeep} />
+      <MaterialCommunityIcons name="corn" size={28} color={Colors.cornGold} />
       <Text style={styles.brand}>Choclito</Text>
     </View>;
   }
