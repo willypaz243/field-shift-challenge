@@ -10,6 +10,6 @@ from api.modules.zones.schemas import ZonesResponse
 router = APIRouter(tags=["zones"])
 
 
-@router.get("/zones", response_model=ZonesResponse)
+@router.get("/zones", response_model=ZonesResponse, response_model_exclude_none=True)
 def list_zones(session: Annotated[Session, Depends(get_session)]) -> ZonesResponse:
     return service.list_zones(session)
