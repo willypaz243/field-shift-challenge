@@ -29,6 +29,7 @@ function ReadyStack() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="ubicar" options={{ headerShown: false }} />
         <Stack.Screen name="agua" options={{ headerShown: false }} />
+        <Stack.Screen name="avisos" options={{ headerShown: false }} />
       </Stack>
   );
 }
