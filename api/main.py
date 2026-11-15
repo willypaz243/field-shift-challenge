@@ -4,6 +4,7 @@ from api.core.errors import install_error_handlers
 from api.core.http import install_http_middleware
 from api.modules.crops.router import router as crops_router
 from api.modules.feedback.router import router as feedback_router
+from api.modules.sync.router import router as sync_router
 from api.modules.zones.router import router as zones_router
 
 
@@ -11,7 +12,7 @@ def create_app() -> FastAPI:
     app = FastAPI(title="Choclito API")
     install_error_handlers(app)
     install_http_middleware(app)
-    for router in (zones_router, crops_router, feedback_router):
+    for router in (zones_router, crops_router, feedback_router, sync_router):
         app.include_router(router)
     return app
 

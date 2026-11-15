@@ -13,7 +13,7 @@ def engine(tmp_path):
     engine = make_engine(f"sqlite:///{tmp_path / 'test.db'}")
     init_db(engine)
     with Session(engine) as session:
-        session.add(Zone(id="D9_itocta", lat=-17.4611, lon=-66.2185))
+        session.add(Zone(id="D9_itocta", nombre="Itocta", lat=-17.4611, lon=-66.2185))
         session.add(Crop(id="haba", nombre="Haba"))
         session.commit()
     return engine
