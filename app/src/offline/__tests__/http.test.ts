@@ -37,3 +37,19 @@ test("keeps non-successful feedback available for retry", async () => {
     }),
   ).rejects.toThrow("503");
 });
+
+test("treats a repeated feedback or plan key (409) as already delivered", async () => {
+  const request = jest.fn().mockResolvedValue({ status: 409, ok: false });
+  const transport = new HttpTransport("https://example.test", request);
+  for (const kind of ["feedback", "plans"] as const) {
+    await expect(
+      transport.send({
+        id: `${kind}-id`,
+        kind,
+        payload: {},
+        attempts: 1,
+        next_attempt: 0,
+      }),
+    ).resolves.toBeUndefined();
+  }
+});

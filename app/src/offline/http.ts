@@ -30,7 +30,7 @@ export class HttpTransport implements Transport {
       headers,
       body,
     });
-    if (response.status === 409 && item.kind === "reports") return;
+    if (response.status === 409) return;
     if (!response.ok) throw new Error(`Submission failed: ${response.status}`);
   }
 }

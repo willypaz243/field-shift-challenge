@@ -79,7 +79,7 @@ A successful response removes the item; failures persist with exponential retry
 from one second to one hour. Refresh attempts drain due items even if pulling
 fails. `client.outbox.flush()` can also run after connectivity returns. The
 client owns no background timer: retries run on refresh or explicit flush.
-Only the reports contract defines duplicate 409 as success. Permanent errors
+A duplicate key (409) counts as delivered for every kind. Permanent errors
 remain queued for inspection rather than losing submissions.
 
 ### Mock and verification
