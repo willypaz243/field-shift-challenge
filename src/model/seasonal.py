@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 
@@ -30,7 +31,7 @@ class Fit:
     t_start: float
     t_end: float
     n: int
-    metrics: dict = field(default_factory=dict)
+    metrics: dict[str, Any] = field(default_factory=dict)
 
 
 def _design(t: np.ndarray) -> np.ndarray:
@@ -92,7 +93,9 @@ def backtest(
     return mae, rmse
 
 
-def metrics_for(y: np.ndarray, t: np.ndarray, name: str, holdout: float, horizon: int) -> dict:
+def metrics_for(
+    y: np.ndarray, t: np.ndarray, name: str, holdout: float, horizon: int
+) -> dict[str, Any]:
     mae, rmse = backtest(y, t, holdout, horizon)
     return {"variable": name, "mae": round(mae, 3), "rmse": round(rmse, 3)}
 

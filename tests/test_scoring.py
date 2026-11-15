@@ -11,6 +11,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -25,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = json.loads((ROOT / "data" / "model" / "test_vectors.json").read_text())["vectores"]
 
 
-def run_vector(v: dict) -> dict:
+def run_vector(v: dict[str, Any]) -> dict[str, Any]:
     e = v["entrada"]
     return score_window(
         e["cultivo"],

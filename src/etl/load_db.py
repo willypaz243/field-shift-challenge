@@ -24,6 +24,7 @@ import sqlite3
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from sqlalchemy import Engine
@@ -40,7 +41,9 @@ def f(v: str | None):
     return float(v) if v else None
 
 
-def upsert(con: sqlite3.Connection, table: str, key: tuple[str, ...], rows: list[dict]) -> None:
+def upsert(
+    con: sqlite3.Connection, table: str, key: tuple[str, ...], rows: list[dict[str, Any]]
+) -> None:
     if not rows:
         return
     cols = list(rows[0])
@@ -93,7 +96,7 @@ def load_climate(con: sqlite3.Connection, root: Path) -> int:
         data / "imerg" / "imerg_valle_daily.csv",
     )
     # SMAP and IMERG: valley series (common to the 10 zones - same 0.5 deg cell)
-    smap: dict[str, tuple] = {}
+    smap: dict[str, tuple[Any, Any]] = {}
     if smap_csv.exists():
         with open(smap_csv) as fh:
             for r in csv.DictReader(fh):
@@ -231,6 +234,7 @@ def load(engine: Engine, root: Path = ROOT) -> dict[str, int]:
     raw = engine.raw_connection()
     try:
         con = raw.driver_connection
+        assert con is not None
         counts = {
             "zones": load_zones(con, root),
             "climate": load_climate(con, root),

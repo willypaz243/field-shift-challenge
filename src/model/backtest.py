@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 
 from .history import VARIABLES, HistorySeries
@@ -15,7 +17,7 @@ class Backtester:
         self.series = series
         self.horizon = horizon
 
-    def metrics(self, holdout_start: str) -> list[dict]:
+    def metrics(self, holdout_start: str) -> list[dict[str, Any]]:
         dates = self.series.dates
         i_hold = next(i for i, d in enumerate(dates) if d == holdout_start)
         t = np.arange(len(dates), dtype=float)

@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from api.modules.feedback.models import Feedback, Plan
 
 
-def add(session: Session, row: Feedback | Plan) -> Feedback | Plan:
+def add[T: Feedback | Plan](session: Session, row: T) -> T:
     session.add(row)
     session.commit()
     session.refresh(row)

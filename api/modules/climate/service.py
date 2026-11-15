@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 from sqlmodel import Session
 
@@ -7,7 +8,7 @@ from api.modules.climate import repository
 FORECAST_SOURCES = ["nasa_power", "nasa_imerg", "nasa_smap"]
 
 
-def _day(f) -> dict:
+def _day(f) -> dict[str, Any]:
     return {
         "fecha": f.fecha.isoformat(),
         **{
@@ -19,7 +20,7 @@ def _day(f) -> dict:
     }
 
 
-def forecast(session: Session, zone_id: str) -> dict:
+def forecast(session: Session, zone_id: str) -> dict[str, Any]:
     days = repository.forecast_days(session, zone_id)
     result = {
         "zone_id": zone_id,
@@ -32,7 +33,7 @@ def forecast(session: Session, zone_id: str) -> dict:
     return result
 
 
-def short_forecast(zone_id: str, updated: datetime | None) -> dict:
+def short_forecast(zone_id: str, updated: datetime | None) -> dict[str, Any]:
     return {
         "zone_id": zone_id,
         "actualizado_en": updated.isoformat() if updated else None,
@@ -41,5 +42,5 @@ def short_forecast(zone_id: str, updated: datetime | None) -> dict:
     }
 
 
-def climatology(zone_id: str) -> dict:
+def climatology(zone_id: str) -> dict[str, Any]:
     return {"zone_id": zone_id, "meses": [], "fuente": []}

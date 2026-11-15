@@ -36,6 +36,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 FROST_SEV = {"baja": 1.0, "media": 0.5, "alta": 0.2}
 DROUGHT_MITIG = {"no": 1.0, "poco": 0.6, "sí": 0.3}
@@ -74,8 +75,8 @@ def _confianza(L: int, horizon: int | None, pos: int) -> float:
 
 
 def score_window(
-    crop: dict,
-    zone: dict,
+    crop: dict[str, Any],
+    zone: dict[str, Any],
     tmean: list[float],
     tmin: list[float],
     pmm: list[float],
@@ -84,7 +85,7 @@ def score_window(
     pos: int = 0,
     umbral_bueno: float = VERDICT_GOOD,
     umbral_malo: float = VERDICT_POOR,
-) -> dict:
+) -> dict[str, Any]:
     """Score one window. Inputs: arrays of length L (window days).
 
     `crop`: entry of `crops.json`; `zone`: dict with `cerca_drenaje`
@@ -146,8 +147,8 @@ def score_window(
 
 
 def score_windows(
-    crop: dict,
-    zone: dict,
+    crop: dict[str, Any],
+    zone: dict[str, Any],
     dates: list[str],
     tmean: list[float],
     tmin: list[float],
@@ -156,7 +157,7 @@ def score_windows(
     horizon: int | None = None,
     umbral_bueno: float = VERDICT_GOOD,
     umbral_malo: float = VERDICT_POOR,
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """Top-3 planting windows for a crop.
 
     `dates`/arrays: daily forecast (index 0 = tomorrow).
@@ -165,7 +166,7 @@ def score_windows(
     L = int(round(sum(crop["ciclo_dias"]) / 2))
     H = len(dates)
     horizon = H if horizon is None else horizon
-    scored = []
+    scored: list[dict[str, Any]] = []
     for s in range(0, H - L + 1):
         det = score_window(
             crop,
@@ -192,7 +193,7 @@ def score_windows(
         )
 
     scored.sort(key=lambda w: w["score"], reverse=True)
-    top: list[dict] = []
+    top: list[dict[str, Any]] = []
     for w in scored:
         if all(abs(_day(w["inicio"]) - _day(t["inicio"])) >= MIN_GAP_DAYS for t in top):
             top.append(w)
@@ -206,5 +207,5 @@ def _day(iso: str) -> int:
     return (y - 2026) * 365 + m * 31 + d
 
 
-def load_crops(path: str | Path = "data/crops/crops.json") -> list[dict]:
+def load_crops(path: str | Path = "data/crops/crops.json") -> list[dict[str, Any]]:
     return json.loads(Path(path).read_text())["crops"]

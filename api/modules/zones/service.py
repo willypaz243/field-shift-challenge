@@ -41,4 +41,7 @@ def get_zone(session: Session, zone_id: str) -> ZoneOut:
 
 def last_load_version(session: Session) -> tuple[int, datetime | None]:
     last = repository.last_load(session)
-    return (last.id, last.creado_en) if last else (0, None)
+    if last is None:
+        return (0, None)
+    assert last.id is not None
+    return (last.id, last.creado_en)
