@@ -1,12 +1,10 @@
-PYTHON ?= .venv/bin/python
-
-.PHONY: db-init db-reset test
+.PHONY: db-init db-load test
 
 db-init:
-	$(PYTHON) -m api.db
+	uv run python -c "from api.core.db import init_db, make_engine; init_db(make_engine())"
 
-db-reset:
-	$(PYTHON) -m api.db --reset
+db-load:
+	uv run python -m src.etl.load_db
 
 test:
-	$(PYTHON) -m unittest discover -s api/tests
+	uv run pytest

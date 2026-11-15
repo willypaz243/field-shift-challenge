@@ -55,16 +55,7 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 
 ## Database
 
-The API uses a single SQLite file. It is created without migrations from the SQLModel
-tables in `api/models.py`:
-
-```bash
-make db-init    # create data/app.db with all tables
-make db-reset   # delete and recreate it
-```
-
-`DATABASE_URL` overrides the default `sqlite:///./data/app.db`. See
-[`docs/db-schema.md`](docs/db-schema.md) for the tables and columns.
+One SQLite file, `data/db/valle.db`, with tables defined by the SQLModel models of each module. `make db-init` creates them, `make db-load` (or `bash etl.sh db`) loads the ETL data. Details in [`docs/db-schema.md`](docs/db-schema.md).
 
 ## Architecture
 
