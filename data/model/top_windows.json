@@ -4,9 +4,13 @@
       "inicio": "2026-11-16",
       "fin": "2027-04-14",
       "score": 69.5,
+      "veredicto": "con_cuidado",
       "confianza": 0.82,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 69.5,
         "temp": 0.39,
         "agua": 0.93,
         "helada": 1.0,
@@ -19,9 +23,13 @@
       "inicio": "2026-11-30",
       "fin": "2027-04-28",
       "score": 61.1,
+      "veredicto": "con_cuidado",
       "confianza": 0.8,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 61.1,
         "temp": 0.29,
         "agua": 0.82,
         "helada": 1.0,
@@ -34,9 +42,13 @@
       "inicio": "2026-12-13",
       "fin": "2027-05-11",
       "score": 52.4,
+      "veredicto": "con_cuidado",
       "confianza": 0.78,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 52.4,
         "temp": 0.21,
         "agua": 0.7,
         "helada": 1.0,
@@ -51,9 +63,13 @@
       "inicio": "2026-11-16",
       "fin": "2027-05-14",
       "score": 50.2,
+      "veredicto": "con_cuidado",
       "confianza": 0.8,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 50.2,
         "temp": 0.0,
         "agua": 0.88,
         "helada": 1.0,
@@ -66,9 +82,13 @@
       "inicio": "2026-11-30",
       "fin": "2027-05-28",
       "score": 47.9,
+      "veredicto": "con_cuidado",
       "confianza": 0.78,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 47.9,
         "temp": 0.0,
         "agua": 0.82,
         "helada": 1.0,
@@ -81,9 +101,13 @@
       "inicio": "2026-12-13",
       "fin": "2027-06-10",
       "score": 45.8,
+      "veredicto": "con_cuidado",
       "confianza": 0.76,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 45.8,
         "temp": 0.0,
         "agua": 0.77,
         "helada": 1.0,
@@ -98,9 +122,12 @@
       "inicio": "2026-11-16",
       "fin": "2027-03-30",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.83,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -113,9 +140,12 @@
       "inicio": "2026-11-30",
       "fin": "2027-04-13",
       "score": 98.9,
+      "veredicto": "bueno",
       "confianza": 0.81,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 98.9,
         "temp": 1.0,
         "agua": 0.97,
         "helada": 1.0,
@@ -128,9 +158,12 @@
       "inicio": "2026-12-13",
       "fin": "2027-04-26",
       "score": 96.8,
+      "veredicto": "bueno",
       "confianza": 0.79,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 96.8,
         "temp": 1.0,
         "agua": 0.92,
         "helada": 1.0,
@@ -145,9 +178,13 @@
       "inicio": "2027-03-06",
       "fin": "2027-09-16",
       "score": 61.4,
+      "veredicto": "con_cuidado",
       "confianza": 0.64,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 61.4,
         "temp": 0.75,
         "agua": 0.31,
         "helada": 1.0,
@@ -160,9 +197,13 @@
       "inicio": "2027-02-23",
       "fin": "2027-09-05",
       "score": 60.7,
+      "veredicto": "con_cuidado",
       "confianza": 0.65,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 60.7,
         "temp": 0.7,
         "agua": 0.36,
         "helada": 1.0,
@@ -175,9 +216,13 @@
       "inicio": "2027-02-09",
       "fin": "2027-08-22",
       "score": 59.7,
+      "veredicto": "con_cuidado",
       "confianza": 0.67,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 59.7,
         "temp": 0.63,
         "agua": 0.41,
         "helada": 1.0,
@@ -192,9 +237,10 @@
       "inicio": "2026-11-18",
       "fin": "2026-12-22",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.89,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -207,9 +253,10 @@
       "inicio": "2026-12-01",
       "fin": "2027-01-04",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.88,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -222,9 +269,10 @@
       "inicio": "2026-12-15",
       "fin": "2027-01-18",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.86,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -239,9 +287,10 @@
       "inicio": "2026-11-18",
       "fin": "2027-01-16",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.88,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -254,9 +303,10 @@
       "inicio": "2026-12-01",
       "fin": "2027-01-29",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.86,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -269,9 +319,10 @@
       "inicio": "2026-12-15",
       "fin": "2027-02-12",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.84,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -286,9 +337,13 @@
       "inicio": "2026-11-16",
       "fin": "2027-08-14",
       "score": 44.0,
+      "veredicto": "con_cuidado",
       "confianza": 0.73,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 44.0,
         "temp": 0.21,
         "agua": 0.48,
         "helada": 1.0,
@@ -301,9 +356,13 @@
       "inicio": "2026-11-30",
       "fin": "2027-08-28",
       "score": 39.7,
+      "veredicto": "malo",
       "confianza": 0.71,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 39.7,
         "temp": 0.16,
         "agua": 0.44,
         "helada": 1.0,
@@ -316,9 +375,13 @@
       "inicio": "2026-12-13",
       "fin": "2027-09-10",
       "score": 35.6,
+      "veredicto": "malo",
       "confianza": 0.7,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 35.6,
         "temp": 0.11,
         "agua": 0.39,
         "helada": 1.0,
@@ -333,9 +396,12 @@
       "inicio": "2026-11-16",
       "fin": "2027-04-29",
       "score": 96.6,
+      "veredicto": "bueno",
       "confianza": 0.81,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 96.6,
         "temp": 1.0,
         "agua": 0.92,
         "helada": 1.0,
@@ -348,9 +414,12 @@
       "inicio": "2026-11-30",
       "fin": "2027-05-13",
       "score": 94.1,
+      "veredicto": "bueno",
       "confianza": 0.79,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 94.1,
         "temp": 1.0,
         "agua": 0.85,
         "helada": 1.0,
@@ -363,9 +432,12 @@
       "inicio": "2026-12-13",
       "fin": "2027-05-26",
       "score": 91.5,
+      "veredicto": "bueno",
       "confianza": 0.77,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 91.5,
         "temp": 1.0,
         "agua": 0.79,
         "helada": 1.0,
@@ -380,9 +452,12 @@
       "inicio": "2026-11-16",
       "fin": "2027-06-13",
       "score": 87.2,
+      "veredicto": "bueno",
       "confianza": 0.78,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 87.2,
         "temp": 1.0,
         "agua": 0.68,
         "helada": 1.0,
@@ -395,9 +470,12 @@
       "inicio": "2026-11-30",
       "fin": "2027-06-27",
       "score": 84.1,
+      "veredicto": "bueno",
       "confianza": 0.76,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 84.1,
         "temp": 1.0,
         "agua": 0.6,
         "helada": 1.0,
@@ -410,9 +488,12 @@
       "inicio": "2026-12-13",
       "fin": "2027-07-10",
       "score": 81.0,
+      "veredicto": "bueno",
       "confianza": 0.74,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 81.0,
         "temp": 1.0,
         "agua": 0.52,
         "helada": 1.0,
@@ -427,9 +508,12 @@
       "inicio": "2026-11-16",
       "fin": "2027-04-29",
       "score": 94.9,
+      "veredicto": "bueno",
       "confianza": 0.81,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 94.9,
         "temp": 1.0,
         "agua": 0.87,
         "helada": 1.0,
@@ -442,9 +526,12 @@
       "inicio": "2026-11-30",
       "fin": "2027-05-13",
       "score": 90.8,
+      "veredicto": "bueno",
       "confianza": 0.79,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 90.8,
         "temp": 1.0,
         "agua": 0.77,
         "helada": 1.0,
@@ -457,9 +544,12 @@
       "inicio": "2026-12-13",
       "fin": "2027-05-26",
       "score": 86.8,
+      "veredicto": "bueno",
       "confianza": 0.77,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 86.8,
         "temp": 1.0,
         "agua": 0.67,
         "helada": 1.0,
@@ -474,9 +564,10 @@
       "inicio": "2026-11-16",
       "fin": "2027-02-28",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.85,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -489,9 +580,10 @@
       "inicio": "2026-11-30",
       "fin": "2027-03-14",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.83,
+      "motivos": [],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -504,9 +596,12 @@
       "inicio": "2026-12-13",
       "fin": "2027-03-27",
       "score": 99.9,
+      "veredicto": "bueno",
       "confianza": 0.81,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 99.9,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -521,9 +616,13 @@
       "inicio": "2026-11-16",
       "fin": "2027-11-15",
       "score": 70.0,
+      "veredicto": "bueno",
       "confianza": 0.67,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 70.0,
         "temp": 0.79,
         "agua": 0.48,
         "helada": 1.0,
@@ -538,9 +637,12 @@
       "inicio": "2026-11-17",
       "fin": "2027-03-16",
       "score": 100.0,
+      "veredicto": "bueno",
       "confianza": 0.84,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 100.0,
         "temp": 1.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -553,9 +655,12 @@
       "inicio": "2026-12-01",
       "fin": "2027-03-30",
       "score": 99.7,
+      "veredicto": "bueno",
       "confianza": 0.82,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 99.7,
         "temp": 1.0,
         "agua": 0.99,
         "helada": 1.0,
@@ -568,9 +673,12 @@
       "inicio": "2026-12-15",
       "fin": "2027-04-13",
       "score": 96.7,
+      "veredicto": "bueno",
       "confianza": 0.8,
+      "motivos": [
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 96.7,
         "temp": 1.0,
         "agua": 0.92,
         "helada": 1.0,
@@ -585,9 +693,13 @@
       "inicio": "2026-11-16",
       "fin": "2027-03-30",
       "score": 55.0,
+      "veredicto": "con_cuidado",
       "confianza": 0.83,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 55.0,
         "temp": 0.0,
         "agua": 1.0,
         "helada": 1.0,
@@ -600,9 +712,13 @@
       "inicio": "2026-11-30",
       "fin": "2027-04-13",
       "score": 54.1,
+      "veredicto": "con_cuidado",
       "confianza": 0.81,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 54.1,
         "temp": 0.0,
         "agua": 0.98,
         "helada": 1.0,
@@ -615,9 +731,13 @@
       "inicio": "2026-12-13",
       "fin": "2027-04-26",
       "score": 52.1,
+      "veredicto": "con_cuidado",
       "confianza": 0.79,
+      "motivos": [
+        "temp_fuera_rango",
+        "deficit_agua"
+      ],
       "detalle": {
-        "score": 52.1,
         "temp": 0.0,
         "agua": 0.93,
         "helada": 1.0,

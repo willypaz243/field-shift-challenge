@@ -149,7 +149,7 @@ Con `desde_version`, devolver solo lo que cambió.
 | Lluvia en palabras | `pmm = 0` sin lluvia · `< 4` débil · `< 15` moderada · `≥ 15` fuerte |
 | Icono del día (prioridad) | granizo > helada > lluvia > nublado > sol |
 | Época | seca: abril–septiembre · lluvias: octubre–marzo |
-| Scoring de ventana | El de `data/crops/README.md` ("Reglas de scoring"). Para la app: score ≥ 70 = **bueno** (verde), 40–69 = **con cuidado**, < 40 = **malo** (rojo). *Umbrales a validar.* |
+| Scoring de ventana | El de `data/crops/README.md` ("Reglas de scoring"): `score_window()` en `src/model/scoring.py` devuelve `score` (0–100), `veredicto` (`bueno` ≥ 70 verde · `con_cuidado` ≥ 40 amarillo · `malo` < 40 rojo; umbrales configurables), `confianza` (0.4–0.9), `motivos` (códigos: `temp_fuera_rango`, `deficit_agua`, `heladas`, `erosion_riesgo`) y `detalle`. Contrato de portabilidad para la app: `data/model/test_vectors.json` (issue #37 [T12a]). |
 
 ---
 

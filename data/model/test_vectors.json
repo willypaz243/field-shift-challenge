@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "descripcion": "Vectores de prueba de la funcion de scoring de ventana (issue #37 [T12a]). La app movil debe reproducir score_window() exactamente: cada vector es entrada -> salida esperada. Reglas: data/crops/README.md (seccion 'Reglas de scoring').",
+  "vectores": [
+    {
+      "id": "v01_ventana_perfecta",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 100.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": [],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v02_helada_tolerancia_baja",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "baja" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [-1, -2, 0, 5, 8],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 94.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": ["heladas"],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 0.6, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 2 }
+      }
+    },
+    {
+      "id": "v03_helada_tolerancia_media",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "media" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [-3, -1, 2, 4, 6],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 97.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": ["heladas"],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 0.8, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 2 }
+      }
+    },
+    {
+      "id": "v04_deficit_agua_severo",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [0, 0, 0, 0, 0],
+        "et0": [4, 4, 4, 4, 4],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 60.0,
+        "veredicto": "con_cuidado",
+        "confianza": 0.9,
+        "motivos": ["deficit_agua"],
+        "detalle": { "temp": 1.0, "agua": 0.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 20.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v05_deficit_mitigado_tolerante_si",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "sí"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [0, 0, 0, 0, 0],
+        "et0": [4, 4, 4, 4, 4],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 76.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": ["deficit_agua"],
+        "detalle": { "temp": 1.0, "agua": 0.4, "helada": 1.0, "erosion": 1.0, "deficit_mm": 20.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v06_deficit_poco_ciclo_largo",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [20, 20],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 0.4, "medio": 0.5, "final": 0.6 },
+          "drought_tolerant": "poco"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17, 17, 17, 17, 30, 30],
+        "tmin": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        "pmm": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "et0": [3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+        "horizon": 365,
+        "pos": 30
+      },
+      "esperado": {
+        "score": 73.0,
+        "veredicto": "bueno",
+        "confianza": 0.87,
+        "motivos": ["temp_fuera_rango", "deficit_agua"],
+        "detalle": { "temp": 0.8, "agua": 0.55, "helada": 1.0, "erosion": 1.0, "deficit_mm": 15.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v07_erosion_alta_cerca_drenaje",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no",
+          "erosion_sens": "alta"
+        },
+        "zona": { "cerca_drenaje": 120 },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 50.0,
+        "veredicto": "con_cuidado",
+        "confianza": 0.9,
+        "motivos": ["erosion_riesgo"],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 0.5, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v08_erosion_media_cerca_drenaje",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no",
+          "erosion_sens": "media"
+        },
+        "zona": { "cerca_drenaje": 50 },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 75.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": ["erosion_riesgo"],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 0.75, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v09_erosion_sin_drenaje",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no",
+          "erosion_sens": "alta"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 100.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": [],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v10_ventana_mala",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "baja" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [30, 30, 30, 30, 30],
+        "tmin": [-2, -2, -1, -1, -1],
+        "pmm": [0, 0, 0, 0, 0],
+        "et0": [4, 4, 4, 4, 4],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 0.0,
+        "veredicto": "malo",
+        "confianza": 0.9,
+        "motivos": ["temp_fuera_rango", "deficit_agua", "heladas"],
+        "detalle": { "temp": 0.0, "agua": 0.0, "helada": 0.0, "erosion": 1.0, "deficit_mm": 20.0, "frost_days": 5 }
+      }
+    },
+    {
+      "id": "v11_veredicto_70_bueno",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [6, 6],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [30, 30, 17],
+        "tmin": [5, 5, 5],
+        "pmm": [4, 4, 4],
+        "et0": [2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 70.0,
+        "veredicto": "bueno",
+        "confianza": 0.9,
+        "motivos": ["temp_fuera_rango"],
+        "detalle": { "temp": 0.33, "agua": 1.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v12_veredicto_699_con_cuidado",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [20, 20],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17, 30, 30, 30, 30, 30],
+        "tmin": [5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        "pmm": [0.62, 0.62, 0.62, 0.62, 0.62, 0.62, 0.62, 0.62, 0.62, 0.62],
+        "et0": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "horizon": 365,
+        "pos": 100
+      },
+      "esperado": {
+        "score": 69.9,
+        "veredicto": "con_cuidado",
+        "confianza": 0.78,
+        "motivos": ["temp_fuera_rango", "deficit_agua"],
+        "detalle": { "temp": 0.5, "agua": 0.81, "helada": 1.0, "erosion": 1.0, "deficit_mm": 3.8, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v13_veredicto_40_con_cuidado",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "baja" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [30, 30, 30, 30, 30],
+        "tmin": [-1, -1, -1, -1, -1],
+        "pmm": [2, 2, 2, 2, 2],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 0
+      },
+      "esperado": {
+        "score": 40.0,
+        "veredicto": "con_cuidado",
+        "confianza": 0.9,
+        "motivos": ["temp_fuera_rango", "heladas"],
+        "detalle": { "temp": 0.0, "agua": 1.0, "helada": 0.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 5 }
+      }
+    },
+    {
+      "id": "v14_veredicto_399_malo",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [20, 20],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "baja" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+        "tmin": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        "pmm": [0.995, 0.995, 0.995, 0.995, 0.995, 0.995, 0.995, 0.995, 0.995, 0.995],
+        "et0": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        "horizon": 365,
+        "pos": 200
+      },
+      "esperado": {
+        "score": 39.9,
+        "veredicto": "malo",
+        "confianza": 0.64,
+        "motivos": ["temp_fuera_rango", "deficit_agua", "heladas"],
+        "detalle": { "temp": 0.0, "agua": 1.0, "helada": 0.0, "erosion": 1.0, "deficit_mm": 0.1, "frost_days": 10 }
+      }
+    },
+    {
+      "id": "v15_confianza_final_horizonte",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2],
+        "horizon": 365,
+        "pos": 360
+      },
+      "esperado": {
+        "score": 100.0,
+        "veredicto": "bueno",
+        "confianza": 0.42,
+        "motivos": [],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    },
+    {
+      "id": "v16_sin_horizonte",
+      "entrada": {
+        "cultivo": {
+          "id": "prueba",
+          "ciclo_dias": [10, 10],
+          "temp": { "tmean_opt": [15, 20] },
+          "helada": { "tolerancia": "alta" },
+          "kc": { "inicial": 1.0, "medio": 1.0, "final": 1.0 },
+          "drought_tolerant": "no"
+        },
+        "zona": { "cerca_drenaje": null },
+        "tmean": [17, 17, 17, 17, 17],
+        "tmin": [5, 5, 5, 5, 5],
+        "pmm": [4, 4, 4, 4, 4],
+        "et0": [2, 2, 2, 2, 2]
+      },
+      "esperado": {
+        "score": 100.0,
+        "veredicto": "bueno",
+        "confianza": 0.7,
+        "motivos": [],
+        "detalle": { "temp": 1.0, "agua": 1.0, "helada": 1.0, "erosion": 1.0, "deficit_mm": 0.0, "frost_days": 0 }
+      }
+    }
+  ]
+}
