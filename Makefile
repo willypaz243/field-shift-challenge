@@ -1,4 +1,7 @@
-.PHONY: db-init db-load test
+.PHONY: api db-init db-load test
+
+api:
+	uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 
 db-init:
 	uv run python -c "from api.core.db import init_db, make_engine; init_db(make_engine())"

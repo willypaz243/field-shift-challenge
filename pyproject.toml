@@ -11,6 +11,7 @@ dependencies = [
     "pillow>=13.0.0",
     "requests>=2.34.2",
     "sqlmodel>=0.0.50",
+    "uvicorn>=0.54.0",
 ]
 
 [dependency-groups]
