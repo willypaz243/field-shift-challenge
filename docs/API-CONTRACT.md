@@ -51,7 +51,7 @@ flowchart LR
 | Campos | `snake_case` en español, como `crops.json` (`ciclo_dias`, `tolerancia`…). Variables de clima con los nombres de `crops.json`: `tmin`, `tmax`, `tmean`, `pmm`, `rh`, `sw`, `ws`, `sm_surface`, `sm_root`. |
 | Fechas | ISO 8601. Día civil boliviano (America/La_Paz, UTC−4), **salvo IMERG**, que viene en día UTC (ver §5). |
 | Coordenadas | WGS84, orden GeoJSON **longitud, latitud**. |
-| Unidades | °C · mm/día · % · W/m² · m/s · m³/m³ · m. |
+| Unidades | °C · mm/día · % · m/s · m³/m³ · m. Radiación `sw` en **MJ/m²/día**, como sale de POWER en `data/power/` (el README de cultivos dice W/m²: unificar). |
 | Textos | La API devuelve **códigos**, no frases. La app traduce a español y quechua. |
 | Fuente | Todo dato derivado lleva `fuente` (códigos de §10). |
 | Frescura | Toda respuesta lleva `actualizado_en`. La app muestra "actualizado 16 nov, 6:00". |
@@ -65,14 +65,14 @@ flowchart LR
 ## 2. Endpoints del backlog
 
 ### 2.1 `GET /zones`
-Zonas agrícolas del Cercado (grid de puntos, backlog 0.2 y 1.4). La app ubica al agricultor en la zona más cercana a su GPS.
+Zonas agrícolas del Cercado (grid de puntos, backlog 0.2 y 1.4). Los ids son los del ETL de POWER: `D9_itocta`, `D15_tamborada`, `D3_molle`… (ver `data/power/*_meta.json`). La app ubica al agricultor en la zona más cercana a su GPS.
 
 ```json
 {
   "actualizado_en": "2026-11-14T06:00:00-04:00",
   "zones": [
-    { "id": "itocta-1", "nombre": "Itocta", "comuna": "ITOCTA", "distrito": 9,
-      "lat": -17.4615, "lon": -66.2191, "elev_m": 2590, "pendiente": 2.1,
+    { "id": "D9_itocta", "nombre": "Itocta", "comuna": "ITOCTA", "distrito": 9,
+      "lat": -17.4611, "lon": -66.2185, "elev_m": 2590, "pendiente": 2.1,
       "es_agricola": true, "cerca_drenaje": 140, "altitud_alta": false }
   ],
   "fuente": ["gamc_wms", "srtm"]
@@ -106,13 +106,13 @@ Proyección diaria 365 d (backlog 2.2 y 3.2). Alimenta: **Calendario → próxim
 
 ```json
 {
-  "zone_id": "itocta-1",
+  "zone_id": "D9_itocta",
   "anio": 2027,
   "creado_en": "2026-11-10T03:00:00-04:00",
   "modelo": { "tipo": "fourier_tendencia", "backtest": { "periodo": "2024-2025", "mae": { "tmin": 1.4, "pmm": 2.9 } } },
   "dias": [
     { "fecha": "2027-01-15", "tmin": 10.2, "tmax": 24.6, "tmean": 17.1, "pmm": 4.8,
-      "rh": 71, "sw": 228, "ws": 2.1, "sm_surface": 0.27, "sm_root": 0.30,
+      "rh": 71, "sw": 21.6, "ws": 2.1, "sm_surface": 0.27, "sm_root": 0.30,
       "incert_min": { "tmin": 8.9, "pmm": 0.0 }, "incert_max": { "tmin": 11.6, "pmm": 13.0 } }
   ],
   "fuente": ["nasa_power", "nasa_imerg", "nasa_smap"]
@@ -160,7 +160,7 @@ Con `desde_version`, devolver solo lo que cambió.
 
 ```json
 {
-  "zone_id": "itocta-1",
+  "zone_id": "D9_itocta",
   "actualizado_en": "2026-11-16T06:00:00-04:00",
   "dias": [
     { "fecha": "2026-11-21", "tmin": -2, "tmax": 24, "pmm": 0, "granizo": false, "confianza": "alta" },
@@ -176,7 +176,7 @@ La app muestra 4 semanas: días 1–14 de aquí y días 15–28 de la proyecció
 
 ```json
 {
-  "zone_id": "itocta-1",
+  "zone_id": "D9_itocta",
   "periodo": { "power": "1995-2024", "imerg": "2016-2025" },
   "meses": [
     { "mes": 1, "pmm_total": 118, "tmin": 10.4, "tmax": 24.8,
@@ -324,20 +324,20 @@ Pantalla: **Mi zona**.
 ### 7.3 `POST /feedback`
 Pantalla: **¿Cómo salió tu cosecha?** (backlog 4.5). Es la única fuente de "etiquetas" de éxito para validar el modelo.
 ```json
-{ "zone_id": "itocta-1", "crop_id": "haba", "siembra": "2026-07-15",
+{ "zone_id": "D9_itocta", "crop_id": "haba", "siembra": "2026-07-15",
   "cosecha": "2026-11-16", "resultado": "buena" }
 ```
 `resultado`: `buena` · `regular` · `mala`. Si el agricultor respondió "Todavía no", no se envía nada.
 
 ### 7.4 Elección de rotación (opcional)
-`POST /plans` `{ "zone_id": "itocta-1", "rotacion_id": "choclo-haba", "siembra": "2027-04-05" }`. Solo para estadística de la zona: el plan vive en el celular.
+`POST /plans` `{ "zone_id": "D9_itocta", "rotacion_id": "choclo-haba", "siembra": "2027-04-05" }`. Solo para estadística de la zona: el plan vive en el celular.
 
 ---
 
 ## 8. Errores
 
 ```json
-{ "error": { "codigo": "zone_not_found", "mensaje_tecnico": "zone_id itocta-9 no existe" } }
+{ "error": { "codigo": "zone_not_found", "mensaje_tecnico": "zone_id D99_x no existe" } }
 ```
 | HTTP | Cuándo |
 |---|---|
