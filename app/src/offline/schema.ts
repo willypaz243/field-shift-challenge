@@ -18,5 +18,8 @@ export async function initialize(db: SQLiteDatabase) {
     CREATE TABLE IF NOT EXISTS farm (
       key TEXT PRIMARY KEY, value TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS cache (
+      key TEXT PRIMARY KEY, value TEXT NOT NULL
+    );
   `);
 }
