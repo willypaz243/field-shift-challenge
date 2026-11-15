@@ -1,0 +1,1686 @@
+openapi: 3.1.0
+info:
+  title: Choclito API
+  version: 1.1.0
+  description: Generated from docs/API-CONTRACT.md (v1.1). Field names in Spanish snake_case, dates in America/La_Paz except
+    IMERG (UTC). The API returns codes; the app translates them.
+servers:
+- url: http://localhost:4010
+  description: Prism mock
+- url: http://localhost:8000
+  description: FastAPI (local)
+tags:
+- name: zones
+- name: crops
+- name: climate
+- name: water
+- name: alerts
+- name: reports
+- name: feedback
+- name: sync
+paths:
+  /zones:
+    get:
+      tags:
+      - zones
+      summary: Agricultural zones of Cercado
+      operationId: listZones
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZonesResponse'
+              example:
+                actualizado_en: '2026-11-14T06:00:00-04:00'
+                zones:
+                - id: D9_itocta
+                  nombre: Itocta
+                  comuna: ITOCTA
+                  distrito: 9
+                  lat: -17.4611
+                  lon: -66.2185
+                  elev_m: 2590
+                  pendiente: 2.1
+                  es_agricola: true
+                  cerca_drenaje: 140
+                  altitud_alta: false
+                fuente:
+                - gamc_wms
+                - srtm
+  /crops:
+    get:
+      tags:
+      - crops
+      summary: Crop catalog (data/crops/crops.json as is)
+      operationId: getCrops
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CropsCatalog'
+              example:
+                version: 2
+                actualizado: '2026-11-14'
+                zona: Cercado de Cochabamba (valle + alturas sobre cota 2750)
+                variables:
+                - tmin
+                - tmax
+                - tmean
+                - pmm
+                - rh
+                - sw
+                - ws
+                - et0
+                - sm_surface
+                - sm_root
+                leer: README.md
+                crops:
+                - id: papa
+                  nombre: Papa
+                  cientifico: Solanum tuberosum
+                  tipo: tuberculo
+                  tipo_ciclo: anual
+                  ciclo_dias:
+                  - 120
+                  - 180
+                  temp:
+                    tmean_opt:
+                    - 15
+                    - 20
+                    fuente: local
+                  helada:
+                    tolerancia: baja
+                    etapa_critica: todo el ciclo
+                  agua:
+                    demanda: alta
+                    deficit_tol: baja
+                  altitud: valle
+                  erosion_sens: alta
+                  fix_n: false
+                  breaks_pest_cycle: false
+                  forage_value: bajo
+                  drought_tolerant: 'no'
+                  deep_rooting: false
+                  kc:
+                    inicial: 0.75
+                    medio: 1.15
+                    final: 1.05
+                  mercado: 'Cultivo ancla del Cercado: 26.544 Tm / 2.396 ha (SITAP)'
+                  siembra_local: ago / dic (después del riesgo fuerte de heladas)
+                  rotacion: No repetir papa tras papa (otoñal/plagas); precede bien tras haba/tarwi; precede a trigo
+                  fuente: 'CROPS.md #1 (PROINPA, SITAP, revistasbolivianas 2018)'
+                - id: choclo
+                  nombre: Maíz / choclo
+                  cientifico: Zea mays
+                  tipo: cereal
+                  tipo_ciclo: anual
+                  ciclo_dias:
+                  - 120
+                  - 240
+                  temp:
+                    tmean_opt:
+                    - 18
+                    - 27
+                    fuente: estimado
+                  helada:
+                    tolerancia: baja
+                    etapa_critica: todo el ciclo
+                  agua:
+                    demanda: alta
+                    deficit_tol: baja
+                  altitud: valle
+                  erosion_sens: media
+                  fix_n: false
+                  breaks_pest_cycle: true
+                  forage_value: medio
+                  drought_tolerant: poco
+                  deep_rooting: true
+                  kc:
+                    inicial: 0.3
+                    medio: 1.2
+                    final: 1.05
+                  mercado: 'Choclo cochabambino (waltaco, kulli, morochito, ch''iji): demanda segura local (anticuchos/sillpacho)'
+                  siembra_local: sep–oct (con riego hasta dic); precoz 120–170 días, amiláceo tardío 7–8 meses
+                  rotacion: Alta extracción de N; después conviene leguminosa (haba/tarwi) o descanso. Interruptor de ciclos
+                    de papa
+                  fuente: 'CROPS.md #2 (EcoRural 2022, Agrecol Andes)'
+  /zones/{zone_id}/forecast:
+    get:
+      tags:
+      - climate
+      summary: Daily 365-day projection with uncertainty band
+      operationId: getForecast
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      - name: anio
+        in: query
+        schema:
+          type: integer
+        example: 2027
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forecast'
+              example:
+                zone_id: D9_itocta
+                anio: 2027
+                creado_en: '2026-11-10T03:00:00-04:00'
+                modelo:
+                  tipo: fourier_tendencia
+                  backtest:
+                    periodo: 2024-2025
+                    mae:
+                      tmin: 1.4
+                      pmm: 2.9
+                dias:
+                - fecha: '2027-01-15'
+                  tmin: 10.2
+                  tmax: 24.6
+                  tmean: 17.1
+                  pmm: 4.8
+                  rh: 71
+                  sw: 21.6
+                  ws: 2.1
+                  sm_surface: 0.27
+                  sm_root: 0.3
+                  incert_min:
+                    tmin: 8.9
+                    pmm: 0.0
+                  incert_max:
+                    tmin: 11.6
+                    pmm: 13.0
+                fuente:
+                - nasa_power
+                - nasa_imerg
+                - nasa_smap
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /zones/{zone_id}/weather:
+    get:
+      tags:
+      - climate
+      summary: Short-range forecast, day by day
+      operationId: getWeather
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      - name: dias
+        in: query
+        schema:
+          type: integer
+          default: 14
+          maximum: 14
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+              example:
+                zone_id: D9_itocta
+                actualizado_en: '2026-11-16T06:00:00-04:00'
+                dias:
+                - fecha: '2026-11-21'
+                  tmin: -2
+                  tmax: 24
+                  pmm: 0
+                  granizo: false
+                  confianza: alta
+                - fecha: '2026-11-26'
+                  tmin: 10
+                  tmax: 23
+                  pmm: 8
+                  granizo: true
+                  confianza: media
+                fuente:
+                - nasa_geos
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /zones/{zone_id}/climatology:
+    get:
+      tags:
+      - climate
+      summary: Typical climate per month (30 years)
+      operationId: getClimatology
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Climatology'
+              example:
+                zone_id: D9_itocta
+                periodo:
+                  power: 1995-2024
+                  imerg: 2016-2025
+                meses:
+                - mes: 1
+                  pmm_total: 118
+                  tmin: 10.4
+                  tmax: 24.8
+                  p_helada: 0.0
+                  p_granizo: 0.35
+                  p_desborde: 0.3
+                  p_poca_agua: 0.05
+                - mes: 7
+                  pmm_total: 2
+                  tmin: -1.6
+                  tmax: 22.1
+                  p_helada: 0.85
+                  p_granizo: 0.0
+                  p_desborde: 0.0
+                  p_poca_agua: 0.4
+                fuente:
+                - nasa_power
+                - nasa_imerg
+                - eventos_historicos
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /zones/{zone_id}/history:
+    get:
+      tags:
+      - climate
+      summary: Measured climate (IMERG day in UTC)
+      operationId: getHistory
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      - name: desde
+        in: query
+        schema:
+          type: string
+          format: date
+      - name: hasta
+        in: query
+        schema:
+          type: string
+          format: date
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/History'
+              example:
+                dias:
+                - fecha_utc: '2026-11-12'
+                  pmm: 3.2
+                  pmm_producto: late
+                  pmm_revision: V07B
+                  pmm_calidad:
+                    intervalos_validos: 48
+                  fecha: '2026-11-12'
+                  tmin: 6.1
+                  tmax: 27.4
+                fuente:
+                - nasa_imerg
+                - nasa_power
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /reservoirs/la-angostura:
+    get:
+      tags:
+      - water
+      summary: La Angostura dam level
+      operationId: getReservoir
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservoir'
+              example:
+                actualizado_en: '2026-11-15T18:00:00-04:00'
+                nivel_pct: 34
+                volumen_hm3: 25.5
+                estado: bajo
+                fuente:
+                - riego_n1
+  /zones/{zone_id}/alerts:
+    get:
+      tags:
+      - alerts
+      summary: Active alerts for the zone
+      operationId: getAlerts
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alerts'
+              example:
+                actualizado_en: '2026-11-16T06:00:00-04:00'
+                alertas:
+                - id: al-1
+                  tipo: helada
+                  fecha_evento: '2026-11-21'
+                  momento: madrugada
+                  valor:
+                    tmin: -2
+                  confianza: alta
+                  volver_a_avisar: '2026-11-20'
+                  regla:
+                    id: helada-firma-1
+                    similitud: 0.82
+                    eventos_parecidos:
+                    - '2019-06-12'
+                    - '2021-07-03'
+                - id: al-3
+                  tipo: represa_baja
+                  valor:
+                    nivel_pct: 34
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /zones/{zone_id}/map:
+    get:
+      tags:
+      - reports
+      summary: Zone map (anonymous, cells with >= 3 reports) and history
+      operationId: getZoneMap
+      parameters:
+      - name: zone_id
+        in: path
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZoneMap'
+              example:
+                actualizado_en: '2026-11-16T06:00:00-04:00'
+                resumen:
+                  sin_agua_vecinos: 8
+                  periodo_dias: 7
+                  direccion: este
+                capas:
+                  sin_agua:
+                    type: FeatureCollection
+                    features: []
+                  inundable:
+                    type: FeatureCollection
+                    features: []
+                historial:
+                - fecha: '2024-03-10'
+                  tipo: inundacion
+                  lugar: canal_valverde
+                  fuente: eventos_historicos
+                - fecha: '2024-07-04'
+                  tipo: represa_baja
+                  valor:
+                    nivel_pct: 18
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /sync:
+    get:
+      tags:
+      - sync
+      summary: Offline package for the app (<= 500 KB gzip)
+      operationId: getSync
+      parameters:
+      - name: zone_id
+        in: query
+        required: true
+        schema:
+          type: string
+        example: D9_itocta
+      - name: desde_version
+        in: query
+        schema:
+          type: integer
+        description: Return only what changed since this version
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sync'
+              example:
+                sync_version: 42
+                hash: sha256:0d3c1f7e
+                zone:
+                  id: D9_itocta
+                  nombre: Itocta
+                  comuna: ITOCTA
+                  distrito: 9
+                  lat: -17.4611
+                  lon: -66.2185
+                  elev_m: 2590
+                  pendiente: 2.1
+                  es_agricola: true
+                  cerca_drenaje: 140
+                  altitud_alta: false
+                crops:
+                  version: 2
+                  actualizado: '2026-11-14'
+                  zona: Cercado de Cochabamba (valle + alturas sobre cota 2750)
+                  variables:
+                  - tmin
+                  - tmax
+                  - tmean
+                  - pmm
+                  - rh
+                  - sw
+                  - ws
+                  - et0
+                  - sm_surface
+                  - sm_root
+                  leer: README.md
+                  crops:
+                  - id: papa
+                    nombre: Papa
+                    cientifico: Solanum tuberosum
+                    tipo: tuberculo
+                    tipo_ciclo: anual
+                    ciclo_dias:
+                    - 120
+                    - 180
+                    temp:
+                      tmean_opt:
+                      - 15
+                      - 20
+                      fuente: local
+                    helada:
+                      tolerancia: baja
+                      etapa_critica: todo el ciclo
+                    agua:
+                      demanda: alta
+                      deficit_tol: baja
+                    altitud: valle
+                    erosion_sens: alta
+                    fix_n: false
+                    breaks_pest_cycle: false
+                    forage_value: bajo
+                    drought_tolerant: 'no'
+                    deep_rooting: false
+                    kc:
+                      inicial: 0.75
+                      medio: 1.15
+                      final: 1.05
+                    mercado: 'Cultivo ancla del Cercado: 26.544 Tm / 2.396 ha (SITAP)'
+                    siembra_local: ago / dic (después del riesgo fuerte de heladas)
+                    rotacion: No repetir papa tras papa (otoñal/plagas); precede bien tras haba/tarwi; precede a trigo
+                    fuente: 'CROPS.md #1 (PROINPA, SITAP, revistasbolivianas 2018)'
+                  - id: choclo
+                    nombre: Maíz / choclo
+                    cientifico: Zea mays
+                    tipo: cereal
+                    tipo_ciclo: anual
+                    ciclo_dias:
+                    - 120
+                    - 240
+                    temp:
+                      tmean_opt:
+                      - 18
+                      - 27
+                      fuente: estimado
+                    helada:
+                      tolerancia: baja
+                      etapa_critica: todo el ciclo
+                    agua:
+                      demanda: alta
+                      deficit_tol: baja
+                    altitud: valle
+                    erosion_sens: media
+                    fix_n: false
+                    breaks_pest_cycle: true
+                    forage_value: medio
+                    drought_tolerant: poco
+                    deep_rooting: true
+                    kc:
+                      inicial: 0.3
+                      medio: 1.2
+                      final: 1.05
+                    mercado: 'Choclo cochabambino (waltaco, kulli, morochito, ch''iji): demanda segura local (anticuchos/sillpacho)'
+                    siembra_local: sep–oct (con riego hasta dic); precoz 120–170 días, amiláceo tardío 7–8 meses
+                    rotacion: Alta extracción de N; después conviene leguminosa (haba/tarwi) o descanso. Interruptor de ciclos
+                      de papa
+                    fuente: 'CROPS.md #2 (EcoRural 2022, Agrecol Andes)'
+                forecast:
+                  zone_id: D9_itocta
+                  anio: 2027
+                  creado_en: '2026-11-10T03:00:00-04:00'
+                  modelo:
+                    tipo: fourier_tendencia
+                    backtest:
+                      periodo: 2024-2025
+                      mae:
+                        tmin: 1.4
+                        pmm: 2.9
+                  dias:
+                  - fecha: '2027-01-15'
+                    tmin: 10.2
+                    tmax: 24.6
+                    tmean: 17.1
+                    pmm: 4.8
+                    rh: 71
+                    sw: 21.6
+                    ws: 2.1
+                    sm_surface: 0.27
+                    sm_root: 0.3
+                    incert_min:
+                      tmin: 8.9
+                      pmm: 0.0
+                    incert_max:
+                      tmin: 11.6
+                      pmm: 13.0
+                  fuente:
+                  - nasa_power
+                  - nasa_imerg
+                  - nasa_smap
+                corto_plazo:
+                  zone_id: D9_itocta
+                  actualizado_en: '2026-11-16T06:00:00-04:00'
+                  dias:
+                  - fecha: '2026-11-21'
+                    tmin: -2
+                    tmax: 24
+                    pmm: 0
+                    granizo: false
+                    confianza: alta
+                  - fecha: '2026-11-26'
+                    tmin: 10
+                    tmax: 23
+                    pmm: 8
+                    granizo: true
+                    confianza: media
+                  fuente:
+                  - nasa_geos
+                climatologia:
+                  zone_id: D9_itocta
+                  periodo:
+                    power: 1995-2024
+                    imerg: 2016-2025
+                  meses:
+                  - mes: 1
+                    pmm_total: 118
+                    tmin: 10.4
+                    tmax: 24.8
+                    p_helada: 0.0
+                    p_granizo: 0.35
+                    p_desborde: 0.3
+                    p_poca_agua: 0.05
+                  - mes: 7
+                    pmm_total: 2
+                    tmin: -1.6
+                    tmax: 22.1
+                    p_helada: 0.85
+                    p_granizo: 0.0
+                    p_desborde: 0.0
+                    p_poca_agua: 0.4
+                  fuente:
+                  - nasa_power
+                  - nasa_imerg
+                  - eventos_historicos
+                alertas:
+                - id: al-1
+                  tipo: helada
+                  fecha_evento: '2026-11-21'
+                  momento: madrugada
+                  valor:
+                    tmin: -2
+                  confianza: alta
+                  volver_a_avisar: '2026-11-20'
+                  regla:
+                    id: helada-firma-1
+                    similitud: 0.82
+                    eventos_parecidos:
+                    - '2019-06-12'
+                    - '2021-07-03'
+                - id: al-3
+                  tipo: represa_baja
+                  valor:
+                    nivel_pct: 34
+                rotaciones:
+                  actualizado_en: '2026-11-14T06:00:00-04:00'
+                  rotaciones:
+                  - id: choclo-haba
+                    secuencia:
+                    - choclo
+                    - haba
+                    puntaje:
+                      agua: 1
+                      tierra: 3
+                      forraje: 1
+                      vender: 3
+                    etiquetas:
+                    - - abona_tierra
+                      - bien
+                    - - vende_haba
+                      - bien
+                    - - mas_riego
+                      - mal
+                    por_que: fija_nitrogeno
+                    bueno:
+                    - tierra_fertil
+                    - menos_gusano
+                    - vende_haba_verde
+                    riesgos:
+                    - helada_julio_flor
+                    - riego_invierno
+                    falta_saber:
+                    - precio_haba
+                    evidencia:
+                    - codigo: heladas_may_ago
+                      fuente: nasa_power
+                    - codigo: poca_lluvia_abr_sep
+                      fuente: nasa_imerg
+                    - codigo: angostura_baja
+                      fuente: riego_n1
+                    confianza: media
+                  - id: choclo-sin_cultivo
+                    secuencia:
+                    - choclo
+                    - null
+                    actual_tipica: true
+                    meses_sin_cultivo: 6
+                    puntaje:
+                      agua: 3
+                      tierra: 1
+                      forraje: 2
+                      vender: 2
+                    etiquetas:
+                    - - poco_riego
+                      - bien
+                    - - tierra_se_cansa
+                      - mal
+                    - - meses_sin_cultivo
+                      - mal
+                    por_que: sin_cambio
+                    bueno:
+                    - poco_riego
+                    - conocido
+                    riesgos:
+                    - mas_gusano
+                    - erosion_viento
+                    falta_saber:
+                    - rendimiento_parcela
+                    evidencia:
+                    - codigo: campo_sin_cultivo_abr_sep
+                      fuente: nasa_power
+                    confianza: media
+                represa:
+                  actualizado_en: '2026-11-15T18:00:00-04:00'
+                  nivel_pct: 34
+                  volumen_hm3: 25.5
+                  estado: bajo
+                  fuente:
+                  - riego_n1
+                historial_zona:
+                - fecha: '2024-03-10'
+                  tipo: inundacion
+                  lugar: canal_valverde
+                  fuente: eventos_historicos
+                - fecha: '2024-07-04'
+                  tipo: represa_baja
+                  valor:
+                    nivel_pct: 18
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
+  /reports:
+    post:
+      tags:
+      - reports
+      summary: Farmer report (queued offline, idempotent)
+      operationId: createReport
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                tipo:
+                  type: string
+                  enum:
+                  - sin_agua
+                  - helada
+                  - granizo
+                  - inundacion
+                  - plaga
+                zone_id:
+                  type: string
+                lat:
+                  type: number
+                lon:
+                  type: number
+                ocurrido_en:
+                  type: string
+                  format: date-time
+                foto:
+                  type: string
+                  format: binary
+                audio:
+                  type: string
+                  format: binary
+              required:
+              - tipo
+              - zone_id
+              - ocurrido_en
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCreated'
+              example:
+                id: rep-551
+                vecinos_mismo_tipo_semana: 7
+        '409':
+          description: 'Idempotency-Key already used: original report'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportCreated'
+              example:
+                id: rep-551
+                vecinos_mismo_tipo_semana: 7
+  /feedback:
+    post:
+      tags:
+      - feedback
+      summary: Harvest result
+      operationId: createFeedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Feedback'
+            example:
+              zone_id: D9_itocta
+              crop_id: haba
+              siembra: '2026-07-15'
+              cosecha: '2026-11-16'
+              resultado: buena
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: fb-12
+        '400':
+          description: resultado must be buena, regular or mala
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: invalid_request
+                  mensaje_tecnico: resultado must be buena, regular or mala
+  /plans:
+    post:
+      tags:
+      - feedback
+      summary: Chosen rotation plan (statistics only)
+      operationId: createPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plan'
+            example:
+              zone_id: D9_itocta
+              rotacion_id: choclo-haba
+              siembra: '2027-04-05'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: plan-3
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            codigo:
+              type: string
+            mensaje_tecnico:
+              type: string
+          required:
+          - codigo
+      required:
+      - error
+    Zone:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        comuna:
+          type: string
+        distrito:
+          type: integer
+        lat:
+          type: number
+        lon:
+          type: number
+        elev_m:
+          type: number
+        pendiente:
+          type: number
+        es_agricola:
+          type: boolean
+        cerca_drenaje:
+          anyOf:
+          - type: integer
+          - type: 'null'
+        altitud_alta:
+          type: boolean
+      required:
+      - id
+      - nombre
+      - lat
+      - lon
+      - es_agricola
+    ZonesResponse:
+      type: object
+      properties:
+        actualizado_en:
+          type: string
+          format: date-time
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Zone'
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+      required:
+      - actualizado_en
+      - zones
+    Crop:
+      type: object
+      properties:
+        id:
+          type: string
+        nombre:
+          type: string
+        tipo_ciclo:
+          type: string
+          enum:
+          - anual
+          - perenne
+        ciclo_dias:
+          type: array
+          items:
+            type: integer
+        fix_n:
+          type: boolean
+        kc:
+          type: object
+          properties:
+            inicial:
+              type: number
+            medio:
+              type: number
+            final:
+              type: number
+      required:
+      - id
+      - nombre
+      - tipo_ciclo
+      - ciclo_dias
+      additionalProperties: true
+    CropsCatalog:
+      type: object
+      properties:
+        version:
+          type: integer
+        actualizado:
+          type: string
+          format: date
+        zona:
+          type: string
+        variables:
+          type: array
+          items:
+            type: string
+        crops:
+          type: array
+          items:
+            $ref: '#/components/schemas/Crop'
+      required:
+      - version
+      - crops
+      additionalProperties: true
+    ForecastDay:
+      type: object
+      properties:
+        fecha:
+          type: string
+          format: date
+        tmin:
+          type: number
+        tmax:
+          type: number
+        tmean:
+          type: number
+        pmm:
+          type: number
+        rh:
+          type: number
+        sw:
+          type: number
+        ws:
+          type: number
+        sm_surface:
+          anyOf:
+          - type: number
+          - type: 'null'
+        sm_root:
+          anyOf:
+          - type: number
+          - type: 'null'
+        incert_min:
+          type: object
+          properties:
+            tmin:
+              type: number
+            pmm:
+              type: number
+          additionalProperties: true
+        incert_max:
+          type: object
+          properties:
+            tmin:
+              type: number
+            pmm:
+              type: number
+          additionalProperties: true
+      required:
+      - fecha
+      - tmin
+      - tmax
+      - pmm
+    Forecast:
+      type: object
+      properties:
+        zone_id:
+          type: string
+        anio:
+          type: integer
+        creado_en:
+          type: string
+          format: date-time
+        modelo:
+          type: object
+          properties:
+            tipo:
+              type: string
+            backtest:
+              type: object
+              properties: {}
+              additionalProperties: true
+          additionalProperties: true
+        dias:
+          type: array
+          items:
+            $ref: '#/components/schemas/ForecastDay'
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+      required:
+      - zone_id
+      - anio
+      - dias
+    WeatherDay:
+      type: object
+      properties:
+        fecha:
+          type: string
+          format: date
+        tmin:
+          type: number
+        tmax:
+          type: number
+        pmm:
+          type: number
+        granizo:
+          type: boolean
+        confianza:
+          type: string
+          enum:
+          - alta
+          - media
+          - baja
+      required:
+      - fecha
+      - tmin
+      - tmax
+      - pmm
+      - confianza
+    Weather:
+      type: object
+      properties:
+        zone_id:
+          type: string
+        actualizado_en:
+          type: string
+          format: date-time
+        dias:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherDay'
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+        desactualizado:
+          type: boolean
+      required:
+      - zone_id
+      - actualizado_en
+      - dias
+    ClimatologyMonth:
+      type: object
+      properties:
+        mes:
+          type: integer
+          minimum: 1
+          maximum: 12
+        pmm_total:
+          type: number
+        tmin:
+          type: number
+        tmax:
+          type: number
+        p_helada:
+          type: number
+        p_granizo:
+          type: number
+        p_desborde:
+          type: number
+        p_poca_agua:
+          type: number
+      required:
+      - mes
+    Climatology:
+      type: object
+      properties:
+        zone_id:
+          type: string
+        periodo:
+          type: object
+          properties: {}
+          additionalProperties: true
+        meses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClimatologyMonth'
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+      required:
+      - zone_id
+      - meses
+    Reservoir:
+      type: object
+      properties:
+        actualizado_en:
+          type: string
+          format: date-time
+        nivel_pct:
+          type: number
+        volumen_hm3:
+          type: number
+        estado:
+          type: string
+          enum:
+          - normal
+          - bajo
+          - critico
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+      required:
+      - actualizado_en
+      - nivel_pct
+      - estado
+    HistoryDay:
+      type: object
+      properties:
+        fecha_utc:
+          type: string
+          format: date
+        pmm:
+          anyOf:
+          - type: number
+          - type: 'null'
+        pmm_producto:
+          type: string
+          enum:
+          - final
+          - late
+        pmm_revision:
+          type: string
+        pmm_calidad:
+          type: object
+          properties:
+            intervalos_validos:
+              type: integer
+          additionalProperties: true
+        fecha:
+          type: string
+          format: date
+        tmin:
+          type: number
+        tmax:
+          type: number
+      required:
+      - fecha
+    History:
+      type: object
+      properties:
+        dias:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryDay'
+        fuente:
+          type: array
+          items:
+            type: string
+            enum:
+            - nasa_power
+            - nasa_imerg
+            - nasa_smap
+            - nasa_geos
+            - srtm
+            - gamc_wms
+            - riego_n1
+            - eventos_historicos
+            - catalogo_cultivos
+            - reportes
+      required:
+      - dias
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        tipo:
+          type: string
+          enum:
+          - helada
+          - granizo
+          - lluvia_fuerte
+          - desborde
+          - sequia
+          - represa_baja
+          - temporada
+        fecha_evento:
+          type: string
+          format: date
+        momento:
+          type: string
+        valor:
+          type: object
+          properties: {}
+          additionalProperties: true
+        confianza:
+          type: string
+          enum:
+          - alta
+          - media
+          - baja
+        volver_a_avisar:
+          type: string
+          format: date
+        regla:
+          type: object
+          properties:
+            id:
+              type: string
+            similitud:
+              type: number
+            eventos_parecidos:
+              type: array
+              items:
+                type: string
+                format: date
+      required:
+      - id
+      - tipo
+    Alerts:
+      type: object
+      properties:
+        actualizado_en:
+          type: string
+          format: date-time
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+      required:
+      - actualizado_en
+      - alertas
+    Rotation:
+      type: object
+      properties:
+        id:
+          type: string
+        secuencia:
+          type: array
+          items:
+            anyOf:
+            - type: string
+            - type: 'null'
+        actual_tipica:
+          type: boolean
+        meses_sin_cultivo:
+          type: integer
+        puntaje:
+          type: object
+          properties:
+            agua:
+              type: integer
+              minimum: 1
+              maximum: 3
+            tierra:
+              type: integer
+              minimum: 1
+              maximum: 3
+            forraje:
+              type: integer
+              minimum: 1
+              maximum: 3
+            vender:
+              type: integer
+              minimum: 1
+              maximum: 3
+        etiquetas:
+          type: array
+          items:
+            type: array
+            prefixItems:
+            - type: string
+            - type: string
+              enum:
+              - bien
+              - mal
+              - neutro
+            minItems: 2
+            maxItems: 2
+        por_que:
+          type: string
+        bueno:
+          type: array
+          items:
+            type: string
+        riesgos:
+          type: array
+          items:
+            type: string
+        falta_saber:
+          type: array
+          items:
+            type: string
+        evidencia:
+          type: array
+          items:
+            type: object
+            properties:
+              codigo:
+                type: string
+              fuente:
+                type: string
+                enum:
+                - nasa_power
+                - nasa_imerg
+                - nasa_smap
+                - nasa_geos
+                - srtm
+                - gamc_wms
+                - riego_n1
+                - eventos_historicos
+                - catalogo_cultivos
+                - reportes
+            required:
+            - codigo
+            - fuente
+        confianza:
+          type: string
+          enum:
+          - alta
+          - media
+          - baja
+      required:
+      - id
+      - secuencia
+      - puntaje
+      - por_que
+      - bueno
+      - riesgos
+      - falta_saber
+      - evidencia
+    Rotations:
+      type: object
+      properties:
+        actualizado_en:
+          type: string
+          format: date-time
+        rotaciones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rotation'
+      required:
+      - rotaciones
+    HistoryEvent:
+      type: object
+      properties:
+        fecha:
+          type: string
+          format: date
+        tipo:
+          type: string
+        lugar:
+          type: string
+        valor:
+          type: object
+          properties: {}
+          additionalProperties: true
+        fuente:
+          type: string
+      required:
+      - fecha
+      - tipo
+    ZoneMap:
+      type: object
+      properties:
+        actualizado_en:
+          type: string
+          format: date-time
+        resumen:
+          type: object
+          properties:
+            sin_agua_vecinos:
+              type: integer
+            periodo_dias:
+              type: integer
+            direccion:
+              type: string
+        capas:
+          type: object
+          properties:
+            sin_agua:
+              type: object
+              description: GeoJSON object (WGS84, lon/lat order)
+              additionalProperties: true
+            inundable:
+              type: object
+              description: GeoJSON object (WGS84, lon/lat order)
+              additionalProperties: true
+        historial:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryEvent'
+      required:
+      - actualizado_en
+      - capas
+    Sync:
+      type: object
+      properties:
+        sync_version:
+          type: integer
+        hash:
+          type: string
+        zone:
+          $ref: '#/components/schemas/Zone'
+        crops:
+          $ref: '#/components/schemas/CropsCatalog'
+        forecast:
+          $ref: '#/components/schemas/Forecast'
+        corto_plazo:
+          $ref: '#/components/schemas/Weather'
+        climatologia:
+          $ref: '#/components/schemas/Climatology'
+        alertas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        rotaciones:
+          $ref: '#/components/schemas/Rotations'
+        represa:
+          $ref: '#/components/schemas/Reservoir'
+        historial_zona:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryEvent'
+      required:
+      - sync_version
+      - hash
+    ReportCreated:
+      type: object
+      properties:
+        id:
+          type: string
+        vecinos_mismo_tipo_semana:
+          type: integer
+      required:
+      - id
+    Feedback:
+      type: object
+      properties:
+        zone_id:
+          type: string
+        crop_id:
+          type: string
+        siembra:
+          type: string
+          format: date
+        cosecha:
+          type: string
+          format: date
+        resultado:
+          type: string
+          enum:
+          - buena
+          - regular
+          - mala
+      required:
+      - zone_id
+      - crop_id
+      - cosecha
+      - resultado
+    Plan:
+      type: object
+      properties:
+        zone_id:
+          type: string
+        rotacion_id:
+          type: string
+        siembra:
+          type: string
+          format: date
+      required:
+      - zone_id
+      - rotacion_id
+      - siembra
+    Created:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+      - id
+
