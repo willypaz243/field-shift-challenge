@@ -53,6 +53,19 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 | Tests | `pytest` (API and data), `jest` (app) |
 | Formatting | `ruff` (Python), `prettier` + `eslint` (TS) |
 
+## Database
+
+The API uses a single SQLite file. It is created without migrations from the SQLModel
+tables in `api/models.py`:
+
+```bash
+make db-init    # create data/app.db with all tables
+make db-reset   # delete and recreate it
+```
+
+`DATABASE_URL` overrides the default `sqlite:///./data/app.db`. See
+[`docs/db-schema.md`](docs/db-schema.md) for the tables and columns.
+
 ## Architecture
 
 The API is a **modular monolith**: one FastAPI process and one SQLite database, split into modules by domain. Each module owns its tables and exposes a service; other modules only talk to it through that service.
