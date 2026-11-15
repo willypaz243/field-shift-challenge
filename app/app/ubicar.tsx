@@ -93,6 +93,7 @@ export default function UbicarScreen() {
               onTap={setPin}
               credit={t("comun.mapa_gamc")}
               accessibilityLabel={t("ubicar.pista")}
+              zoomLabels={{ in: t("zona.acercar"), out: t("zona.alejar") }}
             >
               <View style={styles.hint} pointerEvents="none">
                 <Ionicons name="location" size={20} color={Colors.field} />
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     left: 10,
-    right: 10,
+    right: 76,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,

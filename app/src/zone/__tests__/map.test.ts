@@ -3,6 +3,7 @@ import { testDatabase } from "../../offline/__tests__/database";
 import { fetchHistory, fetchZoneMap, MapCache } from "../fetch";
 import {
   clampCenter,
+  clampZoom,
   floodMarks,
   historyItems,
   imageRect,
@@ -143,4 +144,19 @@ test("the view never leaves the GAMC image", () => {
   expect(rect.left + rect.width).toBeGreaterThanOrEqual(view.width - 0.1);
   expect(rect.top + rect.height).toBeGreaterThanOrEqual(view.height - 0.1);
   expect(clampCenter(center, view, bbox)).toEqual(center);
+});
+
+test("zooming in shows less ground and keeps taps and pins consistent", () => {
+  const zoomed = { ...view, zoom: 2 };
+  const near = { lat: -17.4591, lon: -66.2165 };
+  const a = projectPoint(center, view, near);
+  const b = projectPoint(center, zoomed, near);
+  expect(b.x - view.width / 2).toBeCloseTo((a.x - view.width / 2) * 2, 6);
+  const back = unproject(center, zoomed, b.x, b.y);
+  expect(back.lat).toBeCloseTo(near.lat, 9);
+  expect(back.lon).toBeCloseTo(near.lon, 9);
+});
+
+test("zoom stays between the whole zone and the picture's sharpness", () => {
+  expect([clampZoom(0.2), clampZoom(2), clampZoom(9)]).toEqual([1, 2, 3]);
 });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Touch, Typography } from "../../constants/Theme";
 import { useFarm, useOffline } from "../../src/offline/provider";
@@ -86,7 +86,7 @@ export default function MiZonaScreen() {
   };
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.wall}>
+    <View style={styles.screen}>
       <View style={styles.map}>
         <ZoneMap
           zoneId={zone}
@@ -95,16 +95,17 @@ export default function MiZonaScreen() {
           layers={map}
           credit={t("comun.mapa_gamc")}
           accessibilityLabel={t("zona.titulo")}
+          zoomLabels={{ in: t("zona.acercar"), out: t("zona.alejar") }}
         >
-          <View style={styles.legend} pointerEvents="none">
-            <Legend color={Colors.nowater} bg="#FBE3E0" label={t("zona.leyenda.sin_agua")} />
-            <Legend color={Colors.water} bg="#D3E1F3" label={t("zona.leyenda.inunda")} />
-            <Legend color={Colors.field} bg="#D2E7D8" label={t("zona.leyenda.parcela")} />
-            <Legend color="#7FCC5A" bg={GAMC.crecimiento} label={t("zona.leyenda.crecimiento")} />
-            <Legend color="#E08A72" bg={GAMC.consolidado} label={t("zona.leyenda.consolidado")} />
-            <Legend color={GAMC.drenaje} bg={GAMC.drenaje} label={t("zona.leyenda.rios")} />
-          </View>
         </ZoneMap>
+      </View>
+      <View style={styles.legend}>
+        <Legend color={Colors.nowater} bg="#FBE3E0" label={t("zona.leyenda.sin_agua")} />
+        <Legend color={Colors.water} bg="#D3E1F3" label={t("zona.leyenda.inunda")} />
+        <Legend color={Colors.field} bg="#D2E7D8" label={t("zona.leyenda.parcela")} />
+        <Legend color="#7FCC5A" bg={GAMC.crecimiento} label={t("zona.leyenda.crecimiento")} />
+        <Legend color="#E08A72" bg={GAMC.consolidado} label={t("zona.leyenda.consolidado")} />
+        <Legend color={GAMC.drenaje} bg={GAMC.drenaje} label={t("zona.leyenda.rios")} />
       </View>
       {news && (
         <View style={styles.notice}>
@@ -198,7 +199,7 @@ export default function MiZonaScreen() {
           );
         })}
       </Sheet>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -212,28 +213,20 @@ function Legend({ color, bg, label }: { color: string; bg: string; label: string
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: Colors.paper },
-  wall: { padding: Spacing.gutter, gap: 12, paddingBottom: 32 },
+  screen: { flex: 1, backgroundColor: Colors.paper, padding: Spacing.gutter, gap: 10 },
   map: {
-    height: 440,
+    flex: 1,
+    minHeight: 280,
     borderRadius: Radius.card,
     overflow: "hidden",
     borderWidth: 1,
     borderColor: Colors.line,
     backgroundColor: "#EEF3EC",
   },
-  legend: {
-    position: "absolute",
-    left: 10,
-    bottom: 10,
-    gap: 4,
-    padding: 10,
-    borderRadius: 12,
-    backgroundColor: "rgba(255,255,255,0.95)",
-  },
+  legend: { flexDirection: "row", flexWrap: "wrap", columnGap: 14, rowGap: 4 },
   legendRow: { flexDirection: "row", alignItems: "center", gap: 8 },
-  swatch: { width: 18, height: 18, borderRadius: 4, borderWidth: 2 },
-  legendText: { ...Typography.meta, fontSize: 16, color: Colors.ink },
+  swatch: { width: 16, height: 16, borderRadius: 4, borderWidth: 2 },
+  legendText: { ...Typography.meta, fontSize: 17, color: Colors.ink },
   notice: {
     flexDirection: "row",
     alignItems: "center",
