@@ -1,4 +1,4 @@
-.PHONY: api db-init db-load forecast test web
+.PHONY: api db-init db-load forecast weather test web
 
 api:
 	uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
@@ -12,6 +12,9 @@ db-load:
 forecast:
 	uv run python -m src.model.run_pipeline
 	uv run python -m src.etl.load_forecast
+
+weather:
+	uv run python -m src.etl.load_weather
 
 test:
 	uv run pytest

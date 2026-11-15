@@ -1119,6 +1119,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1
@@ -1268,6 +1269,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1
@@ -1327,6 +1329,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1
@@ -1384,6 +1387,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1
@@ -1418,6 +1422,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1
@@ -1476,6 +1481,7 @@ components:
             - nasa_imerg
             - nasa_smap
             - nasa_geos
+            - open_meteo
             - srtm
             - gamc_wms
             - riego_n1

@@ -40,6 +40,7 @@ const SOURCES: Record<string, string> = {
   nasa_imerg: "NASA IMERG",
   nasa_smap: "NASA SMAP",
   nasa_geos: "NASA GEOS",
+  open_meteo: "Open-Meteo",
 };
 
 type RawDay = Partial<Omit<CalendarDay, "proyeccion">>;

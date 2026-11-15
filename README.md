@@ -57,6 +57,8 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 
 One SQLite file, `data/db/valle.db`, with tables defined by the SQLModel models of each module. `make db-init` creates them, `make db-load` (or `bash etl.sh db`) loads the ETL data. Details in [`docs/db-schema.md`](docs/db-schema.md).
 
+`make weather` loads the 14-day short forecast (Open-Meteo) into `weather` for every zone; run it every 6 hours with cron (`0 */6 * * * cd /srv/field-shift-challenge && make weather`). `/zones/{id}/weather`, alerts and Hoy read it.
+
 `make web` builds the app for the browser and serves it on http://localhost:8081 against the local API (`make api`). Use it instead of `expo start --web`: the app's SQLite engine needs cross-origin isolation headers that only `app/scripts/serve-web.mjs` sends.
 
 `make forecast` regenerates the 365-day forecast (`src.model.run_pipeline`) and replaces the `forecasts` table for every zone (`src.etl.load_forecast`). Run it weekly on the server, for example with cron (Mondays 03:00 La Paz time):
