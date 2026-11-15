@@ -102,7 +102,12 @@ export default function CultivoScreen() {
         {fuente ? <Text style={styles.source}>{t("sembrar.fuente", { fuentes: fuente })}</Text> : null}
       </ScrollView>
       <Sheet visible={picking} title={t("sembrar.elegir_fecha")} subtitle={crop.nombre} closeLabel={t("comun.cerrar")} onClose={() => setPicking(false)}>
-        <DatePicker today={today} first={tomorrow} cycle={L} verdicts={verdicts} onAdd={(d) => void add(d)} />
+        <DatePicker today={today} first={tomorrow} cycle={L} verdicts={verdicts} onAdd={(d) => void add(d)}
+          onPlan={(cosecha) => {
+            setPicking(false);
+            router.push({ pathname: "/rotar", params: { c: id, h: cosecha } });
+          }}
+        />
         {fuente ? <Text style={styles.source}>{t("sembrar.fuente", { fuentes: fuente })}</Text> : null}
       </Sheet>
     </SafeAreaView>
@@ -115,12 +120,14 @@ function DatePicker({
   cycle,
   verdicts,
   onAdd,
+  onPlan,
 }: {
   today: string;
   first: string;
   cycle: number;
   verdicts: Map<string, Veredicto>;
   onAdd: (siembra: string) => void;
+  onPlan: (cosecha: string) => void;
 }) {
   const { t } = useTranslation();
   const [view, setView] = useState({ year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) });
@@ -210,6 +217,10 @@ function DatePicker({
             <Ionicons name="add" size={24} color={Colors.paper} />
             <Text style={styles.primaryText}>{t("sembrar.agregar")}</Text>
           </Pressable>
+          <Pressable accessibilityRole="button" onPress={() => onPlan(harvest!)} style={styles.ghost}>
+            <Ionicons name="refresh" size={24} color={Colors.fieldDeep} />
+            <Text style={styles.ghostText}>{t("rotar.planificar")}</Text>
+          </Pressable>
         </>
       )}
     </View>
@@ -278,6 +289,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   primaryText: { ...Typography.label, fontSize: 19, color: Colors.paper },
+  ghost: {
+    minHeight: Touch.buttonHeight,
+    borderRadius: Radius.btn,
+    backgroundColor: Colors.fieldSoft,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  ghostText: { ...Typography.label, fontSize: 19, color: Colors.fieldDeep },
   source: { ...Typography.meta, color: Colors.ink2, textAlign: "center", paddingTop: 8 },
   monthHead: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   monthTitle: { ...Typography.title, color: Colors.ink },
