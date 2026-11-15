@@ -1,14 +1,12 @@
 # Área de estudio acordada para IMERG
 
-Periodo confirmado por Alejandro: **2016-01-01 a 2025-12-31**.
-
 `cochabamba-estudio.geojson` es un Polygon GeoJSON WGS84 (longitud, latitud),
 construido con la extensión espacial de la ficha **Límite Distritos** de GAMC
 (service_id `7eb13092-bf0e-493b-aae6-03c43eedda2c`):
 `[-66.280703, -17.531190, -66.069520, -17.257306]`.
 
 Se adopta explícitamente como rectángulo de estudio para avanzar con la selección
-de celdas IMERG. **No es un límite oficial ni una máscara de agricultura.**
+de celdas IMERG. 
 Incluye áreas fuera de los polígonos municipales y distintos usos de suelo.
 Las fracciones de celda se refieren a este rectángulo, no a superficie cultivada.
 

@@ -72,8 +72,7 @@ Portal oficial de servicios geoespaciales municipales asignados a los retos Spac
 | **Endpoint del proxy WMS** | `https://serviciosgamc.cochabamba.bo/api/gs/wms` |
 
 - Protocolo: **WMS 1.1.1** (GetMap · GetLegendGraphic · GetFeatureInfo) — acceso solo lectura.
-- **API key del proyecto 04** (Agrotecnología y Gestión del Agua):
-  `37f574a3292eafd287024269399aafa51b7cf55932603e2f`
+- **API key del proyecto 04** (Agrotecnología y Gestión del Agua): va en `.env` como `GAMC_API_KEY` (ver `.env.example`; pedirla al equipo).
 
 ### Capas del proyecto 04 (cobre del valle de Cochabamba)
 
@@ -87,7 +86,7 @@ Portal oficial de servicios geoespaciales municipales asignados a los retos Spac
 
 ```
 https://serviciosgamc.cochabamba.bo/api/gs/wms
-  ?key=37f574a3292eafd287024269399aafa51b7cf55932603e2f
+  ?key=$GAMC_API_KEY
   &service_id=c52066a1-32fd-4925-81e0-c2dcb8f4238f
   &REQUEST=GetMap
   &SERVICE=WMS

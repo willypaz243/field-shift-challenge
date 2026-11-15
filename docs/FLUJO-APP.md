@@ -73,18 +73,18 @@ sequenceDiagram
     participant API
 
     App->>App: Pide permiso de ubicación (GPS)
-    App->>API: GET /v1/parcelas/cercanas?lat&lon
-    API-->>App: Parcelas del mapa + parcela más probable
+    App->>API: GET /zones
+    API-->>App: Zonas agrícolas del Cercado
+    App->>App: Elige la zona más cercana al GPS
     App->>Ag: Mapa con su parcela marcada
     alt No es su parcela
         Ag->>App: Toca su parcela en el mapa
     end
-    Ag->>App: "Sí, aquí está"
-    App->>API: POST /v1/parcelas
-    API-->>App: parcela_id, zona, distrito
+    Ag->>App: "Sí, aquí está" (la parcela queda en el celular)
+    App->>API: GET /sync?zone_id
+    API-->>App: Cultivos, proyección, pronóstico, alertas, rotaciones
     App->>Ag: ¿De dónde sale tu agua? / ¿Qué te importa más?
-    Ag->>App: Un toque en cada pregunta (se guarda solo)
-    App->>API: PUT /v1/parcelas/{id}/perfil
+    Ag->>App: Un toque en cada pregunta (se guarda en el celular)
     App->>Ag: Pantalla Hoy
 ```
 
@@ -103,7 +103,7 @@ flowchart TD
     CUL --> REP["Tira de La Angostura (% de agua)"]
     D --> CQ{"¿Algún cultivo pasó su<br/>fecha de cosecha hace ≥1 día?"}
     CQ -->|sí| Q(["Ventana obligatoria:<br/>¿Cómo salió tu cosecha?<br/>Buena · Regular · Mala"])
-    Q -->|elige| POST["POST /v1/cosechas/{id}/resultado"]
+    Q -->|elige| POST["POST /feedback"]
     Q -->|Todavía no coseché| LATER["Pregunta otra vez en 3 días"]
 ```
 
@@ -116,14 +116,14 @@ flowchart TD
     S["Sembrar<br/>carrusel de cultivos"] -->|etiqueta 'Mejor época'<br/>si conviene sembrar ahora| S
     S -->|toca cultivo| C["Detalle del cultivo<br/>Siembra / Cosecha / Si siembras ahora"]
     C -->|Elegir fecha de siembra| F(["Calendario mensual<br/>días buenos · con cuidado · malos"])
-    F -->|toca un día| R["Veredicto + fecha de cosecha estimada"]
-    R -->|Agregar a mis cultivos| ADD["POST /v1/parcelas/{id}/cultivos"]
+    F -->|toca un día| R["Veredicto + fecha de cosecha estimada<br/>(scoring en el celular: crops + forecast)"]
+    R -->|Agregar a mis cultivos| ADD["Se guarda en el celular"]
     ADD --> HOY["Aparece en Hoy y en Calendario"]
     R -->|Planificar rotación| ROT["¿Qué sembrar después?<br/>usa la fecha de cosecha elegida"]
     ROT --> OBJ["Elige objetivo:<br/>Ahorrar agua · Mejor tierra · Forraje · Vender"]
-    OBJ --> RANK["GET /v1/rotaciones<br/>plan actual + 3 alternativas<br/>'Mejor para ti' según objetivo y época"]
+    OBJ --> RANK["Rotaciones de /sync<br/>plan actual + 3 alternativas<br/>'Mejor para ti' según objetivo y época"]
     RANK -->|toca un plan| P(["Ventana del plan<br/>lo bueno · revisa con tu técnico · falta saber · fuentes"])
-    P -->|Quiero este plan| SAVE["POST /v1/parcelas/{id}/rotacion"]
+    P -->|Quiero este plan| SAVE["Se guarda en el celular<br/>(opcional POST /plans)"]
     SAVE --> CALP["Calendario: 'Siembra de X' en su fecha<br/>Mi cultivo: 'Después: X, fecha'"]
 ```
 
@@ -186,9 +186,9 @@ sequenceDiagram
     end
     Ag->>App: Enviar aviso
     App->>Cola: Guarda con id local
-    Cola->>API: POST /v1/reportes (cuando hay señal)
+    Cola->>API: POST /reports (cuando hay señal)
     API->>Zona: Agrega el reporte sin nombre
-    Zona-->>App: GET /v1/zonas/{zona}/mapa
+    Zona-->>App: GET /zones/{id}/map
     App->>Ag: "Aviso enviado. 7 vecinos avisaron lo mismo"
 ```
 
@@ -216,25 +216,29 @@ La alfalfa es perenne: después de cada cosecha vuelve a "Creciendo" en lugar de
 
 ## 9. Flujo de datos
 
+Offline-first, como el backlog: el servidor proyecta y empaqueta; el celular guarda todo y calcula el scoring sin internet. Detalle de los endpoints en [`API-CONTRACT.md`](API-CONTRACT.md).
+
 ```mermaid
 flowchart LR
     subgraph NASA
-        POWER["NASA POWER<br/>temp., heladas, radiación"]
-        IMERG["GPM IMERG<br/>lluvia"]
-        SMAP["SMAP<br/>humedad del suelo"]
-        GEOS["GEOS<br/>pronóstico"]
-        LS["Landsat / Sentinel-2<br/>NDVI, campo sin cultivo"]
+        POWER["NASA POWER<br/>diario 1984+"]
+        IMERG["GPM IMERG<br/>lluvia 2016+"]
+        SMAP["SMAP L4<br/>humedad del suelo"]
+        GEOS["Pronóstico corto<br/>(fuente por decidir)"]
     end
     subgraph Local
-        GAMC["GAMC WMS<br/>distritos, zonas, drenaje"]
-        ANG["Riego N°1<br/>nivel La Angostura"]
-        FAO["FAO-56<br/>Kc y duración de cultivos"]
-        REP["Reportes de agricultores"]
+        GAMC["GAMC WMS<br/>zonas, drenaje"]
+        SRTM["SRTM<br/>elevación"]
+        CROPS["crops.json<br/>13 cultivos"]
+        EV["Eventos históricos"]
+        ANG["Riego N°1<br/>La Angostura"]
     end
-    POWER & IMERG & SMAP & GEOS & LS --> ETL["Pipeline de analistas<br/>malla común + reglas"]
-    GAMC & ANG & FAO & REP --> ETL
-    ETL --> API["API Choclito<br/>(ver API-CONTRACT.md)"]
-    API --> CACHE["Caché en el celular<br/>'actualizado 16 nov, 6:00'"]
-    CACHE --> APP["App"]
-    APP -->|reportes, cosechas, planes| API
+    POWER & IMERG & SMAP & GAMC & SRTM & EV --> ETL["ETL → DB"]
+    ETL --> MOD["Proyección 365 d<br/>+ incertidumbre"]
+    ETL --> ALR["Reglas de alerta"]
+    MOD & ALR & CROPS & ANG & GEOS --> SYNC["GET /sync<br/>≤ 500 KB"]
+    SYNC --> SQL[("SQLite en el celular")]
+    SQL --> SC["Scoring de ventana<br/>y orden de rotaciones"]
+    SC --> APP["Pantallas"]
+    APP -->|POST /reports · /feedback| ETL
 ```

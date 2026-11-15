@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Hoy · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script>var DEMO=(function(){var d=new URLSearchParams(location.search).get("demo");return d?"#"+d:location.hash;})();</script>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.wall{gap:10px;padding-top:10px;padding-bottom:110px}
+.qrow{display:grid;grid-template-columns:auto 1fr 1.25fr 1fr;gap:6px;align-items:center;padding:8px 14px 12px;background:var(--field-soft)}
+.qrow span{font-weight:600;font-size:17px;color:var(--field-deep);padding-right:2px}
+.qrow button{min-height:58px;border-radius:14px;background:#fff;font-weight:600;font-size:17px;padding:0 4px;box-shadow:inset 0 0 0 1px var(--field-line);transition:transform 140ms var(--ease-out),background-color 200ms ease}
+.qrow button:active{transform:scale(.96)}
+.qrow button[aria-pressed="true"]{background:var(--field);color:#fff}
+.icbtn{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);color:var(--ink)}
+.alert{padding:10px 14px;gap:10px}
+.alert b{font-size:19px}
+.alert span{font-size:16px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wd7{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;border-radius:12px;font-size:15px;color:var(--ink-2);font-weight:700}
+.wd7 b{font-size:19px;color:var(--ink)}
+.wd7 .mn{font-size:15px}
+.wd7.on{background:var(--field);color:#fff} .wd7.on b,.wd7.on .mn{color:#fff} .wd7.on svg{color:#fff!important}
+.wd7.fr{background:var(--frost-soft);color:var(--frost)} .wd7.fr b,.wd7.fr .mn{color:var(--frost)}
+.wk{display:block;padding:10px}
+.wk .h{display:flex;justify-content:space-between;align-items:center;padding:0 0 6px 4px;font-size:17px;color:var(--ink-2)}
+.wk .h b{font-size:19px;color:var(--ink)}
+.wk .h a,.sh a{font-weight:600;color:var(--field-deep);background:var(--field-soft);border-radius:999px;display:flex;align-items:center;gap:4px;min-height:48px;padding:0 14px 0 16px;font-size:18px}
+.crops{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.crow{display:grid;grid-template-columns:14px 1fr 90px 24px;gap:12px;align-items:center;padding:0 14px;border-top:1px solid var(--line);min-height:64px}
+.crow:first-child{border-top:0}
+.crow>i{width:14px;height:14px;border-radius:4px}
+.crow b{font-size:21px;font-weight:600}
+.crow .bar{height:10px;border-radius:5px;background:var(--paper-2);position:relative;overflow:hidden}
+.crow .bar i{position:absolute;inset:0 auto 0 0;border-radius:5px}
+.crow>svg{color:var(--field)}
+.sh{display:flex;justify-content:space-between;align-items:center;font-size:21px;font-weight:600}
+
+.ask{background:var(--field-soft);border-radius:14px;padding:10px 12px}
+.ask p{font-weight:600;font-size:17px;color:var(--field-deep)}
+.ask .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.ask .opts button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:76px;border-radius:12px;background:#fff;font-weight:600;font-size:18px;transition:transform 140ms var(--ease-out),background-color 200ms ease}
+.ask .opts i{width:22px;height:22px;border-radius:50%}
+.ask[hidden]{display:none}
+.harv{padding:14px}
+.harv p{font-size:19px;color:var(--ink);display:flex;gap:10px;align-items:center}
+#hsheet .sh-in{height:88dvh}
+#hsheet .hb{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;padding:6px 18px calc(18px + env(safe-area-inset-bottom))}
+#hsheet .hero{display:block;width:100%;flex:1;min-height:0;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+#hsheet h2{font-size:26px;font-weight:700;line-height:1.2;outline:none}
+#hsheet .ask{background:none;padding:0}
+#hsheet .opts{margin-top:0}
+#hsheet .opts button{min-height:112px;font-size:21px;background:var(--paper-2)}
+#hsheet .opts i{width:30px;height:30px}
+.harv .later{width:100%;min-height:48px;margin-top:6px;font-size:17px;font-weight:600;color:var(--field-deep)}
+.ask .opts button:active{transform:scale(.96)}
+.ask .opts [aria-pressed="true"]{background:var(--field);color:#fff}
+.echo[hidden]{display:none}
+.echo{margin-top:8px;font-size:16px;display:flex;gap:8px;align-items:center}
+.echo a{margin-left:auto;font-weight:600;color:var(--field-deep);display:flex;align-items:center;gap:4px;min-height:44px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.water-strip{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;min-height:68px;padding:10px 14px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.water-strip b{font-size:19px}
+.water-strip small{display:block;font-size:16px;color:var(--ink-2)}
+.water-strip .lv{display:block;height:8px;border-radius:4px;background:var(--paper-2);margin:4px 0;overflow:hidden}
+.water-strip .lv i{display:block;width:34%;height:100%;background:var(--water)}
+.tday{display:grid;grid-template-rows:auto 1fr auto;gap:6px;width:100%;height:296px;padding:16px 20px}
+.tday .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tday .top .when{display:flex;flex-direction:column}
+.tday .speak2{flex:none;display:flex;align-items:center;gap:6px;min-height:52px;padding:0 16px;border-radius:999px;background:var(--field-soft);color:var(--field-deep);font-weight:600;font-size:17px;transition:transform 140ms var(--ease-out)}
+.tday .speak2:active{transform:scale(.96)}
+.tday .dw{font-size:24px;font-weight:700;color:var(--ink)}
+.tday .dd{font-size:17px;font-weight:700;color:var(--ink-2)}
+.tday .mid{display:grid;grid-template-columns:1fr 1fr;align-items:center}
+.tday .mid svg{width:104px;height:104px;stroke-width:1.5;justify-self:center}
+.tday .tt{text-align:center;font-size:20px;color:var(--ink-2);font-weight:700}
+.tday .tt b{display:block;font-size:68px;color:var(--ink);font-weight:700;line-height:.9;letter-spacing:-.04em}
+.tday .bot{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.tday .bot b{font-size:26px;font-weight:700}
+.tday .bot span{font-size:19px;color:var(--ink-2);text-align:right}
+.tday .bot .warn{color:var(--frost);font-weight:600}
+.tday.fr{background:var(--frost-soft);border-color:#B6E0EA}
+.tday.fr .bot{border-color:#B6E0EA}
+.week button.wd7{border:1px solid var(--line);background:#fff;font-family:inherit;font-size:15px;font-weight:700;color:var(--ink-2);cursor:pointer}
+.tday .dn{color:var(--ink)}
+.week button.wd7:active{transform:scale(.95)}
+.week button.wd7{transition:transform 140ms var(--ease-out),background-color 200ms ease}
+.week button.wd7[aria-pressed="true"]{background:var(--field);border-color:var(--field);color:#fff}
+.week button.wd7[aria-pressed="true"] b,.week button.wd7[aria-pressed="true"] .mn,.week button.wd7[aria-pressed="true"] svg{color:#fff!important}
+.sheetm{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:430px;max-height:88dvh;padding:0;border:0;border-radius:24px 24px 0 0;background:#fff;color:var(--ink);transform:translateY(0);transition:transform 320ms cubic-bezier(0.32,0.72,0,1),overlay 320ms allow-discrete,display 320ms allow-discrete}
+.sheetm:not([open]){transform:translateY(100%)}
+@starting-style{.sheetm[open]{transform:translateY(100%)}}
+.sheetm::backdrop{background:rgba(10,20,14,.45);transition:background-color 320ms ease,overlay 320ms allow-discrete,display 320ms allow-discrete}
+@starting-style{.sheetm[open]::backdrop{background:rgba(10,20,14,0)}}
+.sh-in{display:flex;flex-direction:column;max-height:88dvh}
+.sh-grab{width:48px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 18px 12px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:26px;font-weight:700}
+.sh-head p{font-size:17px;color:var(--ink-2)}
+.sh-x{width:56px;height:56px;border-radius:50%;background:var(--paper-2);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+#mcs .hero{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+#mcs .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#mcs .box{border-radius:16px;padding:14px 16px;background:var(--paper-2)}
+#mcs .box small{display:block;font-size:16px;font-weight:700;color:var(--ink-2)}
+#mcs .box b{display:block;font-size:22px;font-weight:700;margin-top:4px;line-height:1.15}
+#mcs h2.sec{font-size:22px;font-weight:600;padding-top:4px}
+#mcs .tl{list-style:none;position:relative;display:flex;flex-direction:column;gap:10px}
+#mcs .tl::before{content:"";position:absolute;left:27px;top:20px;bottom:20px;width:4px;border-radius:2px;background:var(--line)}
+#mcs .m{position:relative;display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:start}
+#mcs .dot{position:relative;z-index:1;width:58px;height:58px;border-radius:16px;background:#fff;border:2px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:var(--ink-2);line-height:1.1;text-transform:capitalize}
+#mcs .card{border:1px solid var(--line);border-radius:16px;background:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+#mcs .card b{font-size:20px;font-weight:600}
+#mcs .chips2{display:flex;flex-wrap:wrap;gap:6px}
+#mcs .chips2 span{display:inline-flex;align-items:center;gap:5px;font-size:16px;font-weight:700;border-radius:999px;padding:5px 10px;background:var(--paper-2)}
+#mcs .chips2 .fr{background:var(--frost-soft);color:var(--frost)} .chips2 .ha{background:#E9ECEE;color:#2B3A33}
+#mcs .chips2 .wa{background:var(--water-soft);color:var(--water)} .chips2 .dr{background:var(--dry-soft);color:var(--dry)}
+#mcs .chips2 .ev{background:var(--field);color:#fff} .chips2 .fi{background:#FFF3DC;color:#8F5200}
+#mcs .m.now .dot{border-color:var(--field);background:var(--field);color:#fff}
+#mcs .m.now .card{border:2px solid var(--field)}
+#mcs .m.done .card{opacity:.7}
+#mcs .nowtag{font-size:15px;font-weight:600;color:var(--field-deep)}
+#mcs{overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:14px 16px calc(18px + env(safe-area-inset-bottom))}
+#msheet .sh-head h2{font-size:28px}
+button.crow{width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;border-top:1px solid var(--line);cursor:pointer}
+button.crow:first-child{border-top:0}
+button.crow:active{background:var(--paper-2)}
+</style>
+</head>
+<body>
+<header class="status">
+  <b class="brand"><svg class="i"><use href="icons.svg#corn"/></svg>Choclito</b>
+  <span><svg class="i s"><use href="icons.svg#pin"/></svg><span data-qu="Itocta · musuqchasqa 6:00">Itocta · actualizado 16 nov, 6:00</span></span>
+  <a class="bell" href="avisos.html" aria-label="Avisos: 3 nuevos"><svg class="i"><use href="icons.svg#bell"/></svg><span class="badge">3</span></a>
+  <div class="lang" role="group" aria-label="Idioma"><button data-lang="es" aria-pressed="true">ES</button><button data-lang="qu" aria-pressed="false">QU</button></div>
+</header>
+
+<main class="wall">
+  <h1 class="sr">Hoy</h1>
+  <a class="alert" href="avisos.html">
+    <svg class="i l"><use href="icons.svg#frost"/></svg>
+    <div><b data-qu="Sabadupi qasa · -2 °C">Helada el sábado · -2 °C</b></div>
+    <svg class="i"><use href="icons.svg#chevron"/></svg>
+  </a>
+
+  <section class="sheet tday" id="day" aria-live="polite"></section>
+
+
+  <div class="sh"><span data-qu="Chakraykuna">Mis cultivos</span><a href="sembrar.html"><svg class="i s"><use href="icons.svg#plus"/></svg>Agregar</a></div>
+  <div class="crops" id="crops"></div>
+
+  <a class="water-strip" href="agua.html">
+    <svg class="i" style="color:var(--water)"><use href="icons.svg#drop"/></svg>
+    <div><b>La Angostura 34 %</b><span class="lv"><i></i></span></div>
+    <svg class="i s"><use href="icons.svg#chevron"/></svg>
+  </a>
+  <p class="sr" id="resumen"></p>
+</main>
+<dialog class="sheetm" id="hsheet" aria-labelledby="hs-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="hb">
+      <img class="hero" id="hs-img" alt="Haba" src="img/haba.webp">
+      <h2 id="hs-t" tabindex="-1" autofocus></h2>
+      <div class="ask harv" id="harv"><div class="opts" role="group" aria-label="Resultado de la cosecha"><button data-rate="buena"><i style="background:var(--field)"></i>Buena</button><button data-rate="regular"><i style="background:#D99A1E"></i>Regular</button><button data-rate="mala"><i style="background:var(--nowater)"></i>Mala</button></div>
+      <button class="later" data-later>Todavía no coseché</button></div>
+    </div>
+  </div>
+</dialog>
+<dialog class="sheetm" id="msheet" aria-labelledby="ms-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><h2 id="ms-t"></h2><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div class="ms-body" id="mcs">
+      <img class="hero" id="hero" alt="" src="img/maiz.webp">
+      <div class="two" id="two"></div>
+      <h2 class="sec">Calendario de tu cultivo</h2>
+      <ol class="tl" id="tl"></ol>
+      <p class="src"><svg class="i"><use href="icons.svg#info"/></svg>Riesgos por mes: NASA POWER e IMERG, últimos 30 años.</p>
+      <a class="btn ghost" id="nextBtn" href="rotar.html"></a>
+      <button class="btn ghost" id="doneBtn"><svg class="i"><use href="icons.svg#check"/></svg>Ya coseché</button>
+      <section class="ask harv" id="mrate" hidden><p>¿Cómo salió?</p><div class="opts" role="group" aria-label="Resultado de la cosecha"><button data-rate="buena"><i style="background:var(--field)"></i>Buena</button><button data-rate="regular"><i style="background:#D99A1E"></i>Regular</button><button data-rate="mala"><i style="background:var(--nowater)"></i>Mala</button></div></section>
+    </div>
+  </div>
+</dialog>
+
+<nav class="nav" aria-label="Principal">
+  <a href="hoy.html" aria-current="page"><span class="pill"><svg class="i"><use href="icons.svg#home"/></svg></span><span data-qu="Kunan">Hoy</span></a>
+  <a href="calendario.html"><span class="pill"><svg class="i"><use href="icons.svg#calendar"/></svg></span><span data-qu="Killakuna">Calendario</span></a>
+  <a href="sembrar.html"><span class="pill"><svg class="i"><use href="icons.svg#sprout"/></svg></span><span data-qu="Tarpuy">Sembrar</span></a>
+  <a href="zona.html"><span class="pill"><svg class="i"><use href="icons.svg#map"/></svg></span><span data-qu="Llaqtay">Mi zona</span></a>
+</nav>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#info"/></svg><span class="toast-msg"></span></div>
+<script src="data.js?v=89"></script>
+<script>
+(() => {
+  const { TODAY, crops, forecast, stageOf, diff, ahead, part, fiestaRef, WDL, WD3, seasonOf } = FS;
+  const I = (id, c = '', cls = 'i') => `<svg class="${cls}"${c ? ` style="color:${c}"` : ''}><use href="icons.svg#${id}"/></svg>`;
+  const ICC = { sun: 'var(--dry)', cloud: 'var(--ink-2)', rain: 'var(--water)', frost: 'var(--frost)', hail: 'var(--ink-2)' };
+  const WORD = { sun: 'Soleado', cloud: 'Nublado', rain: 'Lluvia', frost: 'Helada', hail: 'Granizo' };
+  const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const week = forecast.slice(0, 7);
+  function showDay(i) {
+    const f = week[i], d = document.getElementById('day');
+    const extra = f.mn <= 0 ? `<span class="warn">Helada en la madrugada</span>` : f.ic === 'hail' ? `<span class="warn">Puede granizar</span>` : '';
+    d.className = 'sheet tday' + (f.mn <= 0 ? ' fr' : '');
+    const name = i === 0 ? 'Hoy' : WDL[f.t.getDay()][0].toUpperCase() + WDL[f.t.getDay()].slice(1);
+    d.innerHTML = `<div class="top"><div class="when"><span class="dw">${name}</span><span class="dd">${f.t.getDate()} de ${MESES[f.t.getMonth()]}</span></div><button class="speak2" data-speak="#resumen" aria-label="Escuchar el día"><svg class="i"><use href="icons.svg#volume"/></svg>Escuchar</button></div>
+      <div class="mid">${I(f.ic, ICC[f.ic])}<div class="tt"><b>${f.mx}°</b>mín ${f.mn}°</div></div>
+      <div class="bot"><b>${WORD[f.ic]}</b><span>${FS.lluvia(f.mm)[0].toUpperCase() + FS.lluvia(f.mm).slice(1)}${extra ? '<br>' + extra : ''}</span></div>`;
+  }
+  showDay(0);
+
+  document.getElementById('crops').innerHTML = crops.map((c) => {
+    const [h0] = c.harvest, n = diff(TODAY, c.start), total = diff(h0, c.start);
+    const pct = Math.min(100, Math.max(4, (n / total) * 100));
+    return `<button class="crow" data-mc="${c.id}"><i style="background:${c.color}"></i><b>${c.n}</b><span class="bar"><i style="width:${pct}%;background:${c.color}"></i></span><svg class="i"><use href="icons.svg#chevron"/></svg></button>`;
+  }).join('');
+
+
+  // ---- ventana "Mi cultivo" ----
+  const msheet = document.getElementById('msheet');
+  function openMine(id) {
+
+  const { TODAY, crops, stageOf, addDays, MES, MES3, riesgoMes, fiestas, fmt, part } = FS;
+  const I = (id) => `<svg class="i s"><use href="icons.svg#${id}"/></svg>`;
+  const c = crops.find((x) => x.id === id) || crops[0];
+  const hero = document.getElementById('hero'); hero.src = `img/${c.id}.webp`; hero.alt = c.n;
+  document.getElementById('ms-t').textContent = c.n;
+  const [h0, h1] = c.harvest;
+  document.getElementById('two').innerHTML = c.perenne
+    ? `<div class="box"><small>Última cosecha</small><b>${fmt(c.lastCut)}</b></div><div class="box"><small>Próxima cosecha</small><b>${part(h0)}</b></div>`
+    : `<div class="box"><small>Sembraste</small><b>${fmt(c.start)}</b></div><div class="box"><small>${c.harvestName === 'choclo' ? 'Choclo' : 'Cosecha'}</small><b>${MES[h0.getMonth()]}${h1.getMonth() !== h0.getMonth() ? ' a ' + MES[h1.getMonth()] : ''}</b></div>`;
+
+  // meses del cultivo
+  const first = c.perenne ? new Date(TODAY.getFullYear(), TODAY.getMonth() - 1, 1) : new Date(c.start.getFullYear(), c.start.getMonth(), 1);
+  const lastD = c.perenne ? new Date(TODAY.getFullYear(), TODAY.getMonth() + 4, 1) : h1;
+  const cuts = c.perenne ? [c.lastCut, addDays(c.lastCut, 42), addDays(c.lastCut, 84), addDays(c.lastCut, 126)] : [];
+  const R = { helada: ['fr', 'frost', 'Heladas'], granizo: ['ha', 'hail', 'Granizo'], desbordes: ['wa', 'waves', 'Desbordes'], 'poca agua': ['dr', 'nowater', 'Poca agua'] };
+  let h = '';
+  for (let m0 = first; m0 <= lastD; m0 = new Date(m0.getFullYear(), m0.getMonth() + 1, 1)) {
+    const m1 = new Date(m0.getFullYear(), m0.getMonth() + 1, 0), m = m0.getMonth();
+    const isNow = m === TODAY.getMonth() && m0.getFullYear() === TODAY.getFullYear(), done = m1 < TODAY;
+    const mid = new Date(m0.getFullYear(), m, 15);
+    let stage = c.perenne ? 'Rebrote' : stageOf(c, mid < c.start ? c.start : mid);
+    const ev = [];
+    if (!c.perenne && c.start >= m0 && c.start <= m1) { ev.push(`<span class="ev">${I('sprout')}Siembra ${fmt(c.start)}</span>`); stage = 'Siembra'; }
+    if (!c.perenne && h0 <= m1 && h1 >= m0) { ev.push(`<span class="ev">${I('check')}${c.harvestName === 'choclo' ? 'Choclo' : 'Cosecha'}</span>`); stage = c.harvestName === 'choclo' ? 'Choclo listo' : 'Cosecha'; }
+    cuts.filter((t) => t >= m0 && t <= m1).forEach((t) => { ev.push(`<span class="ev">${I('check')}Cosecha ${fmt(t)}</span>`); stage = 'Cosecha'; });
+    const rk = riesgoMes[m].map((r) => `<span class="${R[r][0]}">${I(R[r][1])}${R[r][2]}</span>`);
+    h += `<li class="m${isNow ? ' now' : ''}${done ? ' done' : ''}"><span class="dot">${MES3[m]}</span><div class="card">${isNow ? '<span class="nowtag">Ahora</span>' : ''}<b>${stage}</b><div class="chips2">${[...ev, ...rk].join('')}</div></div></li>`;
+  }
+  document.getElementById('tl').innerHTML = h;
+
+    const nb = document.getElementById('nextBtn'), pr = (FS.planned || []).find((x) => x.rot);
+    nb.hidden = !!c.perenne; nb.href = `rotar.html?c=${c.id}`;
+    nb.innerHTML = pr ? `<svg class="i"><use href="icons.svg#sprout"/></svg>Después: ${pr.n.toLowerCase()}, ${FS.fmt(pr.t)}` : '<svg class="i"><use href="icons.svg#refresh"/></svg>¿Qué sembrar después?';
+    document.getElementById('doneBtn').hidden = false; document.getElementById('mrate').hidden = true;
+    document.getElementById('mrate').dataset.crop = c.id;
+    msheet.showModal();
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-mc]'); if (b) { openMine(b.dataset.mc); return; }
+    if (e.target.closest('#doneBtn')) { document.getElementById('doneBtn').hidden = true; document.getElementById('mrate').hidden = false; return; }
+    const r = e.target.closest('[data-rate]');
+    if (r) {
+      const box = r.closest('.ask'), c = crops.find((x) => x.id === box.dataset.crop);
+      box.querySelectorAll('[data-rate]').forEach((o) => o.setAttribute('aria-pressed', String(o === r)));
+      const msg = (`Guardado: ${r.dataset.rate === 'buena' ? 'buena cosecha' : r.dataset.rate === 'mala' ? 'mala cosecha' : 'cosecha regular'} de ${c.n.toLowerCase()}. Con esto mejoramos las fechas para tu zona.`);
+      if (box.id === 'harv') { document.getElementById('hsheet').close(); }
+      window.say && say(msg);
+      return;
+    }
+    if (e.target.closest('[data-later]')) { document.getElementById('hsheet').close(); window.say && say('Bien. Te preguntamos de nuevo en 3 días.'); return; }
+    if (e.target === msheet || e.target.closest('#msheet [data-close]')) msheet.close();
+  });
+  if (DEMO.startsWith('#mc=')) setTimeout(() => openMine(DEMO.slice(4)), 60);
+  // Pregunta de cosecha: se abre sola 1 día después de la fecha de cosecha
+  const due = DEMO === '#limpio' ? null : crops.find((c) => !c.perenne && diff(TODAY, c.harvest[0]) >= 1);
+  if (due) {
+    document.getElementById('harv').dataset.crop = due.id;
+    const im = document.getElementById('hs-img'); im.src = `img/${due.id}.webp`; im.alt = due.n;
+    document.getElementById('hs-t').textContent = `¿Cómo salió tu cosecha de ${due.n.toLowerCase()}?`;
+    setTimeout(() => document.getElementById('hsheet').showModal(), 400);
+  }
+  const frost = forecast.slice(0, 7).find((f) => f.mn <= 0), s = seasonOf(TODAY.getMonth());
+  document.getElementById('resumen').textContent = `Hoy lunes 16 de noviembre. Soleado, sin lluvia, la tierra está seca. ${frost ? `El ${WDL[frost.t.getDay()]} puede helar, hasta dos grados bajo cero.` : ''} Temporada de ${s.n.toLowerCase()}.`;
+})();
+</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>
