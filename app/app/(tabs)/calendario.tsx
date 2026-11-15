@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Typography } from "../../constants/Theme";
 import {
   buildWeeks,
+  pastWeeks,
   monthsAhead,
   sourceLine,
   type MonthTile,
@@ -15,6 +16,7 @@ import { useOffline } from "../../src/offline/provider";
 import { dayIcon, rainWord, type DayIcon } from "../../src/today/today";
 import { laPazToday, monthName, shortDate, weekday } from "../../src/ui/dates";
 import { Sheet } from "../../src/ui/Sheet";
+import { fetchHistory, HistoryCache } from "../../src/zone/fetch";
 import type { MyCrop } from "../../src/farm/my-crops";
 import { cropEvents } from "../../src/mycrops/mycrops";
 import { MyCropSheet } from "../../src/mycrops/MyCropSheet";
@@ -38,17 +40,53 @@ const DAY_ICON: Record<DayIcon, { icon: Icon; color: string }> = {
   sol: { icon: "sunny-outline", color: Colors.dry },
 };
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/$/, "");
+const PAST_DAYS = 28;
+
+function shift(iso: string, n: number) {
+  const date = new Date(`${iso}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + n);
+  return date.toISOString().slice(0, 10);
+}
+
+function useHistory(zone: string, today: string) {
+  const { client } = useOffline();
+  const [history, setHistory] = useState<unknown>(null);
+  useEffect(() => {
+    let active = true;
+    const cache = new HistoryCache(client.store.db);
+    void (async () => {
+      const cached = await cache.read(zone);
+      if (active && cached) setHistory(cached);
+      if (!API_URL) return;
+      const fresh = await fetchHistory(API_URL, zone, shift(today, -PAST_DAYS), shift(today, -1));
+      if (!fresh) return;
+      await cache.save(zone, fresh);
+      if (active) setHistory(fresh);
+    })();
+    return () => {
+      active = false;
+    };
+  }, [client, zone, today]);
+  return history;
+}
+
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 const range = (w: Week) => `${Number(w.inicio.slice(8))} – ${shortDate(w.fin)}`;
 
 export default function CalendarioScreen() {
   const { t } = useTranslation();
-  const { data } = useOffline();
+  const { data, zone } = useOffline();
+  const today = laPazToday();
   const [open, setOpen] = useState<Week | null>(null);
+  const [openPast, setOpenPast] = useState(false);
+  const [showPast, setShowPast] = useState(false);
+  const history = useHistory(zone, today);
+  const past = pastWeeks(history, today).filter((w) => w.dias.length > 0);
+  const historySource = sourceLine((history as { fuente?: string[] } | null)?.fuente);
   const [months, setMonths] = useState(false);
   const [crop, setCrop] = useState<MyCrop | null>(null);
   const { crops } = useMyCrops();
-  const today = laPazToday();
   const weeks = buildWeeks(data, today);
   const ahead = monthsAhead(data?.climatologia, today);
   const clima = data?.climatologia as { fuente?: string[]; periodo?: { power?: string } } | undefined;
@@ -117,6 +155,39 @@ export default function CalendarioScreen() {
         ])}
       </View>
       <MyCropSheet crop={crop} onClose={() => setCrop(null)} />
+      {past.length > 0 && (
+        <Pressable accessibilityRole="button" onPress={() => setShowPast(!showPast)} style={styles.more}>
+          <Ionicons name={showPast ? "chevron-down" : "chevron-back"} size={22} color={Colors.ink} />
+          <Text style={styles.moreText}>{showPast ? t("calendario.ocultar_pasadas") : t("calendario.ver_pasadas")}</Text>
+        </Pressable>
+      )}
+      {showPast && (
+        <View style={styles.list}>
+          {past.map((w, k) => (
+            <Pressable
+              key={w.inicio}
+              accessibilityRole="button"
+              onPress={() => {
+                setOpenPast(true);
+                setOpen(w);
+              }}
+              style={({ pressed }) => [styles.item, k > 0 && styles.divider, styles.pastItem, pressed && styles.pressed]}
+            >
+              <Tile tile={w.tile} label={t(`calendario.semana.${w.tile}`)} />
+              <View style={styles.body}>
+                <Text style={styles.range}>{range(w)}</Text>
+                <View style={styles.wx}>
+                  <Text style={[styles.wxText, w.pmm >= 4 && styles.wet]}>
+                    {capital(t(`hoy.lluvia.${rainWord(w.pmm)}`).toLowerCase())}
+                  </Text>
+                  {w.helada && <Text style={[styles.wxText, styles.frost]}>{t("calendario.helada_el", { dia: weekday(w.helada) })}</Text>}
+                </View>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color={Colors.field} />
+            </Pressable>
+          ))}
+        </View>
+      )}
       {ahead.length > 0 && (
         <Pressable accessibilityRole="button" onPress={() => setMonths(true)} style={styles.more}>
           <Text style={styles.moreText}>{t("calendario.ver_meses")}</Text>
@@ -127,9 +198,12 @@ export default function CalendarioScreen() {
       <Sheet
         visible={open !== null}
         title={open ? range(open) : ""}
-        subtitle={open?.lejos ? t("calendario.lejos") : t("calendario.pronostico")}
+        subtitle={openPast ? t("calendario.medido") : open?.lejos ? t("calendario.lejos") : t("calendario.pronostico")}
         closeLabel={t("comun.cerrar")}
-        onClose={() => setOpen(null)}
+        onClose={() => {
+          setOpen(null);
+          setOpenPast(false);
+        }}
       >
         {open?.dias.map((d) => {
           const icon = dayIcon(d);
@@ -153,7 +227,7 @@ export default function CalendarioScreen() {
             </View>
           );
         })}
-        {open && <Source text={t("calendario.fuente", { fuentes: weekSources(open) })} />}
+        {open && <Source text={t("calendario.fuente", { fuentes: openPast ? historySource : weekSources(open) })} />}
       </Sheet>
 
       <Sheet
@@ -268,6 +342,7 @@ const styles = StyleSheet.create({
   warn: { ...Typography.meta, color: Colors.frost },
   month: { flexDirection: "row", gap: 12, alignItems: "center", paddingVertical: 6 },
   source: { flexDirection: "row", gap: 8, alignItems: "center", paddingTop: 12 },
+  pastItem: { opacity: 0.85 },
   eventTile: { width: 92, alignItems: "center", justifyContent: "center", gap: 2 },
   eventKind: { ...Typography.meta, color: Colors.fieldDeep },
   sourceText: { ...Typography.meta, color: Colors.ink2, flexShrink: 1 },
