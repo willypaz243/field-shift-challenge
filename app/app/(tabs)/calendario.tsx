@@ -15,6 +15,10 @@ import { useOffline } from "../../src/offline/provider";
 import { dayIcon, rainWord, type DayIcon } from "../../src/today/today";
 import { laPazToday, monthName, shortDate, weekday } from "../../src/ui/dates";
 import { Sheet } from "../../src/ui/Sheet";
+import type { MyCrop } from "../../src/farm/my-crops";
+import { cropEvents } from "../../src/mycrops/mycrops";
+import { MyCropSheet } from "../../src/mycrops/MyCropSheet";
+import { cropName, useMyCrops } from "../../src/mycrops/use-my-crops";
 
 type Icon = keyof typeof Ionicons.glyphMap;
 const TILE: Record<WeekTile | MonthTile, { icon: Icon; bg: string; fg: string }> = {
@@ -42,6 +46,8 @@ export default function CalendarioScreen() {
   const { data } = useOffline();
   const [open, setOpen] = useState<Week | null>(null);
   const [months, setMonths] = useState(false);
+  const [crop, setCrop] = useState<MyCrop | null>(null);
+  const { crops } = useMyCrops();
   const today = laPazToday();
   const weeks = buildWeeks(data, today);
   const ahead = monthsAhead(data?.climatologia, today);
@@ -62,7 +68,7 @@ export default function CalendarioScreen() {
       <Text style={styles.title}>{t("calendario.titulo")}</Text>
       <Text style={styles.section}>{t("calendario.proximas")}</Text>
       <View style={styles.list}>
-        {weeks.map((w, k) => (
+        {weeks.flatMap((w, k) => [
           <Pressable
             key={w.inicio}
             accessibilityRole="button"
@@ -87,9 +93,30 @@ export default function CalendarioScreen() {
               {w.lejos && <Text style={styles.far}>{t("calendario.lejos")}</Text>}
             </View>
             <Ionicons name="chevron-forward" size={24} color={Colors.field} />
-          </Pressable>
-        ))}
+          </Pressable>,
+          ...cropEvents(crops, w.inicio, w.fin).map((e) => (
+            <Pressable
+              key={`${e.crop.id}-${e.tipo}`}
+              accessibilityRole="button"
+              onPress={() => setCrop(e.crop)}
+              style={({ pressed }) => [styles.item, styles.divider, pressed && styles.pressed]}
+            >
+              <View style={styles.eventTile}>
+                <Ionicons name={e.tipo === "siembra" ? "leaf-outline" : "checkmark"} size={28} color={Colors.field} />
+                <Text style={styles.eventKind}>{t(`cultivos.${e.tipo}`)}</Text>
+              </View>
+              <View style={styles.body}>
+                <Text style={styles.range}>{`${capital(weekday(e.fecha))} ${shortDate(e.fecha)}`}</Text>
+                <Text style={[styles.wxText, { color: Colors.fieldDeep }]}>
+                  {t(`cultivos.${e.tipo}_de`, { cultivo_min: cropName(data, e.crop.crop_id).toLowerCase() })}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color={Colors.field} />
+            </Pressable>
+          )),
+        ])}
       </View>
+      <MyCropSheet crop={crop} onClose={() => setCrop(null)} />
       {ahead.length > 0 && (
         <Pressable accessibilityRole="button" onPress={() => setMonths(true)} style={styles.more}>
           <Text style={styles.moreText}>{t("calendario.ver_meses")}</Text>
@@ -241,5 +268,7 @@ const styles = StyleSheet.create({
   warn: { ...Typography.meta, color: Colors.frost },
   month: { flexDirection: "row", gap: 12, alignItems: "center", paddingVertical: 6 },
   source: { flexDirection: "row", gap: 8, alignItems: "center", paddingTop: 12 },
+  eventTile: { width: 92, alignItems: "center", justifyContent: "center", gap: 2 },
+  eventKind: { ...Typography.meta, color: Colors.fieldDeep },
   sourceText: { ...Typography.meta, color: Colors.ink2, flexShrink: 1 },
 });

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Touch, Typography } from "../../constants/Theme";
 import { sourceLine } from "../../src/calendar/calendar";
 import { MyCrops } from "../../src/farm/my-crops";
+import { notifyMyCrops } from "../../src/mycrops/use-my-crops";
 import { useOffline } from "../../src/offline/provider";
 import { windowsFor } from "../../src/scoring/local";
 import type { Veredicto } from "../../src/scoring/scoring";
@@ -43,6 +44,7 @@ export default function CultivoScreen() {
   const add = async (siembra: string) => {
     const cosecha = addDays(siembra, L);
     await new MyCrops(client.store.db).add({ crop_id: id, siembra, cosecha });
+    notifyMyCrops();
     setPicking(false);
     setSaved(t("sembrar.agregado", { cultivo: crop.nombre, siembra: shortDate(siembra), cosecha: shortDate(cosecha) }));
   };

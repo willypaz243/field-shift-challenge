@@ -1,7 +1,5 @@
 import * as Notifications from "expo-notifications";
-import type { Planned } from "./plan";
-
-const PREFIX = "alerta:";
+export type LocalNotice = { id: string; at: Date; title: string; body: string };
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -12,29 +10,26 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Re-planning on every sync keeps one notification per alert and notice day,
-// and drops the ones whose alert is gone.
-export async function scheduleAlerts(
-  plan: Planned[],
-  text: (p: Planned) => { title: string; body: string },
-) {
+// Re-planning keeps one notification per item and drops the ones no longer
+// wanted; each caller owns its own identifier prefix.
+export async function scheduleLocal(prefix: string, items: LocalNotice[]) {
   let { granted } = await Notifications.getPermissionsAsync();
   if (!granted) ({ granted } = await Notifications.requestPermissionsAsync());
   if (!granted) return;
   const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-  const wanted = new Set(plan.map((p) => PREFIX + p.id));
+  const wanted = new Set(items.map((i) => prefix + i.id));
   for (const n of scheduled)
-    if (n.identifier.startsWith(PREFIX) && !wanted.has(n.identifier))
+    if (n.identifier.startsWith(prefix) && !wanted.has(n.identifier))
       await Notifications.cancelScheduledNotificationAsync(n.identifier);
   const have = new Set(scheduled.map((n) => n.identifier));
-  for (const p of plan)
-    if (!have.has(PREFIX + p.id))
+  for (const item of items)
+    if (!have.has(prefix + item.id))
       await Notifications.scheduleNotificationAsync({
-        identifier: PREFIX + p.id,
-        content: text(p),
+        identifier: prefix + item.id,
+        content: { title: item.title, body: item.body },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
-          date: p.at,
+          date: item.at,
         },
       });
 }

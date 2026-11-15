@@ -6,6 +6,7 @@ import { Colors, Radius, Spacing, Typography } from "../../constants/Theme";
 import { useOffline } from "../../src/offline/provider";
 import { alertStrip, dayIcon, pickToday, rainWord, reservoirStrip, type DayIcon, type Today } from "../../src/today/today";
 import { speak } from "../../src/today/speak";
+import { MyCropsList } from "../../src/mycrops/MyCropsList";
 import { laPazToday, longDate, weekday } from "../../src/ui/dates";
 
 const ICONS: Record<DayIcon, { name: keyof typeof Ionicons.glyphMap; color: string }> = {
@@ -51,7 +52,7 @@ export default function HoyScreen() {
           <Text style={styles.addText}>{t("hoy.agregar")}</Text>
         </Pressable>
       </View>
-      <Text style={styles.empty}>{t("hoy.sin_cultivos")}</Text>
+      <MyCropsList emptyText={t("hoy.sin_cultivos")} />
       {reservoir && (
         <View style={styles.water}>
           <Ionicons name="water-outline" size={26} color={Colors.water} />
