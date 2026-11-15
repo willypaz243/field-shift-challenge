@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "bbox": [
+    -66.280703,
+    -17.53119,
+    -66.06952,
+    -17.257306
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cochabamba-distritos-bbox-v2",
+        "nombre": "Área rectangular de estudio — cobertura Límite Distritos GAMC",
+        "tipo": "area_de_estudio_aproximada",
+        "limite_oficial": false,
+        "identifica_agricultura": false,
+        "fuente": "Ficha técnica GAMC: Límite Distritos, extensión espacial WGS84",
+        "creado": "2026-11-14",
+        "periodo_inicio": "2016-01-01",
+        "periodo_fin": "2025-12-31",
+        "advertencia": "Rectángulo para selección de celdas IMERG; incluye zonas urbanas, rurales y periurbanas. No representa el perímetro oficial municipal ni parcelas agrícolas.",
+        "fuente_url": "https://recursosgamc.cochabamba.bo/api-doc",
+        "service_id": "7eb13092-bf0e-493b-aae6-03c43eedda2c"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -66.280703,
+              -17.53119
+            ],
+            [
+              -66.06952,
+              -17.53119
+            ],
+            [
+              -66.06952,
+              -17.257306
+            ],
+            [
+              -66.280703,
+              -17.257306
+            ],
+            [
+              -66.280703,
+              -17.53119
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

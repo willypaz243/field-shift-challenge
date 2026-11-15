@@ -1,5 +1,14 @@
 # Alejandro — lluvia diaria GPM IMERG
 
+## Área y periodo confirmados
+
+Alejandro confirmó **2016–2025**. Se creó el área aproximada
+[`areas/cochabamba-estudio.geojson`](areas/cochabamba-estudio.geojson) a partir del
+BBOX de la ficha Límite Distritos GAMC (área v2). Permite avanzar sin esperar
+un límite oficial; no identifica terrenos agrícolas. Véanse los comandos y
+limitaciones en [`areas/README.md`](areas/README.md). Los pasos que usan
+`area-oficial.geojson` más abajo corresponden a la alternativa con límite oficial.
+
 ## Estado real del trabajo
 
 - Investigación y programa preparados para IMERG Final y Late diarios, colección 07.
