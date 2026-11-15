@@ -1195,6 +1195,9 @@ components:
           type: number
         pmm:
           type: number
+        et0:
+          type: number
+          description: Reference evapotranspiration (Hargreaves), mm/day; used by the scoring on the phone
         rh:
           type: number
         sw:

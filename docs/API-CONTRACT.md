@@ -111,13 +111,14 @@ Proyección diaria 365 d (backlog 2.2 y 3.2). Alimenta: **Calendario → próxim
   "creado_en": "2026-11-10T03:00:00-04:00",
   "modelo": { "tipo": "fourier_tendencia", "backtest": { "periodo": "2024-2025", "mae": { "tmin": 1.4, "pmm": 2.9 } } },
   "dias": [
-    { "fecha": "2027-01-15", "tmin": 10.2, "tmax": 24.6, "tmean": 17.1, "pmm": 4.8,
+    { "fecha": "2027-01-15", "tmin": 10.2, "tmax": 24.6, "tmean": 17.1, "pmm": 4.8, "et0": 4.1,
       "rh": 71, "sw": 21.6, "ws": 2.1, "sm_surface": 0.27, "sm_root": 0.30,
       "incert_min": { "tmin": 8.9, "pmm": 0.0 }, "incert_max": { "tmin": 11.6, "pmm": 13.0 } }
   ],
   "fuente": ["nasa_power", "nasa_imerg", "nasa_smap"]
 }
 ```
+- `et0`: evapotranspiración de referencia (Hargreaves, mm/día); la usa el scoring en el celular.
 - `incert_min` / `incert_max`: como mínimo para `tmin` y `pmm`. La app los usa para la `confianza` del scoring (helada) y para marcar "puede cambiar".
 - SMAP es un solo valor para el valle (píxel de 9 km): repetir el mismo valor en todas las zonas y marcarlo con `fuente`.
 

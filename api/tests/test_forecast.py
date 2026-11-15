@@ -36,6 +36,7 @@ def test_forecast_returns_days_with_uncertainty_band(client, engine):
     assert [d["fecha"] for d in body["dias"]] == ["2026-12-31", "2027-01-01"]
     assert body["dias"][1]["incert_min"] == {"tmin": -2.0, "pmm": 0.0}
     assert body["dias"][1]["incert_max"] == {"tmin": 3.5, "pmm": 15.7}
+    assert body["dias"][1]["et0"] == 4.7
 
 
 def test_forecast_filters_by_year(client, engine):
