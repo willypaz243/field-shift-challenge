@@ -48,14 +48,22 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 
 | # | Fuente | Qué aporta | Rango | Formato / acceso | Prioridad |
 |---|---|---|---|---|---|
-| 1 | **NASA POWER** (Power-DA) | Clima **diario**: T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS, SW/LW (all-sky) | **1984 → presente** (cubre 2010–2025 + antes ✅) | JSON por punto vía API, 0.5° — **verificado 14/11: funciona SIN token** (v2.10.3); `start`/`end` = int `YYYYMMDD`; **no hay T2MIN/T2MAX en diario** | **P0** |
+| 1 | **NASA POWER** (Power-DA) | Clima **diario**: T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS, SW/LW (all-sky). Base para **ET₀ (Hargreaves)** | **1984 → presente** (cubre 2010–2025 + antes ✅) | JSON por punto vía API, 0.5° — **verificado 14/11: funciona SIN token** (v2.10.3); `start`/`end` = int `YYYYMMDD`; **no hay T2MIN/T2MAX en diario** | **P0** |
 | 1b | **ERA5** (CDS ECMWF) | **t2m_min / t2m_max** diarios (heladas) + validación de T2M | **1940 → presente** | API CDS (clave gratis en cds.climate.copernicus.eu); `reanalysis-era5-single-levels` | **P0** |
-| 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | NetCDF vía Earthdata/CMR (`GPM_3IMERGDL` diario, `GPM_3IMERGHH` 30-min); ⚠️ **requiere aceptar EULA** (ver nota) | P1 |
+| 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | NetCDF vía Earthdata/CMR (`GPM_3IMERGDL` diario, `GPM_3IMERGHH` 30-min); ✅ **EULA aceptado 14/11** | P1 |
 | 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente (brecha 2026-05/07 ya rellena, verificado)** | HDF5 9 km EASE-Grid (EPSG:6933); descarga directa CMR+token verificada; **granules globales ~148 MB** (~1,3 GB/día) | P1 |
 | 4 | **GAMC WMS** (key p04) | Zonas: periurbanos (mask urbano), distritos/comunas, drenaje | estático | WMS vía proxy (rate limit 10–15 s/peticion) | **P0** (obligatorio) |
 | 5 | **SRTM 30 m** | Elevación + pendiente por zona (erosión, escorrentía) | estático | Tiled GeoTIFF (dwtkns/earthdata) | P2 |
-| 6 | **Cultivos** (CROPS.md) | Vector de condiciones óptimas por cultivo (T, heladas, agua, ciclo, fixN, mercado) | curado | tabla local `crops` | **P0** |
+| 6 | **Cultivos** (CROPS.md) | Vector de condiciones óptimas por cultivo (T, heladas, agua, ciclo, fixN, mercado, **plagas, forraje, sequía**) | curado | tabla local `crops` | **P0** |
 | 7 | **Eventos históricos** | Fechas de eventos imprevistos (helada/granizo/inundación/sequía) para alertas | curado 10–20 eventos | tabla local `events` | P1 |
+| 8 | **GEOS-FP / GEOS-S2S** (NASA) | **Pronóstico de corto plazo (28 días)** para la app (complementa el modelo estacional) | presente → +28 d | API JSON (GMAO) | P1 |
+| 9 | **Landsat 8/9 / Sentinel-2** | **NDVI** (estrés vegetal, campo desnudo / bare fields), límites de parcelas | 2013+ / 2015+ | COG/GeoTIFF (USGS/AWS) | P2 |
+| 10 | **Riego N°1 La Angostura** (local) | **Nivel de represa** (%) → disponibilidad de agua para riego, alertas | continuo | CSV/API local (asociación) | P1 |
+
+> **Armonización de datasets (decisión):** todos los productos se llevan a una **malla común de ~1 km**
+> para clima/suelo y **~30 m** para NDVI/parcelas (ver API-CONTRACT §11). POWER 0.5° → interpolación
+> bilineal; SMAP 9 km → promedio de píxeles del valle; IMERG 0.1° → resampling al punto; GAMC vector →
+> punto en polígono. La app no ve las resoluciones originales: solo la malla unificada.
 
 > **Nota SMAP (verificado 14/11 en nsidc.org + CMR en vivo con token Earthdata):**
 > - Producto 3-horario (no 9-días), 9 km; **un solo píxel puede cubrir varias comunas**
@@ -116,26 +124,48 @@ zones(id, nombre, comuna, distrito, lat, lon, elev_m, pendiente,
       cerca_drenaje int,           -- dist. a quebrada (m)
       altitud_alta bool)           -- >2750 m
 
+parcels(id, zone_id, lat, lon, area_m2, fuente_agua enum,
+        prioridad enum)            -- agua/tierra/forraje/vender (perfil agricultor)
+
 climate_history(zone_id, fecha, tmin, tmax, tmean, pmm, rh, sw, ws,
-                sm_surface, sm_root)   -- sm_* desde 2015 (SMAP)
+                et0,                          -- ET₀ Hargreaves (mm/día)
+                sm_surface, sm_root)         -- sm_* desde 2015 (SMAP)
 
 crops(id, nombre, t_opt_min, t_opt_max, tol_helada enum, demanda_agua enum,
-      ciclos_dias int, fix_n bool, mercado enum, foto_url)
-      -- vector de condiciones óptimas (CROPS.md)
+      ciclos_dias int, fix_n bool, mercado enum,
+      breaks_pest_cycle bool,        -- interrumpe ciclo de plagas
+      forage_value enum,            -- bajo/medio/alto
+      drought_tolerant enum,        -- no/poco/alto
+      deep_rooting bool,            -- raíz profunda (infiltración)
+      kcInicial float, kcMedio float, kcFinal float,  -- FAO-56
+      foto_url)
+      -- vector de condiciones óptimas (CROPS.md) + criterios de rotación
 
 events(id, tipo, fecha, zona_id, descripcion, fuente)
 
+reservoir(id, nombre, nivel_pct, volumen_hm3, estado enum, actualizado_en)
+          -- La Angostura (Riego N°1)
+
 forecasts(zone_id, anio, fecha, tmin, tmax, tmean, pmm, rh, sw, ws,
-          sm_surface, sm_root,          -- proyección diaria 365 d
-          incert_min, incert_max,       -- banda de incertidumbre
-          creado_en)                     -- cache: se regenera por cron
+          et0, sm_surface, sm_root,   -- proyección diaria 365 d
+          incert_min, incert_max,     -- banda de incertidumbre
+          creado_en)                   -- cache: se regenera por cron
+
+reports(id, parcela_id, tipo, fecha, foto_url, audio_url, enviado_en)
+        -- reportes comunitarios (sin nombre)
 
 sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 ```
 
 **Vector de características común** (cultivo ↔ proyección):
-`[tmin, tmax, tmean, pmm, rh, sw, ws, sm_surface, sm_root]` — el cultivo define rangos
-óptimos por variable + penalizadores (helada, déficit hídrico), no una distribución.
+`[tmin, tmax, tmean, pmm, rh, sw, ws, et0, sm_surface, sm_root]` — el cultivo define rangos
+óptimos por variable + penalizadores (helada, déficit hídrico, erosión), no una distribución.
+
+**Dimensiones de scoring de rotaciones** (ver API-CONTRACT §6):
+`[agua, tierra, forraje, vender]` — cada plan de rotación se puntúa 1–3 por dimensión.
+El peso de cada dimensión lo determina `objetivo` (perfil del agricultor) + `epoca` (seca/lluvias).
+Criterios adicionales: `fix_n`, `breaks_pest_cycle`, `drought_tolerant`, `deep_rooting`,
+`meses_sin_cultivo` (bare field), `cerca_drenaje` (erosión).
 
 ## 6. Backlog por fases
 
@@ -145,7 +175,7 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 | 0.1 | Claves de acceso: **CDS (ERA5)** — registro gratis + API key; Earthdata (para SMAP, P1, puede esperar). **POWER ya no pide token** (verificado 14/11) | 1 h | `curl` de POWER devuelve JSON diario ✅ (hecho); **token Earthdata ✅ en `.env` y verificado en vivo (CMR + descarga SMAP)**; `cdsapi` de ERA5 pendiente |
 | 0.2 | Definir grid de zonas: 1–3 puntos agrícolas por distrito (D1–D12) usando mask periurbanos | 1 h | Lista de ~15–25 zonas (lat/lon, comuna vía GetFeatureInfo GAMC) |
 | 0.3 | Definir schema (§5) + repo de datos (`data/`, `src/etl`, `src/model`, `api/`, `app/`) | 0,5 h | Schema documentado; estructura de carpetas |
-| 0.4 | Catálogo de cultivos en tabla `crops` (de CROPS.md: papa, choclo, trigo, papaliza, hortalizas/lechuga, alfalfa, haba, tarwi, quinua, avena, flores, durazno) | 1 h (paralelo) | ≥10 cultivos con vector de condiciones |
+| 0.4 | Catálogo de cultivos en tabla `crops` (de CROPS.md: papa, choclo, trigo, papaliza, hortalizas/lechuga, alfalfa, haba, tarwi, quinua, avena, flores, durazno). **Campos necesarios para rotaciones**: `fix_n`, `breaks_pest_cycle`, `forage_value`, `drought_tolerant`, `deep_rooting`, `erosion_sens`, `kc{inicial,medio,final}` (FAO-56), `mercado` | 1,5 h (paralelo) | ≥10 cultivos con vector de condiciones + **criterios de rotación completos** (ver API-CONTRACT §4) |
 
 ### Fase 1 — ETL: explorar, extraer, cargar (hoy→noche, 4–6 h) — *prioridad máxima*
 | ID | Tarea | Est. | Criterio de aceptación |
@@ -160,49 +190,58 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 
 **Hito 1 (noche del día 1):** DB completa (clima 2010+ por zona, cultivos, eventos, zonas GAMC) → **datos listos para entrenar**.
 
-### Fase 2 — Modelos (noche día 1 → mañana día 2, 4–5 h)
+### Fase 2 — Modelos (noche día 1 → mañana día 2, 5–6 h)
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
 | 2.1 | EDA + validación de series contra conocimiento local (lluvia dic–feb, heladas may–ago, seca may–sep) | 1 h | Informe corto de anomalías/validación |
-| 2.2 | Modelo serie temporal por zona/variable: **estacionalidad (Fourier/Prophet) + tendencia + residuo**; alternativa SARIMA | 2 h | Proyección 365 d por variable con banda de incertidumbre |
+| 2.2 | Modelo serie temporal por zona/variable: **estacionalidad (Fourier/Prophet) + tendencia + residuo**; alternativa SARIMA. Incluir **ET₀ (Hargreaves)** como variable derivada: `ET₀ = 0.0023 × (Tmean+15) × √RA` | 2 h | Proyección 365 d por variable (incl. ET₀) con banda de incertidumbre |
 | 2.3 | **Backtest**: holdout 2024–2025 → MAE/RMSE por variable (número para el pitch) | 0,5 h | Métricas documentadas |
-| 2.4 | **Scoring de ventana**: para cada ventana de L días (ciclo del cultivo) en la proyección, score = cumplimiento de rangos óptimos − penalizadores (heladas, déficit agua, erosión por drenaje) | 1 h | Top-3 ventanas + confianza por cultivo/zona; función compartida servidor↔móvil |
+| 2.4 | **Scoring de ventana**: para cada ventana de L días (ciclo del cultivo) en la proyección, score = cumplimiento de rangos óptimos − penalizadores (heladas, déficit agua [pmm vs ET₀×Kc], erosión por drenaje) | 1 h | Top-3 ventanas + confianza por cultivo/zona; función compartida servidor↔móvil |
 | 2.5 | **Reglas de alerta**: firma climática de N días previos a cada evento histórico (T, lluvia, días secos) → similitud con ventanas proyectadas > umbral → alerta | 1 h | ≥1 regla funcional (helada o lluvia extrema) con 5+ eventos |
-| 2.6 | **Módulo rotaciones** (requisito oficial): ≥3 estrategias vs. rotación actual (papa→trigo→maíz), score por agua/fixN/erosión/mercado (CROPS.md) | 1 h (paralelo UI) | 3 estrategias comparables con "por qué se sugirió / evidencia / riesgos" |
+| 2.6 | **Módulo rotaciones** (requisito oficial): ≥3 estrategias vs. rotación actual (papa→trigo→maíz). **Estructura por plan** (ver API-CONTRACT §6): `por_que`, `bueno[]`, `riesgos[]`, `falta_saber[]`, `evidencia[{codigo, fuente}]`, `puntaje{agua,tierra,forraje,vender}`, `etiquetas[]`, `confianza`. Criterios de scoring: agua (ET₀ vs pmm), tierra (fixN, erosión, materia orgánica), forraje (valor), vender (mercado), plagas (`breaks_pest_cycle`), bare field (`meses_sin_cultivo`) | 1,5 h (paralelo UI) | 3+ estrategias con los **5 campos completos** (por qué, evidencia, beneficios, brechas, riesgos) + puntaje por 4 objetivos |
 
-### Fase 3 — API + cache (mañana día 2, 3 h)
+### Fase 3 — API + cache (mañana día 2, 3–4 h)
+> **Referencia:** [`API-CONTRACT.md`](API-CONTRACT.md) define todos los endpoints, formatos y códigos.
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 3.1 | FastAPI: `GET /zones` (agrícolas), `GET /crops`, `GET /zones/{id}/forecast?anio=` | 1,5 h | Endpoints documentados (OpenAPI) |
-| 3.2 | **Cron de proyecciones**: regenera `forecasts` por zona (semanal + on-demand) → cache BD | 1 h | Tabla `forecasts` poblada; regeneración idempotente |
-| 3.3 | `GET /sync` (JSON versionado: crops + forecasts de la comuna seleccionada) | 0,5 h | Payload < 500 KB; delta por `sync_version` |
+| 3.1 | FastAPI: endpoints del API-CONTRACT §1–§8 (parcelas, clima, agua, cultivos, rotaciones, avisos, zona) | 2 h | Endpoints documentados (OpenAPI); response schemas coinciden con API-CONTRACT |
+| 3.2 | **Cron de proyecciones**: regenera `forecasts` por zona (semanal + on-demand) → cache BD. Incluir **ET₀** y **pronóstico 28 d (GEOS)** si disponible | 1 h | Tabla `forecasts` poblada; `/clima/pronostico?dias=28` funcional |
+| 3.3 | `GET /sync` (JSON versionado: crops + forecasts + rotaciones de la comuna) | 0,5 h | Payload < 500 KB; delta por `sync_version` |
+| 3.4 | **`GET /rotaciones`** con la estructura completa de API-CONTRACT §6 (5 campos por plan + puntaje por 4 objetivos + `objetivo` param) | 0,5 h | Response tiene `por_que`, `bueno[]`, `riesgos[]`, `falta_saber[]`, `evidencia[]` |
 
-### Fase 4 — Móvil offline-first (día 2, 4–6 h, paralelo) — *según mockup Figma*
+### Fase 4 — Móvil offline-first (día 2, 5–7 h, paralelo) — *según mockup Figma + FLUJO-APP.md*
+> **Referencia:** [`FLUJO-APP.md`](FLUJO-APP.md) define las 9 pantallas y los flujos.
+> [`API-CONTRACT.md`](API-CONTRACT.md) define los endpoints que la app consume.
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 4.1 | Pantallas: cultivo+foto, **indicar zona (GPS) + confirmar**, calendario clima (proyección semanal), reporte general histórico, registro/retroalimentación, notificaciones | 3 h | Mockup cubierto; flujo demo completo |
-| 4.2 | **Sync**: al conectar a internet → descarga crops + proyección de la comuna → SQLite local | 1 h | La app funciona 100 % sin internet tras el primer sync |
+| 4.1 | Pantallas (FLUJO-APP §1): **onboarding** (GPS + fuente agua + **prioridad: agua/tierra/forraje/vender**), Hoy, Calendario, Sembrar, Mi cultivo, Rotaciones, Mi zona, Avisos | 3 h | 9 pantallas del mockup; flujo demo completo |
+| 4.2 | **Sync**: al conectar a internet → descarga crops + forecasts + rotaciones de la comuna → SQLite local | 1 h | La app funciona 100 % sin internet tras el primer sync |
 | 4.3 | **Scoring en dispositivo** (misma función que 2.4) → ventana óptima (fecha inicio/fin + guía) | 1 h | Resultado idéntico al servidor (test) |
 | 4.4 | **Notificaciones locales** 1–2 semanas antes (eventos previstos por patrón) + aviso de eventos de otros usuarios cercanos | 1 h | Notificación push local con la ventana de riesgo |
-| 4.5 | **Retroalimentación**: el agricultor registra cosecha/ventana real → se guarda local y se sincroniza (comunidad: alertar a usuarios cercanos) | 0,5 h | Registro funcional (stretch) |
-| 4.6 | Recordatorio visible: "apoya, no reemplaza" + dónde cuenta el juicio local | 0,25 h | Texto en pantalla de resultado |
+| 4.5 | **Retroalimentación + reportes comunitarios**: cosecha (buena/regular/mala) + "avisar algo" (sin_agua, helada, granizo, inundación, plaga) → cola offline → `POST /reportes` | 1 h | Registro funcional; reportes aparecen en mapa de zona (sin nombre) |
+| 4.6 | **Rotaciones en UI**: pantalla "¿Qué sembrar después?" con selector de objetivo + 3+ planes con los 5 campos (por qué, evidencia, beneficios, brechas, riesgos) + "Quiero este plan" | 0,5 h | Estructura visual coincide con API-CONTRACT §6 |
+| 4.7 | Recordatorio visible: "apoya, no reemplaza" + dónde cuenta el juicio local + **tooltips de términos científicos** (ET, humedad suelo, helada) | 0,5 h | Texto en pantalla de resultado + tooltips funcionales |
 
 ### Fase 5 — Demo y pitch (cierre día 2, 3 h)
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 5.1 | Demo: elegir comuna + cultivo → ventana óptima + alerta + mapa GAMC (capas WMS en mapa) | 1 h | Flujo sin errores en vivo |
-| 5.2 | Pitch alineado al reto: NASA (POWER/GPM/SMAP) + **GAMC (zonas, presión urbana, drenaje)** + rotaciones (≥3) + incertidumbre + apoyo-no-reemplazo | 1 h | Guion 5 min |
+| 5.1 | Demo: onboarding (GPS + prioridad) → Hoy → Sembrar → fecha óptima → **Rotaciones (3 planes con 5 campos)** → alerta + mapa GAMC | 1 h | Flujo sin errores en vivo; rotaciones visibles con evidencia |
+| 5.2 | Pitch alineado al reto: NASA (POWER/SMAP/GPM/GEOS) + **GAMC (zonas, presión urbana, drenaje)** + **ET₀ + humedad suelo** + rotaciones (≥3 con 5 campos) + **armonización de datasets** + incertidumbre + **apoyo-no-reemplazo** + **prioridades del agricultor** | 1 h | Guion 5 min que cubre todos los puntos del reto |
 | 5.3 | Video 3–5 min | 1 h | Grabado |
 
 ## 7. Cortes de MVP (si falta tiempo, en orden de descarte)
 
 1. **Móvil → PWA web** (si el nativo no cierra a tiempo; el scoring local funciona igual).
 2. **Eventos/alertas → 1 regla + 5 eventos** (helada o lluvia).
-3. **Rotaciones → tabla estática** de 3 estrategias (sin scoring dinámico).
+3. **Rotaciones → tabla estática** de 3 estrategias con los 5 campos (sin scoring dinámico por objetivo).
 4. **Zonas → 5 comunas** en vez de 12 (Itocta, Molle, A. Zamudio, Tiquipaya, Valle Hermoso).
 5. **SMAP → descartar** (quedan POWER + GPM; humedad de suelo se menciona como "próximamente").
-6. **SRTM → descartar** (pendiente/erosión se toma de la capa drenaje GAMC).
-7. **GPM → solo POWER** (una sola fuente de clima).
+6. **GEOS 28 d → descartar** (solo modelo estacional 365 d; sin pronóstico corto).
+7. **Landsat/Sentinel-2 → descartar** (sin NDVI; bare fields se infiere del calendario de cultivos).
+8. **SRTM → descartar** (pendiente/erosión se toma de la capa drenaje GAMC).
+9. **GPM → solo POWER** (una sola fuente de clima).
+10. **Reportes comunitarios → descartar** (sin mapa de zona colaborativo).
+11. **La Angostura → descartar** (sin nivel de represa; agua solo por lluvia/SMAP).
 
 ## 8. Riesgos y mitigaciones
 
@@ -210,7 +249,7 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 |---|---|---|
 | Claves de acceso (CDS/Earthdata) | Bajo | **POWER sin token** ✅ y **token Earthdata verificado en vivo** ✅ (CMR + descarga SMAP). Queda CDS (ERA5) opcional |
 | SMAP 9 km grueso + tamaño de granules (~1,3 GB/día) | Medio | Brecha 2026-05/07 ya cubierta ✅; tratar como "valle" no comunal; histórico completo no viable → ventana reducida o P1 descartable |
-| EULA GPM/IMERG no aceptado (403) | Bajo | Aceptar una vez: `urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ`; es P1 |
+| EULA GPM/IMERG no aceptado (403) | ~~Bajo~~ **RESUELTO** ✅ | EULA aceptado 14/11/2026. Descarga IMERG desbloqueada |
 | Rate limit GAMC (429) | Medio | Batch con sleeps 12 s (script probado); todo lo descargable ya está en `data/gamc/04/` |
 | Proyección 1 año "honestidad" | Medio (pitch) | Enmarcar como **ciclo estacional + tendencia + incertidumbre** (no "predicción mágica"); mostrar backtest con números |
 | FeatureInfo drenaje vacío | Bajo | Solo mask visual (G3); no depende de atributos |
@@ -232,9 +271,34 @@ DÍA 1 (sábado)                    DÍA 2 (domingo)
 18:00  F5: demo + pitch + video
 ```
 
-## 10. Referencias
+## 10. Alineación con el reto (auditoría 14/11)
+
+> Verificación contra el enunciado oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/>
+
+| Requisito del reto | Dónde lo cubrimos | Estado |
+|---|---|---|
+| **Decision-support tool** (app/modelo/mapa) | App móvil offline-first + API + modelo estacional | ✅ |
+| **Datos NASA + info local** (suelos, cultivos, prioridades) | POWER + SMAP + GPM + SRTM + GEOS + **GAMC** + `crops.json` + La Angostura | ✅ |
+| **≥3 rotaciones incl. la actual** con 5 campos | Tarea 2.6 + API-CONTRACT §6 (`por_que`, `evidencia[]`, `bueno[]`, `riesgos[]`, `falta_saber[]`) | ✅ |
+| **Apoya, no reemplaza** | Tarea 4.7 (texto + tooltips) | ✅ |
+| T, lluvia, **humedad suelo**, **evaporación (ET₀)**, heladas, precip. extrema | POWER (T, pmm, RH, SW) + SMAP (sm) + **ET₀ Hargreaves** (tarea 2.2) | ✅ |
+| Prioridades: agua, forraje, fixN, erosión, materia orgánica, mercado | `crops.json` + scoring 4 dimensiones (API-CONTRACT §6) | ✅ |
+| Bare fields / campo desnudo | `meses_sin_cultivo` en rotaciones + calendario de cultivos | ✅ |
+| Pest cycle disruption | `breaks_pest_cycle` en crops + `riesgos: ["mas_gusano"]` en rotaciones | ✅ |
+| **Farmer input: prioridades/restricciones** | Onboarding: `PUT /perfil` con `prioridad` (API-CONTRACT §1) | ✅ |
+| Incertidumbre + validación local | Banda de incertidumbre + backtest + `confianza` por respuesta | ✅ |
+| Armonización de datasets (explicar) | Nota §3 (malla 1 km / 30 m) + pitch | ✅ |
+| Mapas interactivos (tendencias, vulnerabilidades) | GAMC WMS en app + capa drenaje + heladas por zona | ✅ |
+| Explicar términos científicos | Tooltips en UI (tarea 4.7): ET, humedad suelo, helada | ✅ |
+| Cultivos fixN, cobertura, raíz profunda, tolerantes a sequía | `crops.json`: `fix_n`, `deep_rooting`, `drought_tolerant`, `forage_value` | ✅ |
+
+**Datasets NASA no usados** (opcionales, "you may explore"): ECOSTRESS, Landsat/MODIS/VIIRS, GRACE/GRACE-FO, GEDI.
+No bloquean; se mencionan como "próximamente" si el jurado pregunta.
+
+## 11. Referencias
 
 - Reto oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/> · [CHALLENGE.md](./CHALLENGE.md)
+- **API Contract (equipo app):** [API-CONTRACT.md](./API-CONTRACT.md) · **Flujo de app:** [FLUJO-APP.md](./FLUJO-APP.md)
 - SMAP v8: <https://nsidc.org/data/spl4smgp/versions/8> (DOI 10.5067/T5RUATAQREF8)
 - POWER API: <https://power.larc.nasa.gov/api/documents/>
 - Series temporales (ref. equipo): <https://www.ibm.com/mx-es/think/topics/time-series-model>
