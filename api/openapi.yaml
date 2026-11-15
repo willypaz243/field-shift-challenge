@@ -887,8 +887,15 @@ paths:
     post:
       tags:
       - feedback
-      summary: Harvest result
+      summary: Harvest result (queued offline, idempotent)
       operationId: createFeedback
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Generated on the phone; a repeated key returns 409 with the original id
       requestBody:
         required: true
         content:
@@ -909,7 +916,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Created'
               example:
-                id: fb-12
+                id: '12'
+        '409':
+          description: 'Idempotency-Key already used: original id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: '12'
         '400':
           description: resultado must be buena, regular or mala
           content:
@@ -920,12 +935,29 @@ paths:
                 error:
                   codigo: invalid_request
                   mensaje_tecnico: resultado must be buena, regular or mala
+        '404':
+          description: crop_id kiwi does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: crop_not_found
+                  mensaje_tecnico: crop_id kiwi does not exist
   /plans:
     post:
       tags:
       - feedback
-      summary: Chosen rotation plan (statistics only)
+      summary: Chosen rotation plan (statistics only, idempotent)
       operationId: createPlan
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Generated on the phone; a repeated key returns 409 with the original id
       requestBody:
         required: true
         content:
@@ -944,7 +976,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/Created'
               example:
-                id: plan-3
+                id: '3'
+        '409':
+          description: 'Idempotency-Key already used: original id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: '3'
+        '400':
+          description: siembra is required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: invalid_request
+                  mensaje_tecnico: siembra is required
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
 components:
   schemas:
     Error:
