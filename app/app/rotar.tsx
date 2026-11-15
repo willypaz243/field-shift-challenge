@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Colors, Radius, Spacing, Touch, Typography } from "../constants/Theme";
+import { nearChannel, parcelFacts } from "../src/farm/parcel";
 import { parseCode } from "../src/rotations/codes";
 import { sourceLine } from "../src/calendar/calendar";
 import { MyCrops } from "../src/farm/my-crops";
@@ -59,6 +60,13 @@ export default function RotarScreen() {
   const [open, setOpen] = useState<RankedRotation | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
   const ranked = rankFor(plans, goal);
+  const channel = farm?.parcela ? nearChannel(parcelFacts(zone, farm.parcela)) : false;
+  // Erodible crops lose soil to a nearby channel; the zone-level rule cannot know the plot.
+  const plotRisk = (r: RankedRotation | null) => {
+    const next = r?.secuencia[1] ? findCrop(data, r.secuencia[1]) : null;
+    const erodible = ["media", "alta"].includes(next?.erosion_sens ?? "");
+    return channel && erodible && !r?.riesgos?.includes("riesgo_erosion");
+  };
   const code = (k: string) => {
     const parsed = parseCode(k);
     if (parsed?.key === "precio")
@@ -243,8 +251,11 @@ export default function RotarScreen() {
         {!!open?.bueno?.length && (
           <Block label={t("rotar.bueno")} items={open.bueno.map(code)} />
         )}
-        {!!open?.riesgos?.length && (
-          <Block label={t("rotar.riesgos")} items={open.riesgos.map(code)} />
+        {(!!open?.riesgos?.length || plotRisk(open)) && (
+          <Block
+            label={t("rotar.riesgos")}
+            items={[...(open?.riesgos ?? []), ...(plotRisk(open) ? ["parcela_cerca_canal"] : [])].map(code)}
+          />
         )}
         {!!open?.falta_saber?.length && (
           <Block label={t("rotar.falta")} items={open.falta_saber.map(code)} />
