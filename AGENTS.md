@@ -8,6 +8,10 @@ Rules for anyone (human or AI agent) contributing to this repo. Read before writ
 - [`docs/API-CONTRACT.md`](docs/API-CONTRACT.md): endpoints and payloads. Source of truth for frontend and backend.
 - [`docs/FLUJO-APP.md`](docs/FLUJO-APP.md): app screens and flows.
 - [`data/crops/README.md`](data/crops/README.md): crop catalog and scoring rules.
+- [`PRODUCT.md`](PRODUCT.md): who the users are, product principles, accessibility rules.
+- [`DESIGN.md`](DESIGN.md): visual system (colors, type, spacing, components, motion). Tokens in its frontmatter are normative.
+- [`mockups/`](mockups/): approved HTML mockups, one file per screen. Open them with any static server (`python3 -m http.server -d mockups`).
+- [`SKILLS.md`](SKILLS.md): agent skills to use (`pair`, `impeccable`).
 - The GitHub issue you are working on, including its acceptance criteria and "Blocked by".
 
 ## Branches
@@ -51,7 +55,7 @@ Rules for anyone (human or AI agent) contributing to this repo. Read before writ
 - Offline-first: screens read from local SQLite, never block on the network. Show "actualizado + date", never "sin señal".
 - User-facing text goes through i18n keys (Spanish and Quechua). No hardcoded strings.
 - Short, plain language for farmers. No technical terms in the UI.
-- Match the approved mockups. Attach screenshots to the PR.
+- Match the screen in `mockups/` and use the tokens from `DESIGN.md`; do not invent colors or sizes. Attach screenshots to the PR.
 
 ### Backend (`api/`)
 
