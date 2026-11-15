@@ -8,6 +8,14 @@ FastAPI modular monolith. Architecture and stack: see the root [`README.md`](../
 
 Every response has an example taken from the contract, so the mock returns realistic data.
 
+## Run the API
+
+```bash
+make api    # http://localhost:8000, docs at /docs
+```
+
+It reads `data/db/valle.db` (override with `DATABASE_URL`) and `data/crops/crops.json`.
+
 ## Mock server
 
 Run the contract as a fake API (no Python needed):
