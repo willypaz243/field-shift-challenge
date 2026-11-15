@@ -35,3 +35,11 @@ test("a farm without a zone is not ready", async () => {
 
   expect(await farm.read()).toEqual({ idioma: "qu" });
 });
+
+test("a plot without real coordinates is refused", async () => {
+  const farm = await store();
+  await expect(
+    farm.save({ parcela: { lat: NaN, lon: -66.2 } }),
+  ).rejects.toThrow();
+  expect(await farm.read()).toBeNull();
+});

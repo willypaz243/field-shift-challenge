@@ -27,6 +27,57 @@ function projector(center: Point, view: View) {
   });
 }
 
+// Keeps the visible window inside the georeferenced image: the map pans only as
+// far as the GAMC picture goes instead of showing empty margins.
+export function clampCenter(center: Point, view: View, bbox: number[]): Point {
+  const [west, south, east, north] = bbox;
+  const halfLon =
+    view.width /
+    2 /
+    (view.width / SPAN_DEG) /
+    Math.cos((center.lat * Math.PI) / 180);
+  const halfLat = view.height / 2 / (view.width / SPAN_DEG);
+  const clamp = (v: number, lo: number, hi: number) =>
+    lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v));
+  return {
+    lat: clamp(center.lat, south + halfLat, north - halfLat),
+    lon: clamp(center.lon, west + halfLon, east - halfLon),
+  };
+}
+
+export function projectPoint(center: Point, view: View, point: Point) {
+  return projector(center, view)([point.lon, point.lat]);
+}
+
+// Inverse of the projection: where the farmer tapped, in coordinates.
+export function unproject(
+  center: Point,
+  view: View,
+  x: number,
+  y: number,
+): Point {
+  const scale = view.width / SPAN_DEG;
+  const shrink = Math.cos((center.lat * Math.PI) / 180);
+  return {
+    lat: center.lat - (y - view.height / 2) / scale,
+    lon: center.lon + (x - view.width / 2) / (shrink * scale),
+  };
+}
+
+// Screen rectangle of a georeferenced image ([west, south, east, north]).
+export function imageRect(center: Point, view: View, bbox: number[]) {
+  const [west, south, east, north] = bbox;
+  const project = projector(center, view);
+  const topLeft = project([west, north]);
+  const bottomRight = project([east, south]);
+  return {
+    left: topLeft.x,
+    top: topLeft.y,
+    width: bottomRight.x - topLeft.x,
+    height: bottomRight.y - topLeft.y,
+  };
+}
+
 function features(map: unknown, layer: string) {
   return (map as ZoneMap | null)?.capas?.[layer]?.features ?? [];
 }

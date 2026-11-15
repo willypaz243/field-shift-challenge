@@ -1,7 +1,16 @@
 import { initialize } from "../../offline/schema";
 import { testDatabase } from "../../offline/__tests__/database";
 import { fetchHistory, fetchZoneMap, MapCache } from "../fetch";
-import { floodMarks, historyItems, notice, projectCells } from "../map";
+import {
+  clampCenter,
+  floodMarks,
+  historyItems,
+  imageRect,
+  notice,
+  projectCells,
+  projectPoint,
+  unproject,
+} from "../map";
 
 const center = { lat: -17.4611, lon: -66.2185 };
 const view = { width: 340, height: 520 };
@@ -104,4 +113,34 @@ test("history is asked for the exact range", async () => {
   expect(request).toHaveBeenCalledWith(
     "https://api.test/zones/D9_itocta/history?desde=2026-10-19&hasta=2026-11-15",
   );
+});
+
+test("a tap on the map gives back the coordinates it shows", () => {
+  const tapped = { lat: -17.455, lon: -66.21 };
+  const { x, y } = projectPoint(center, view, tapped);
+  const back = unproject(center, view, x, y);
+  expect(back.lat).toBeCloseTo(tapped.lat, 9);
+  expect(back.lon).toBeCloseTo(tapped.lon, 9);
+});
+
+test("the GAMC image is placed by its bounding box around the plot", () => {
+  const rect = imageRect(
+    center,
+    view,
+    [-66.2485, -17.4911, -66.1885, -17.4311],
+  );
+  expect(rect.left + rect.width / 2).toBeCloseTo(view.width / 2, 6);
+  expect(rect.top + rect.height / 2).toBeCloseTo(view.height / 2, 6);
+  expect(rect.width).toBeGreaterThan(view.width);
+});
+
+test("the view never leaves the GAMC image", () => {
+  const bbox = [-66.2785, -17.5211, -66.1585, -17.4011];
+  const far = clampCenter({ lat: -17.4011, lon: -66.1585 }, view, bbox);
+  const rect = imageRect(far, view, bbox);
+  expect(rect.left).toBeLessThanOrEqual(0.001);
+  expect(rect.top).toBeLessThanOrEqual(0.001);
+  expect(rect.left + rect.width).toBeGreaterThanOrEqual(view.width - 0.1);
+  expect(rect.top + rect.height).toBeGreaterThanOrEqual(view.height - 0.1);
+  expect(clampCenter(center, view, bbox)).toEqual(center);
 });
