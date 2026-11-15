@@ -1,0 +1,27 @@
+{
+  "product": "GPM_3IMERGDF",
+  "version": "07",
+  "run": "final",
+  "timezone": "UTC",
+  "start": "2025-01-01",
+  "end": "2025-01-01",
+  "bbox_search_only": [
+    -66.28,
+    -17.53,
+    -66.05,
+    -17.26
+  ],
+  "created_at": "2026-11-14T20:45:18.336852+00:00",
+  "files": [
+    {
+      "id": "G3578705258-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250101-S000000-E235959.V07B.nc4",
+      "date": "2025-01-01",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250101-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:54:16.000Z",
+      "size_mb": "26.7517862319946"
+    }
+  ],
+  "missing_dates": [],
+  "warning": "Los archivos son globales. El BBOX de b\u00fasqueda no recorta los datos."
+}

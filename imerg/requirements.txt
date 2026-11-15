@@ -1,0 +1,4 @@
+earthaccess>=0.15,<1
+xarray>=2025.1
+netCDF4>=1.7
+shapely>=2.0,<3

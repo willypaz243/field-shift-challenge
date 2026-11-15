@@ -1,0 +1,267 @@
+{
+  "product": "GPM_3IMERGDF",
+  "version": "07",
+  "run": "final",
+  "timezone": "UTC",
+  "start": "2025-01-01",
+  "end": "2025-01-31",
+  "bbox_search_only": [
+    -66.28,
+    -17.53,
+    -66.05,
+    -17.26
+  ],
+  "created_at": "2026-11-14T20:36:57.923968+00:00",
+  "files": [
+    {
+      "id": "G3578705258-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250101-S000000-E235959.V07B.nc4",
+      "date": "2025-01-01",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250101-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:54:16.000Z",
+      "size_mb": "26.7517862319946"
+    },
+    {
+      "id": "G3578705250-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250102-S000000-E235959.V07B.nc4",
+      "date": "2025-01-02",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250102-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:55:55.000Z",
+      "size_mb": "27.1949977874756"
+    },
+    {
+      "id": "G3578705282-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250103-S000000-E235959.V07B.nc4",
+      "date": "2025-01-03",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250103-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:57:05.000Z",
+      "size_mb": "26.3993082046509"
+    },
+    {
+      "id": "G3578705278-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250104-S000000-E235959.V07B.nc4",
+      "date": "2025-01-04",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250104-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:59:16.000Z",
+      "size_mb": "25.9473657608032"
+    },
+    {
+      "id": "G3578705392-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250105-S000000-E235959.V07B.nc4",
+      "date": "2025-01-05",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250105-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T17:59:16.000Z",
+      "size_mb": "26.7471055984497"
+    },
+    {
+      "id": "G3578705254-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250106-S000000-E235959.V07B.nc4",
+      "date": "2025-01-06",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250106-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:02:36.000Z",
+      "size_mb": "26.7843866348267"
+    },
+    {
+      "id": "G3578705271-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250107-S000000-E235959.V07B.nc4",
+      "date": "2025-01-07",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250107-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:02:36.000Z",
+      "size_mb": "26.3875494003296"
+    },
+    {
+      "id": "G3578705277-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250108-S000000-E235959.V07B.nc4",
+      "date": "2025-01-08",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250108-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:03:36.000Z",
+      "size_mb": "26.0712871551514"
+    },
+    {
+      "id": "G3578705259-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250109-S000000-E235959.V07B.nc4",
+      "date": "2025-01-09",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250109-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:04:36.000Z",
+      "size_mb": "26.557746887207"
+    },
+    {
+      "id": "G3578705256-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250110-S000000-E235959.V07B.nc4",
+      "date": "2025-01-10",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250110-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:05:26.000Z",
+      "size_mb": "27.2429637908936"
+    },
+    {
+      "id": "G3578705266-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250111-S000000-E235959.V07B.nc4",
+      "date": "2025-01-11",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250111-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:05:56.000Z",
+      "size_mb": "27.125693321228"
+    },
+    {
+      "id": "G3578705248-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250112-S000000-E235959.V07B.nc4",
+      "date": "2025-01-12",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250112-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:08:36.000Z",
+      "size_mb": "27.3314828872681"
+    },
+    {
+      "id": "G3578705253-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250113-S000000-E235959.V07B.nc4",
+      "date": "2025-01-13",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250113-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:08:36.000Z",
+      "size_mb": "27.9251289367676"
+    },
+    {
+      "id": "G3578705403-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250114-S000000-E235959.V07B.nc4",
+      "date": "2025-01-14",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250114-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:15:16.000Z",
+      "size_mb": "27.3689222335815"
+    },
+    {
+      "id": "G3578705285-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250115-S000000-E235959.V07B.nc4",
+      "date": "2025-01-15",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250115-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:15:16.000Z",
+      "size_mb": "26.6539306640625"
+    },
+    {
+      "id": "G3578705290-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250116-S000000-E235959.V07B.nc4",
+      "date": "2025-01-16",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250116-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:15:16.000Z",
+      "size_mb": "26.2892160415649"
+    },
+    {
+      "id": "G3578705260-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250117-S000000-E235959.V07B.nc4",
+      "date": "2025-01-17",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250117-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:15:17.000Z",
+      "size_mb": "26.3046293258667"
+    },
+    {
+      "id": "G3578705255-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250118-S000000-E235959.V07B.nc4",
+      "date": "2025-01-18",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250118-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:21:16.000Z",
+      "size_mb": "26.4161529541016"
+    },
+    {
+      "id": "G3578705267-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250119-S000000-E235959.V07B.nc4",
+      "date": "2025-01-19",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250119-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:21:16.000Z",
+      "size_mb": "26.1486406326294"
+    },
+    {
+      "id": "G3578705251-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250120-S000000-E235959.V07B.nc4",
+      "date": "2025-01-20",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250120-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:21:17.000Z",
+      "size_mb": "26.6462516784668"
+    },
+    {
+      "id": "G3578705289-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250121-S000000-E235959.V07B.nc4",
+      "date": "2025-01-21",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250121-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:21:17.000Z",
+      "size_mb": "27.0587091445923"
+    },
+    {
+      "id": "G3578705286-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250122-S000000-E235959.V07B.nc4",
+      "date": "2025-01-22",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250122-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:21:17.000Z",
+      "size_mb": "26.5900764465332"
+    },
+    {
+      "id": "G3578732479-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250123-S000000-E235959.V07B.nc4",
+      "date": "2025-01-23",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250123-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:27:16.000Z",
+      "size_mb": "26.1367092132568"
+    },
+    {
+      "id": "G3578732409-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250124-S000000-E235959.V07B.nc4",
+      "date": "2025-01-24",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250124-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:27:17.000Z",
+      "size_mb": "26.574104309082"
+    },
+    {
+      "id": "G3578732370-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250125-S000000-E235959.V07B.nc4",
+      "date": "2025-01-25",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250125-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:27:17.000Z",
+      "size_mb": "27.1583042144775"
+    },
+    {
+      "id": "G3578732431-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250126-S000000-E235959.V07B.nc4",
+      "date": "2025-01-26",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250126-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:27:17.000Z",
+      "size_mb": "27.2659034729004"
+    },
+    {
+      "id": "G3578732328-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250127-S000000-E235959.V07B.nc4",
+      "date": "2025-01-27",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250127-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:27:56.000Z",
+      "size_mb": "26.9919834136963"
+    },
+    {
+      "id": "G3578731150-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250128-S000000-E235959.V07B.nc4",
+      "date": "2025-01-28",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250128-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:36:07.000Z",
+      "size_mb": "26.2365865707397"
+    },
+    {
+      "id": "G3578731104-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250129-S000000-E235959.V07B.nc4",
+      "date": "2025-01-29",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250129-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:36:07.000Z",
+      "size_mb": "25.9848661422729"
+    },
+    {
+      "id": "G3578730809-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250130-S000000-E235959.V07B.nc4",
+      "date": "2025-01-30",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250130-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:36:08.000Z",
+      "size_mb": "25.9330291748047"
+    },
+    {
+      "id": "G3578730801-GES_DISC",
+      "name": "3B-DAY.MS.MRG.3IMERG.20250131-S000000-E235959.V07B.nc4",
+      "date": "2025-01-31",
+      "url": "https://data.gesdisc.earthdata.nasa.gov/data/GPM_L3/GPM_3IMERGDF.07/2025/01/3B-DAY.MS.MRG.3IMERG.20250131-S000000-E235959.V07B.nc4",
+      "updated": "2025-06-23T18:36:08.000Z",
+      "size_mb": "26.2207889556885"
+    }
+  ],
+  "missing_dates": [],
+  "warning": "Los archivos son globales. El BBOX de b\u00fasqueda no recorta los datos."
+}
