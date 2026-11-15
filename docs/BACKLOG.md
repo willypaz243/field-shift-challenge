@@ -53,7 +53,7 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 | 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | NetCDF vía Earthdata/CMR (`GPM_3IMERGDL` diario, `GPM_3IMERGHH` 30-min); ✅ **EULA aceptado 14/11** | P1 |
 | 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente (brecha 2026-05/07 ya rellena, verificado)** | HDF5 9 km EASE-Grid (EPSG:6933); descarga directa CMR+token verificada; **granules globales ~148 MB** (~1,3 GB/día) | P1 |
 | 4 | **GAMC WMS** (key p04) | Zonas: periurbanos (mask urbano), distritos/comunas, drenaje | estático | WMS vía proxy (rate limit 10–15 s/peticion) | **P0** (obligatorio) |
-| 5 | **SRTM 30 m** | Elevación + pendiente por zona (erosión, escorrentía) | estático | Tiled GeoTIFF (dwtkns/earthdata) | P2 |
+| 5 | **DEM ~30 m** (nombre "SRTM" por continuidad) | Elevación + pendiente por zona (erosión, escorrentía) | estático | Open-Meteo Elevation (el servidor SRTM dwtkns/earthdata dejó de responder) | P2 |
 | 6 | **Cultivos** (CROPS.md) | Vector de condiciones óptimas por cultivo (T, heladas, agua, ciclo, fixN, mercado, **plagas, forraje, sequía**) | curado | tabla local `crops` | **P0** |
 | 7 | **Eventos históricos** | Fechas de eventos imprevistos (helada/granizo/inundación/sequía) para alertas | curado 10–20 eventos | tabla local `events` | P1 |
 | 8 | **GEOS-FP / GEOS-S2S** (NASA) | **Pronóstico de corto plazo (28 días)** para la app (complementa el modelo estacional) | presente → +28 d | API JSON (GMAO) | P1 |
@@ -120,7 +120,7 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 
 ```sql
 zones(id, nombre, comuna, distrito, lat, lon, elev_m, pendiente,
-      es_agricola bool,            -- mask GAMC periurbanos
+      es_agricola bool,            -- proxy: 1 si no está en la mask periurbana GAMC (una zona periurbana puede ser agrícola)
       cerca_drenaje int,           -- dist. a quebrada (m)
       altitud_alta bool)           -- >2750 m
 

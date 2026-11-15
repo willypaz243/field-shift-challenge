@@ -4,7 +4,7 @@
     "lon": -66.166,
     "elev_m": 2556.0,
     "elev_centro_m": 2556.0,
-    "slope_deg": 0.36,
+    "slope_deg": 0.33,
     "grid_m": [
       [
         2556.0,
@@ -29,7 +29,7 @@
     "lon": -66.157,
     "elev_m": 2575.0,
     "elev_centro_m": 2580.0,
-    "slope_deg": 2.06,
+    "slope_deg": 1.74,
     "grid_m": [
       [
         2580.0,
@@ -54,7 +54,7 @@
     "lon": -66.1444,
     "elev_m": 3719.0,
     "elev_centro_m": 3719.0,
-    "slope_deg": 20.2,
+    "slope_deg": 17.36,
     "grid_m": [
       [
         3719.0,
@@ -79,7 +79,7 @@
     "lon": -66.112,
     "elev_m": 2653.0,
     "elev_centro_m": 2653.0,
-    "slope_deg": 9.01,
+    "slope_deg": 8.9,
     "grid_m": [
       [
         2653.0,
@@ -104,7 +104,7 @@
     "lon": -66.134,
     "elev_m": 2871.0,
     "elev_centro_m": 2871.0,
-    "slope_deg": 10.88,
+    "slope_deg": 9.93,
     "grid_m": [
       [
         2873.0,
@@ -129,7 +129,7 @@
     "lon": -66.13,
     "elev_m": 2693.0,
     "elev_centro_m": 2695.0,
-    "slope_deg": 8.39,
+    "slope_deg": 6.79,
     "grid_m": [
       [
         2693.0,
@@ -154,7 +154,7 @@
     "lon": -66.1922,
     "elev_m": 2560.0,
     "elev_centro_m": 2562.0,
-    "slope_deg": 1.17,
+    "slope_deg": 0.98,
     "grid_m": [
       [
         2562.0,
@@ -179,7 +179,7 @@
     "lon": -66.1984,
     "elev_m": 2544.0,
     "elev_centro_m": 2544.0,
-    "slope_deg": 0.21,
+    "slope_deg": 0.2,
     "grid_m": [
       [
         2544.0,
@@ -204,7 +204,7 @@
     "lon": -66.139,
     "elev_m": 2559.0,
     "elev_centro_m": 2559.0,
-    "slope_deg": 2.34,
+    "slope_deg": 2.29,
     "grid_m": [
       [
         2559.0,
@@ -229,7 +229,7 @@
     "lon": -66.2185,
     "elev_m": 2564.0,
     "elev_centro_m": 2565.0,
-    "slope_deg": 1.29,
+    "slope_deg": 1.04,
     "grid_m": [
       [
         2564.0,

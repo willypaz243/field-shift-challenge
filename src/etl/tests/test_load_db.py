@@ -37,7 +37,7 @@ def data_root(tmp_path):
                 "comuna": "ITOCTA",
                 "distrito": "D9",
                 "es_periurbano": False,
-                "cerca_drenaje": True,
+                "cerca_drenaje_m": 120,
             }
         },
     )
@@ -91,7 +91,7 @@ def test_load_fills_tables_from_source_files(data_root, tmp_path):
     assert query(
         db,
         "SELECT comuna, distrito, elev_m, pendiente, es_agricola, cerca_drenaje, altitud_alta FROM zones",
-    ) == [("ITOCTA", "D9", 2590.0, 2.1, 1, 1, 0)]
+    ) == [("ITOCTA", "D9", 2590.0, 2.1, 1, 120, 0)]
     assert query(
         db, "SELECT fecha, tmin, sm_surface, pmm_sat FROM climate_history ORDER BY fecha"
     ) == [

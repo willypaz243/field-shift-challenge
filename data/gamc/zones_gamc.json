@@ -7,7 +7,7 @@
     "distrito": "D10",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": true
+    "cerca_drenaje_m": 20
   },
   "D12_adela_zamudio": {
     "lat": -17.374,
@@ -17,7 +17,7 @@
     "distrito": "D12",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": 187
   },
   "D13_tunari": {
     "lat": -17.314,
@@ -27,7 +27,7 @@
     "distrito": "D13",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": 89
   },
   "D14_valle_hermoso": {
     "lat": -17.437,
@@ -37,7 +37,7 @@
     "distrito": "D14",
     "periurbano": "Periurbanos consolidados",
     "es_periurbano": true,
-    "cerca_drenaje": true
+    "cerca_drenaje_m": 26
   },
   "D15_tamborada": {
     "lat": -17.488,
@@ -47,7 +47,7 @@
     "distrito": "D15",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": 104
   },
   "D1_tunari": {
     "lat": -17.368,
@@ -57,7 +57,7 @@
     "distrito": "D1",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": null
   },
   "D3_molle": {
     "lat": -17.3707,
@@ -67,7 +67,7 @@
     "distrito": "D3",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": true
+    "cerca_drenaje_m": 28
   },
   "D4_molle": {
     "lat": -17.3938,
@@ -77,7 +77,7 @@
     "distrito": "D4",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": 68
   },
   "D6_valle_hermoso": {
     "lat": -17.41,
@@ -87,7 +87,7 @@
     "distrito": "D6",
     "periurbano": null,
     "es_periurbano": false,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": null
   },
   "D9_itocta": {
     "lat": -17.4611,
@@ -97,6 +97,6 @@
     "distrito": "D9",
     "periurbano": "Periurbanos consolidados",
     "es_periurbano": true,
-    "cerca_drenaje": false
+    "cerca_drenaje_m": null
   }
 }
