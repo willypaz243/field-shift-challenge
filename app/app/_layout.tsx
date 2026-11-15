@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { View, Text } from 'react-native';
+import { OfflineProvider } from '../src/offline/provider';
 
 export default function RootLayout() {
   
@@ -14,8 +15,10 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <OfflineProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </OfflineProvider>
   );
 }

@@ -1,0 +1,727 @@
+{
+  "sync_version": 1,
+  "hash": "sha256:eefd458d8e046ce5fc73e64a111390e36634db922796a2c60b0beed7ddeb8d58",
+  "zone": {
+    "id": "D9_itocta",
+    "nombre": "Itocta (D9) — principal zona agrícola del valle",
+    "comuna": "ITOCTA",
+    "distrito": 9,
+    "lat": -17.4611,
+    "lon": -66.2185,
+    "elev_m": 2564.0,
+    "pendiente": 1.29,
+    "es_agricola": false,
+    "cerca_drenaje": 0,
+    "altitud_alta": false
+  },
+  "crops": {
+    "version": 3,
+    "actualizado": "2026-11-15",
+    "zona": "Cercado de Cochabamba (valle + alturas sobre cota 2750)",
+    "variables": [
+      "tmin",
+      "tmax",
+      "tmean",
+      "pmm",
+      "rh",
+      "sw",
+      "ws",
+      "et0",
+      "sm_surface",
+      "sm_root"
+    ],
+    "leer": "README.md",
+    "crops": [
+      {
+        "id": "papa",
+        "nombre": "Papa",
+        "cientifico": "Solanum tuberosum",
+        "tipo": "tuberculo",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [120, 180],
+        "temp": {
+          "tmean_opt": [15, 20],
+          "fuente": "local"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "todo el ciclo"
+        },
+        "agua": {
+          "demanda": "alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "alta",
+        "fix_n": false,
+        "breaks_pest_cycle": false,
+        "forage_value": "bajo",
+        "drought_tolerant": "no",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.75,
+          "medio": 1.15,
+          "final": 1.05
+        },
+        "granizo_sens": "alta",
+        "etapas": [
+          [0, "siembra"],
+          [20, "crecimiento"],
+          [120, "cosecha"]
+        ],
+        "foto": "img/papa.webp",
+        "mercado": "Cultivo ancla del Cercado: 26.544 Tm / 2.396 ha (SITAP)",
+        "siembra_local": "ago / dic (después del riesgo fuerte de heladas)",
+        "rotacion": "No repetir papa tras papa (otoñal/plagas); precede bien tras haba/tarwi; precede a trigo",
+        "fuente": "CROPS.md #1 (PROINPA, SITAP, revistasbolivianas 2018)"
+      },
+      {
+        "id": "choclo",
+        "nombre": "Maíz / choclo",
+        "cientifico": "Zea mays",
+        "tipo": "cereal",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [120, 240],
+        "temp": {
+          "tmean_opt": [18, 27],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "todo el ciclo"
+        },
+        "agua": {
+          "demanda": "alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "media",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "medio",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.3,
+          "medio": 1.2,
+          "final": 1.05
+        },
+        "granizo_sens": "media",
+        "etapas": [
+          [0, "siembra"],
+          [15, "crecimiento"],
+          [50, "floracion"],
+          [70, "granos"],
+          [120, "cosecha"]
+        ],
+        "foto": "img/maiz.webp",
+        "mercado": "Choclo cochabambino (waltaco, kulli, morochito, ch'iji): demanda segura local (anticuchos/sillpacho)",
+        "siembra_local": "sep–oct (con riego hasta dic); precoz 120–170 días, amiláceo tardío 7–8 meses",
+        "rotacion": "Alta extracción de N; después conviene leguminosa (haba/tarwi) o descanso. Interruptor de ciclos de papa",
+        "fuente": "CROPS.md #2 (EcoRural 2022, Agrecol Andes)"
+      },
+      {
+        "id": "trigo",
+        "nombre": "Trigo",
+        "cientifico": "Triticum aestivum",
+        "tipo": "cereal",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [120, 150],
+        "temp": {
+          "tmean_opt": [12, 22],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "media",
+          "etapa_critica": "espigazón"
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "valle",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.3,
+          "medio": 1.15,
+          "final": 1.2
+        },
+        "granizo_sens": "media",
+        "etapas": [
+          [0, "siembra"],
+          [20, "crecimiento"],
+          [60, "floracion"],
+          [75, "granos"],
+          [120, "cosecha"]
+        ],
+        "foto": "img/wheat.webp",
+        "mercado": "5.320 Tm / 4.341 ha en Cercado (SITAP)",
+        "siembra_local": "oct–dic (valles con riego)",
+        "rotacion": "Su precede bien a papa; raíz fasciculada mejora estructura del suelo",
+        "fuente": "CROPS.md #3 (SIIP 2024, SITAP)"
+      },
+      {
+        "id": "papaliza",
+        "nombre": "Papaliza / papalisa",
+        "cientifico": "Ullucus tuberosus",
+        "tipo": "tuberculo",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [180, 210],
+        "temp": {
+          "tmean_opt": [8, 14],
+          "fuente": "local"
+        },
+        "helada": {
+          "tolerancia": "alta",
+          "etapa_critica": null
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "alta",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "poco",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.75,
+          "medio": 1.1,
+          "final": 1.0
+        },
+        "granizo_sens": "baja",
+        "etapas": [
+          [0, "siembra"],
+          [30, "crecimiento"],
+          [180, "cosecha"]
+        ],
+        "foto": "img/oca.webp",
+        "mercado": "1.134 Tm/año en Cercado; cultivo andino de altura",
+        "siembra_local": "zonas altas del municipio (hacia cota 2750: Tunari/Itocta)",
+        "rotacion": "Tubérculo andino que diversifica y reduce riesgo de plagas de papa",
+        "fuente": "CROPS.md #4 (tesis UMSA T-1747, SITAP)"
+      },
+      {
+        "id": "lechuga",
+        "nombre": "Lechuga",
+        "cientifico": "Lactuca sativa",
+        "tipo": "hortaliza",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [28, 42],
+        "temp": {
+          "tmean_opt": [10, 18],
+          "fuente": "local"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "todo el ciclo"
+        },
+        "agua": {
+          "demanda": "muy alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "media",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "no",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.8,
+          "medio": 1.1,
+          "final": 1.05
+        },
+        "granizo_sens": "alta",
+        "etapas": [
+          [0, "siembra"],
+          [7, "crecimiento"],
+          [28, "cosecha"]
+        ],
+        "foto": "img/lechuga.webp",
+        "mercado": "Venta en la ciudad a minutos (mercado La Cancha) — ventaja periurbana",
+        "siembra_local": "casi todo el año con riego",
+        "rotacion": "Ciclo corto: máxima flexibilidad de rotación; ideal para rellenas periodos de campo desnudo",
+        "fuente": "CROPS.md #5 (Tiquipaya / sistema La Angostura)"
+      },
+      {
+        "id": "hortalizas",
+        "nombre": "Hortalizas (cebolla, zanahoria, repollo, acelga)",
+        "cientifico": "varias",
+        "tipo": "hortaliza",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [30, 90],
+        "temp": {
+          "tmean_opt": [10, 20],
+          "fuente": "local"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "todo el ciclo"
+        },
+        "agua": {
+          "demanda": "muy alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "media",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "no",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.8,
+          "medio": 1.1,
+          "final": 1.05
+        },
+        "granizo_sens": "alta",
+        "etapas": [
+          [0, "siembra"],
+          [10, "crecimiento"],
+          [60, "cosecha"]
+        ],
+        "foto": "img/cebolla.webp",
+        "mercado": "Corazón hortícola del valle (Tiquipaya, La Angostura)",
+        "siembra_local": "casi todo el año con riego (2–3× su peso en agua; riegos constantes)",
+        "rotacion": "Primera víctima de sequía; candidato para zonas con riego seguro La Angostura",
+        "fuente": "CROPS.md #5"
+      },
+      {
+        "id": "alfalfa",
+        "nombre": "Alfalfa",
+        "cientifico": "Medicago sativa",
+        "tipo": "forrajero",
+        "tipo_ciclo": "perenne",
+        "ciclo_dias": [180, 365],
+        "temp": {
+          "tmean_opt": [15, 25],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "media",
+          "etapa_critica": null
+        },
+        "agua": {
+          "demanda": "muy alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "baja",
+        "fix_n": true,
+        "breaks_pest_cycle": true,
+        "forage_value": "alto",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.4,
+          "medio": 1.85,
+          "final": 1.15
+        },
+        "granizo_sens": "media",
+        "etapas": [
+          [0, "siembra"],
+          [30, "crecimiento"],
+          [120, "cosecha"]
+        ],
+        "cosechas_cada_dias": 42,
+        "foto": "img/alfalfa.webp",
+        "mercado": "Ganado vacuno/ovino local",
+        "siembra_local": "sep–mar; establecimiento perenne de 3–5+ años",
+        "rotacion": "Raíz profunda (3–5 m): mejora estructura, infiltración y fija N. 'Descanso mejorado' de 3–5 años tras cultivos extractivos. Solo con riego garantizado (~1,4–1,5 m/año)",
+        "fuente": "CROPS.md #6 (ResearchGate 2026)"
+      },
+      {
+        "id": "haba",
+        "nombre": "Haba",
+        "cientifico": "Vicia faba",
+        "tipo": "leguminosa",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [150, 180],
+        "temp": {
+          "tmean_opt": [8, 18],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "alta",
+          "etapa_critica": null
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "alta",
+        "erosion_sens": "baja",
+        "fix_n": true,
+        "breaks_pest_cycle": true,
+        "forage_value": "medio",
+        "drought_tolerant": "poco",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.4,
+          "medio": 1.2,
+          "final": 1.15
+        },
+        "granizo_sens": "baja",
+        "etapas": [
+          [0, "siembra"],
+          [20, "crecimiento"],
+          [60, "floracion"],
+          [90, "granos"],
+          [150, "cosecha"]
+        ],
+        "foto": "img/haba.webp",
+        "mercado": "Doble uso (verde/seca); forraje",
+        "siembra_local": "oct–dic; se cultiva sobre 2.900 m",
+        "rotacion": "Mejora fertilidad del suelo (CIQ 2024-2026); asocio clásico andino 3 surcos quinua + 1 haba; precede bien a papa",
+        "fuente": "CROPS.md #7 (CIQ 2024-2026)"
+      },
+      {
+        "id": "tarwi",
+        "nombre": "Tarwi / chocho",
+        "cientifico": "Lupinus mutabilis",
+        "tipo": "leguminosa",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [180, 240],
+        "temp": {
+          "tmean_opt": [10, 20],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "alta",
+          "etapa_critica": null
+        },
+        "agua": {
+          "demanda": "media-baja",
+          "deficit_tol": "media"
+        },
+        "altitud": "alta",
+        "erosion_sens": "baja",
+        "fix_n": true,
+        "breaks_pest_cycle": true,
+        "forage_value": "medio",
+        "drought_tolerant": "alto",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.4,
+          "medio": 1.05,
+          "final": 1.0
+        },
+        "granizo_sens": "baja",
+        "etapas": [
+          [0, "siembra"],
+          [30, "crecimiento"],
+          [90, "floracion"],
+          [150, "granos"],
+          [180, "cosecha"]
+        ],
+        "foto": "img/peruvian-lupin.webp",
+        "mercado": "Requiere desamarar (alcaloides)",
+        "siembra_local": "oct–dic",
+        "rotacion": "Fija 50+ kg N/ha — 'el cultivo que sana los suelos' (La Región 2020); raíz profunda; tolerante a heladas en formación de granos",
+        "fuente": "CROPS.md #8 (La Región 2020, sciELO 2016)"
+      },
+      {
+        "id": "quinua",
+        "nombre": "Quinua de valle",
+        "cientifico": "Chenopodium quinoa",
+        "tipo": "pseudo_cereal",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [150, 180],
+        "temp": {
+          "tmean_opt": [12, 22],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "media",
+          "etapa_critica": "post-floración"
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "ambas",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "alto",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.4,
+          "medio": 1.15,
+          "final": 1.1
+        },
+        "granizo_sens": "media",
+        "etapas": [
+          [0, "siembra"],
+          [30, "crecimiento"],
+          [75, "floracion"],
+          [120, "granos"],
+          [150, "cosecha"]
+        ],
+        "foto": "img/quinoa.webp",
+        "mercado": "Precio alto; variedades de valle existen (requiere más agua que la de altiplano)",
+        "siembra_local": "sep–dic",
+        "rotacion": "Diversificación + mercado; evitar helada post-floración",
+        "fuente": "CROPS.md #9 (guía FAO/SIIP)"
+      },
+      {
+        "id": "avena",
+        "nombre": "Avena forrajera",
+        "cientifico": "Avena sativa",
+        "tipo": "forrajero",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [90, 120],
+        "temp": {
+          "tmean_opt": [8, 18],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "alta",
+          "etapa_critica": null
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "alta",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "alto",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.4,
+          "medio": 1.15,
+          "final": 1.2
+        },
+        "granizo_sens": "baja",
+        "etapas": [
+          [0, "siembra"],
+          [15, "crecimiento"],
+          [45, "floracion"],
+          [60, "granos"],
+          [90, "cosecha"]
+        ],
+        "foto": "img/avena.webp",
+        "mercado": "Forraje de ganado local; corto y barato",
+        "siembra_local": "dic–mar (seca con riego)",
+        "rotacion": "Buen 'relleno' de invierno seco con riego",
+        "fuente": "CROPS.md #10 (Agrecol)"
+      },
+      {
+        "id": "durazno",
+        "nombre": "Durazno",
+        "cientifico": "Prunus persica",
+        "tipo": "frutal",
+        "tipo_ciclo": "perenne",
+        "ciclo_dias": [365, 365],
+        "temp": {
+          "tmean_opt": [12, 24],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "media",
+          "etapa_critica": "floración (ago)"
+        },
+        "agua": {
+          "demanda": "media",
+          "deficit_tol": "media"
+        },
+        "altitud": "valle",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.8,
+          "medio": 1.25,
+          "final": 1.05
+        },
+        "granizo_sens": "alta",
+        "etapas": [
+          [0, "siembra"],
+          [45, "floracion"],
+          [150, "cosecha"]
+        ],
+        "cosechas_cada_dias": 180,
+        "foto": "img/peach.webp",
+        "mercado": "Durazno cochabambino con renombre; valor de mercado alto",
+        "siembra_local": "plantar en invierno",
+        "rotacion": "Raíz profunda; GPM/POWER sirven para fechar riesgos de helada en floración",
+        "fuente": "CROPS.md #11 (cambioclimatico.org.bo)"
+      },
+      {
+        "id": "flores",
+        "nombre": "Flores (margaritas, claveles)",
+        "cientifico": "varias",
+        "tipo": "flor",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [60, 180],
+        "temp": {
+          "tmean_opt": [12, 22],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "floración"
+        },
+        "agua": {
+          "demanda": "alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "valle",
+        "erosion_sens": "baja",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "bajo",
+        "drought_tolerant": "no",
+        "deep_rooting": false,
+        "kc": {
+          "inicial": 0.8,
+          "medio": 1.15,
+          "final": 1.05
+        },
+        "granizo_sens": "alta",
+        "etapas": [
+          [0, "siembra"],
+          [10, "crecimiento"],
+          [30, "floracion"],
+          [60, "cosecha"]
+        ],
+        "foto": "img/flowers.webp",
+        "mercado": "Tiquipaya, vocación reconocida; alta rentabilidad por m², demanda urbana",
+        "siembra_local": "con riego",
+        "rotacion": "Ciclo corto-medio; sensible a heladas",
+        "fuente": "CROPS.md #12"
+      },
+      {
+        "id": "maiz_forraje",
+        "nombre": "Maíz forraje (silaje)",
+        "cientifico": "Zea mays",
+        "tipo": "forrajero",
+        "tipo_ciclo": "anual",
+        "ciclo_dias": [120, 150],
+        "temp": {
+          "tmean_opt": [18, 27],
+          "fuente": "estimado"
+        },
+        "helada": {
+          "tolerancia": "baja",
+          "etapa_critica": "todo el ciclo"
+        },
+        "agua": {
+          "demanda": "alta",
+          "deficit_tol": "baja"
+        },
+        "altitud": "ambas",
+        "erosion_sens": "media",
+        "fix_n": false,
+        "breaks_pest_cycle": true,
+        "forage_value": "alto",
+        "drought_tolerant": "poco",
+        "deep_rooting": true,
+        "kc": {
+          "inicial": 0.3,
+          "medio": 1.2,
+          "final": 1.05
+        },
+        "granizo_sens": "media",
+        "etapas": [
+          [0, "siembra"],
+          [15, "crecimiento"],
+          [50, "floracion"],
+          [70, "granos"],
+          [120, "cosecha"]
+        ],
+        "foto": "img/forraje.webp",
+        "mercado": "Silaje para ganado local; muy común en Itocta (API-CONTRACT §2.2)",
+        "siembra_local": "sep–dic (con riego)",
+        "rotacion": "Alta extracción de N como el choclo; le sigue leguminosa (haba/tarwi) o descanso",
+        "fuente": "API-CONTRACT §2.2 (Itocta) + CROPS.md #2 (Zea mays, EcóRural 2022); valores agronómicos estimados"
+      }
+    ]
+  },
+  "forecast": {
+    "zone_id": "D9_itocta",
+    "anio": 2027,
+    "dias": [],
+    "fuente": ["nasa_power", "nasa_imerg", "nasa_smap"]
+  },
+  "corto_plazo": {
+    "zone_id": "D9_itocta",
+    "actualizado_en": "2026-11-15T07:26:05+00:00",
+    "dias": [],
+    "fuente": []
+  },
+  "climatologia": {
+    "zone_id": "D9_itocta",
+    "meses": [],
+    "fuente": []
+  },
+  "alertas": [],
+  "rotaciones": {
+    "rotaciones": []
+  },
+  "represa": {
+    "actualizado_en": "2002-11-27T00:00:00",
+    "nivel_pct": 5.0,
+    "estado": "critico",
+    "fuente": ["riego_n1"]
+  },
+  "historial_zona": [
+    {
+      "fecha": "2025-11-17",
+      "tipo": "inundacion",
+      "descripcion": "Desborde del río 24 en Villa Tunari (Trópico): 7+ comunidades anegadas, cultivos arrasados, deslizamientos que cortan la ruta Cochabamba–Santa Cruz.",
+      "fuente": "Red Uno, 17–18/11/2025"
+    },
+    {
+      "fecha": "2024-11-15",
+      "tipo": "sequia",
+      "descripcion": "Crisis hídrica prolongada en los valles interandinos: muchos municipios de Cochabamba en emergencia/desastre. La lluvia del valle pasó de ~500 mm (década 1940) a ~400 mm.",
+      "fuente": "CIPCA, boletín GVA, nov 2024"
+    },
+    {
+      "fecha": "2023-11-21",
+      "tipo": "granizo",
+      "descripcion": "Granizada del 21/11 en Cocapata (región andina) y Omereque (cono sur): ~100 ha perdidas a días de cosecha (papa, uva); 200+ familias. Semanas antes, emergencia por sequía en las mismas zonas.",
+      "fuente": "Opinión, 23/11/2023"
+    },
+    {
+      "fecha": "2023-11-08",
+      "tipo": "sequia",
+      "descripcion": "Escasez de agua para producción 'más intensa en algunos sectores del Valle Central de Cochabamba'.",
+      "fuente": "CENDA, 08/11/2023"
+    },
+    {
+      "fecha": "2023-10-18",
+      "tipo": "sequia",
+      "descripcion": "Sequía severa en Bolivia: Cochabamba en 'emergencia'; 200.871 familias afectadas en 144 municipios. Precipitación del departamento en descenso desde ~2016.",
+      "fuente": "El País América, 18/10/2023"
+    },
+    {
+      "fecha": "2013-03-12",
+      "tipo": "inundacion",
+      "descripcion": "Desborde de ríos 24, Chapare, Ichoa y Sajta en el Trópico cochabambino (Villa Tunari, Chimoré, Shinahota, Puerto Villarroel): 46 comunidades afectadas.",
+      "fuente": "Opinión, 12/03/2013"
+    },
+    {
+      "fecha": "2002-11-27",
+      "tipo": "sequia",
+      "descripcion": "Valle Central: ola de calor + falta de lluvias. Embalse de La Angostura al 5% de capacidad (se reservan 1,5 Mm³ para peces). Pérdidas agrícolas > 7 M Bs (maíz choclero, hortalizas, alfalfa).",
+      "fuente": "ANF, 27/11/2002 (noticiasfides.com.bo)"
+    }
+  ]
+}

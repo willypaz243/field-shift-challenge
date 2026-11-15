@@ -85,3 +85,12 @@ def test_zones_and_crops_follow_the_openapi_contract(client, engine):
             {"$ref": f"urn:spec#/components/schemas/{schema}"}, registry=registry
         )
         assert not list(validator.iter_errors(client.get(path).json())), path
+
+
+def test_cors_preflight_from_the_expo_web_dev_server(client):
+    response = client.options(
+        "/sync",
+        headers={"Origin": "http://localhost:8081", "Access-Control-Request-Method": "GET"},
+    )
+
+    assert response.headers["access-control-allow-origin"] in ("*", "http://localhost:8081")
