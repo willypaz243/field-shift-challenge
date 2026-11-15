@@ -15,11 +15,8 @@ Resumable: si el CSV ya existe, continúa desde la fecha siguiente.
 
 import argparse
 import csv
-import hashlib
-import io
 import json
 import logging
-import os
 import shutil
 import tempfile
 import time
@@ -92,11 +89,12 @@ def collect_urls(token: str, start: date, end: date) -> list[tuple[date, str]]:
     while cur <= end:
         # Mes actual
         month_end = min(
-            (cur.replace(day=28) + timedelta(days=4)).replace(day=1)
-            - timedelta(days=1),
+            (cur.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1),
             end,
         )
-        temporal = f"{cur.isoformat()}T00:00:00Z,{(month_end + timedelta(days=1)).isoformat()}T00:00:00Z"
+        temporal = (
+            f"{cur.isoformat()}T00:00:00Z,{(month_end + timedelta(days=1)).isoformat()}T00:00:00Z"
+        )
 
         data = cmr_query(
             token,
@@ -129,9 +127,7 @@ def collect_urls(token: str, start: date, end: date) -> list[tuple[date, str]]:
             best = min(
                 candidates,
                 key=lambda x: abs(
-                    x[0].hour * 3600
-                    + x[0].minute * 60
-                    - (target.hour * 3600 + target.minute * 60)
+                    x[0].hour * 3600 + x[0].minute * 60 - (target.hour * 3600 + target.minute * 60)
                 ),
             )
             g = best[1]
@@ -243,9 +239,7 @@ def main():
     ap.add_argument("--end", type=date.fromisoformat, default=date(2025, 12, 31))
     ap.add_argument("--workers", type=int, default=5)
     ap.add_argument("--out", type=Path, default=Path("data/smap/smap_valle_daily.csv"))
-    ap.add_argument(
-        "--tmp-dir", type=Path, default=Path(tempfile.gettempdir()) / "smap_etl"
-    )
+    ap.add_argument("--tmp-dir", type=Path, default=Path(tempfile.gettempdir()) / "smap_etl")
     args = ap.parse_args()
 
     token = load_token()
@@ -261,9 +255,7 @@ def main():
         log.info("Resumable: %d días ya completados", len(done))
 
     # ── Fase 1: CMR ──
-    log.info(
-        "Fase 1: consulta CMR %s → %s", args.start.isoformat(), args.end.isoformat()
-    )
+    log.info("Fase 1: consulta CMR %s → %s", args.start.isoformat(), args.end.isoformat())
     all_urls = collect_urls(token, args.start, args.end)
     log.info("Fase 1 completa: %d URLs", len(all_urls))
 
@@ -309,9 +301,7 @@ def main():
             if completed % 50 == 0 and completed > 0:
                 elapsed = time.time() - start_time
                 rate = completed / elapsed if elapsed > 0 else 0
-                eta_h = (
-                    (len(pending) - completed - failed) / rate / 3600 if rate > 0 else 0
-                )
+                eta_h = (len(pending) - completed - failed) / rate / 3600 if rate > 0 else 0
                 log.info(
                     "Progress: %d/%d done | %d fail | %.1f d/h | ETA %.1f h",
                     completed,

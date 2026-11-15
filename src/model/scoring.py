@@ -54,7 +54,7 @@ def score_window(
     # Agua (déficit = max(0, ET0×Kc − pmm))
     kc = crop.get("kc", {"inicial": 1.0, "medio": 1.0, "final": 1.0})
     kc_avg = (kc["inicial"] + kc["medio"] + kc["final"]) / 3
-    deficit = sum(max(0.0, e * kc_avg - p) for e, p in zip(et0, pmm))
+    deficit = sum(max(0.0, e * kc_avg - p) for e, p in zip(et0, pmm, strict=False))
     mit = DROUGHT_MITIG.get(crop.get("drought_tolerant", "no"), 1.0)
     agua = 1.0 - min(1.0, deficit * mit / (WATER_ALLOW_PER_DAY * L))
 

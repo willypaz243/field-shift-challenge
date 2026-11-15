@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 """IMERG diario: catálogo público, descarga autenticada y recorte a SQLite."""
+
 import argparse
 import csv
 import datetime as dt
 import json
 import math
-from pathlib import Path
 import re
 import sqlite3
 import urllib.parse
 import urllib.request
+from pathlib import Path
 
 PRODUCTS = {"final": "GPM_3IMERGDF", "late": "GPM_3IMERGDL"}
 
@@ -25,12 +26,19 @@ def catalog(start, end, run, bbox):
     dates(start, end)
     entries = []
     for page in range(1, 10000):
-        params = dict(short_name=PRODUCTS[run], version="07", page_size=2000,
-                      page_num=page, sort_key="start_date",
-                      temporal=f"{start}T00:00:00Z,{end}T23:59:59Z")
+        params = dict(
+            short_name=PRODUCTS[run],
+            version="07",
+            page_size=2000,
+            page_num=page,
+            sort_key="start_date",
+            temporal=f"{start}T00:00:00Z,{end}T23:59:59Z",
+        )
         if bbox:
             params["bounding_box"] = ",".join(map(str, bbox))
-        url = "https://cmr.earthdata.nasa.gov/search/granules.json?" + urllib.parse.urlencode(params)
+        url = "https://cmr.earthdata.nasa.gov/search/granules.json?" + urllib.parse.urlencode(
+            params
+        )
         with urllib.request.urlopen(url, timeout=90) as response:
             batch = json.load(response)["feed"]["entry"]
         entries.extend(batch)
@@ -42,28 +50,50 @@ def catalog(start, end, run, bbox):
 def manifest(entries, start, end, run, bbox):
     files = []
     for entry in entries:
-        urls = [link["href"] for link in entry.get("links", [])
-                if not link.get("inherited") and link.get("rel", "").endswith("/data#")
-                and link["href"].startswith("https://")]
+        urls = [
+            link["href"]
+            for link in entry.get("links", [])
+            if not link.get("inherited")
+            and link.get("rel", "").endswith("/data#")
+            and link["href"].startswith("https://")
+        ]
         if not urls:
             raise ValueError(f"Sin enlace HTTPS: {entry['id']}")
-        files.append(dict(id=entry["id"], name=entry["producer_granule_id"],
-                          date=entry["time_start"][:10], url=urls[0],
-                          updated=entry.get("updated"), size_mb=entry.get("granule_size")))
+        files.append(
+            dict(
+                id=entry["id"],
+                name=entry["producer_granule_id"],
+                date=entry["time_start"][:10],
+                url=urls[0],
+                updated=entry.get("updated"),
+                size_mb=entry.get("granule_size"),
+            )
+        )
     start_d, end_d = dates(start, end)
     found = {item["date"] for item in files}
-    missing = [(start_d + dt.timedelta(days=i)).isoformat()
-               for i in range((end_d-start_d).days+1)
-               if (start_d + dt.timedelta(days=i)).isoformat() not in found]
-    return dict(product=PRODUCTS[run], version="07", run=run, timezone="UTC",
-                start=start, end=end, bbox_search_only=bbox,
-                created_at=dt.datetime.now(dt.timezone.utc).isoformat(),
-                files=files, missing_dates=missing,
-                warning="Los archivos son globales. El BBOX de búsqueda no recorta los datos.")
+    missing = [
+        (start_d + dt.timedelta(days=i)).isoformat()
+        for i in range((end_d - start_d).days + 1)
+        if (start_d + dt.timedelta(days=i)).isoformat() not in found
+    ]
+    return dict(
+        product=PRODUCTS[run],
+        version="07",
+        run=run,
+        timezone="UTC",
+        start=start,
+        end=end,
+        bbox_search_only=bbox,
+        created_at=dt.datetime.now(dt.UTC).isoformat(),
+        files=files,
+        missing_dates=missing,
+        warning="Los archivos son globales. El BBOX de búsqueda no recorta los datos.",
+    )
 
 
 def download(path, folder):
     import earthaccess
+
     data = json.loads(Path(path).read_text())
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
@@ -73,7 +103,11 @@ def download(path, folder):
     for item in data["files"]:
         target = folder / item["name"]
         stamp = target.with_suffix(target.suffix + ".json")
-        if target.exists() and stamp.exists() and json.loads(stamp.read_text()).get("updated") == item["updated"]:
+        if (
+            target.exists()
+            and stamp.exists()
+            and json.loads(stamp.read_text()).get("updated") == item["updated"]
+        ):
             continue
         # Descargar a staging evita considerar completo un archivo interrumpido.
         staging = folder / "staging"
@@ -83,6 +117,7 @@ def download(path, folder):
             raise RuntimeError(f"No se descargó {item['name']}")
         downloaded = Path(result[0])
         import xarray as xr
+
         with xr.open_dataset(downloaded) as ds:
             if "precipitation" not in ds:
                 raise ValueError("El archivo no contiene precipitation")
@@ -116,6 +151,7 @@ def open_db(path):
 def read_area(path):
     from shapely.geometry import shape
     from shapely.ops import unary_union
+
     raw = json.loads(Path(path).read_text())
     if raw["type"] == "FeatureCollection":
         geom = unary_union([shape(f["geometry"]) for f in raw["features"]])
@@ -125,8 +161,10 @@ def read_area(path):
         geom = shape(raw)
     if geom.is_empty or not geom.is_valid or geom.geom_type not in ("Polygon", "MultiPolygon"):
         raise ValueError("Se necesita un polígono GeoJSON válido, WGS84 (lon, lat)")
-    if not (-180 <= geom.bounds[0] <= geom.bounds[2] <= 180 and
-            -90 <= geom.bounds[1] <= geom.bounds[3] <= 90):
+    if not (
+        -180 <= geom.bounds[0] <= geom.bounds[2] <= 180
+        and -90 <= geom.bounds[1] <= geom.bounds[3] <= 90
+    ):
         raise ValueError("Coordenadas fuera de WGS84")
     return geom
 
@@ -134,6 +172,7 @@ def read_area(path):
 def process(folder, polygon, database, run):
     import xarray as xr
     from shapely.geometry import box
+
     area = read_area(polygon)
     con = open_db(database)
     files = sorted(Path(folder).glob("*.nc4"))
@@ -154,43 +193,79 @@ def process(folder, polygon, database, run):
                 raise ValueError(f"Unidad inesperada {unit!r}; no se convierte silenciosamente")
             if "time" in ds and str(ds.time.values[0])[:10] != date:
                 raise ValueError("La fecha interna no coincide con el nombre")
-            quality_names = [n for n in ("precipitation_cnt", "randomError", "randomError_cnt",
-                             "PrecipitationQualityIndex") if n in ds]
+            quality_names = [
+                n
+                for n in (
+                    "precipitation_cnt",
+                    "randomError",
+                    "randomError_cnt",
+                    "PrecipitationQualityIndex",
+                )
+                if n in ds
+            ]
             west, south, east, north = area.bounds
             # 0.1° es la malla original del producto diario, no resolución de parcela.
-            lats = [(i, float(v)) for i, v in enumerate(ds.lat.values) if south-.05 < v < north+.05]
-            lons = [(i, float(v)) for i, v in enumerate(ds.lon.values) if west-.05 < v < east+.05]
+            lats = [
+                (i, float(v))
+                for i, v in enumerate(ds.lat.values)
+                if south - 0.05 < v < north + 0.05
+            ]
+            lons = [
+                (i, float(v)) for i, v in enumerate(ds.lon.values) if west - 0.05 < v < east + 0.05
+            ]
             rows = []
             for yi, lat in lats:
                 for xi, lon in lons:
-                    cell = box(lon-.05, lat-.05, lon+.05, lat+.05)
+                    cell = box(lon - 0.05, lat - 0.05, lon + 0.05, lat + 0.05)
                     overlap = cell.intersection(area).area
                     if overlap <= 0:
                         continue
                     index = dict(lat=yi, lon=xi)
+
                     def scalar(name):
-                        a = ds[name].isel(**index)
+                        a = ds[name].isel(**index)  # noqa: B023 (se usa en la misma iteración)
                         if a.size != 1:
                             raise ValueError(f"Dimensiones inesperadas en {name}")
                         v = float(a.values.reshape(-1)[0])
                         return v if math.isfinite(v) else None
+
                     value = scalar("precipitation")
                     if value is not None and value < 0:
                         raise ValueError("Precipitación negativa no enmascarada")
-                    quality = {n: {"value": scalar(n), "unit": ds[n].attrs.get("units")}
-                               for n in quality_names}
+                    quality = {
+                        n: {"value": scalar(n), "unit": ds[n].attrs.get("units")}
+                        for n in quality_names
+                    }
                     quality["status"] = "missing" if value is None else "available"
                     count = quality.get("precipitation_cnt", {}).get("value")
                     if count is not None and count < 48:
                         quality["status"] = "incomplete_half_hours"
-                    downloaded = dt.datetime.fromtimestamp(path.stat().st_mtime, dt.timezone.utc).isoformat()
-                    rows.append((date, "NASA GPM", PRODUCTS[run], match[2], run,
-                                 f"imerg_0.1:{lat:.2f}:{lon:.2f}", lat, lon, overlap/cell.area,
-                                 "precipitation", value, "mm/day", json.dumps(quality), downloaded, path.name))
+                    downloaded = dt.datetime.fromtimestamp(path.stat().st_mtime, dt.UTC).isoformat()
+                    rows.append(
+                        (
+                            date,
+                            "NASA GPM",
+                            PRODUCTS[run],
+                            match[2],
+                            run,
+                            f"imerg_0.1:{lat:.2f}:{lon:.2f}",
+                            lat,
+                            lon,
+                            overlap / cell.area,
+                            "precipitation",
+                            value,
+                            "mm/day",
+                            json.dumps(quality),
+                            downloaded,
+                            path.name,
+                        )
+                    )
             if not rows:
                 raise ValueError("Ninguna celda intersecta el área")
             with con:
-                con.executemany("INSERT OR REPLACE INTO rain VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+                con.executemany(
+                    "INSERT OR REPLACE INTO rain VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows
+                )
             print(f"{date}: {len(rows)} celdas")
     con.close()
 
@@ -198,17 +273,30 @@ def process(folder, polygon, database, run):
 def report(database, start, end, output):
     start_d, end_d = dates(start, end)
     con = open_db(database)
-    rows = con.execute("SELECT date,cell_id,value,quality FROM preferred_rain WHERE date BETWEEN ? AND ?",
-                       (start, end)).fetchall()
+    rows = con.execute(
+        "SELECT date,cell_id,value,quality FROM preferred_rain WHERE date BETWEEN ? AND ?",
+        (start, end),
+    ).fetchall()
     cells = sorted({r[1] for r in rows})
-    expected = {(str(start_d+dt.timedelta(days=i)), c)
-                for i in range((end_d-start_d).days+1) for c in cells}
+    expected = {
+        (str(start_d + dt.timedelta(days=i)), c)
+        for i in range((end_d - start_d).days + 1)
+        for c in cells
+    }
     found = {(r[0], r[1]) for r in rows}
-    result = dict(start=start, end=end, cells=cells, records=len(rows),
-                  missing_records=sorted(expected-found), null_values=sum(r[2] is None for r in rows),
-                  incomplete_records=sum(json.loads(r[3])["status"] == "incomplete_half_hours" for r in rows),
-                  latest_observation=max((r[0] for r in rows), default=None),
-                  warning="Sin registros no se puede inferir la cobertura espacial esperada." if not cells else None)
+    result = dict(
+        start=start,
+        end=end,
+        cells=cells,
+        records=len(rows),
+        missing_records=sorted(expected - found),
+        null_values=sum(r[2] is None for r in rows),
+        incomplete_records=sum(json.loads(r[3])["status"] == "incomplete_half_hours" for r in rows),
+        latest_observation=max((r[0] for r in rows), default=None),
+        warning="Sin registros no se puede inferir la cobertura espacial esperada."
+        if not cells
+        else None,
+    )
     Path(output).write_text(json.dumps(result, indent=2))
     con.close()
 
@@ -226,47 +314,65 @@ def export_csv(database, output):
 def update(root, polygon, database, final_days=210, late_days=14):
     # Reconsultar la ventana recoge revisiones; los sidecars evitan descargas idénticas.
     area = read_area(polygon)
-    today = dt.datetime.now(dt.timezone.utc).date()
+    today = dt.datetime.now(dt.UTC).date()
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     for run, days in (("late", late_days), ("final", final_days)):
-        start = str(today-dt.timedelta(days=days))
-        end = str(today-dt.timedelta(days=1))
+        start = str(today - dt.timedelta(days=days))
+        end = str(today - dt.timedelta(days=1))
         target = root / f"{run}-manifest.json"
-        target.write_text(json.dumps(manifest(catalog(start, end, run, area.bounds),
-                                              start, end, run, list(area.bounds)), indent=2))
+        target.write_text(
+            json.dumps(
+                manifest(catalog(start, end, run, area.bounds), start, end, run, list(area.bounds)),
+                indent=2,
+            )
+        )
         if json.loads(target.read_text())["files"]:
             download(target, root / run)
             process(root / run, polygon, database, run)
-    report(database, str(today-dt.timedelta(days=final_days)), end, root / "coverage.json")
+    report(database, str(today - dt.timedelta(days=final_days)), end, root / "coverage.json")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     p = sub.add_parser("catalog")
-    p.add_argument("--start", required=True); p.add_argument("--end", required=True)
+    p.add_argument("--start", required=True)
+    p.add_argument("--end", required=True)
     p.add_argument("--run", choices=PRODUCTS, default="final")
     p.add_argument("--bbox", type=float, nargs=4)
     p.add_argument("--output", required=True)
     p = sub.add_parser("download")
-    p.add_argument("--manifest", required=True); p.add_argument("--folder", required=True)
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--folder", required=True)
     p = sub.add_parser("process")
-    p.add_argument("--folder", required=True); p.add_argument("--polygon", required=True)
-    p.add_argument("--database", required=True); p.add_argument("--run", choices=PRODUCTS, default="final")
+    p.add_argument("--folder", required=True)
+    p.add_argument("--polygon", required=True)
+    p.add_argument("--database", required=True)
+    p.add_argument("--run", choices=PRODUCTS, default="final")
     p = sub.add_parser("report")
-    p.add_argument("--database", required=True); p.add_argument("--start", required=True)
-    p.add_argument("--end", required=True); p.add_argument("--output", required=True)
+    p.add_argument("--database", required=True)
+    p.add_argument("--start", required=True)
+    p.add_argument("--end", required=True)
+    p.add_argument("--output", required=True)
     p = sub.add_parser("export")
-    p.add_argument("--database", required=True); p.add_argument("--output", required=True)
+    p.add_argument("--database", required=True)
+    p.add_argument("--output", required=True)
     p = sub.add_parser("update")
-    p.add_argument("--root", required=True); p.add_argument("--polygon", required=True)
+    p.add_argument("--root", required=True)
+    p.add_argument("--polygon", required=True)
     p.add_argument("--database", required=True)
     p.add_argument("--final-days", type=int, default=210)
     p.add_argument("--late-days", type=int, default=14)
     args = parser.parse_args()
     if args.command == "catalog":
-        data = manifest(catalog(args.start, args.end, args.run, args.bbox), args.start, args.end, args.run, args.bbox)
+        data = manifest(
+            catalog(args.start, args.end, args.run, args.bbox),
+            args.start,
+            args.end,
+            args.run,
+            args.bbox,
+        )
         Path(args.output).parent.mkdir(parents=True, exist_ok=True)
         Path(args.output).write_text(json.dumps(data, indent=2))
         print(f"{len(data['files'])} archivos; {len(data['missing_dates'])} fechas faltantes")

@@ -34,7 +34,9 @@ from collections import defaultdict
 from pathlib import Path
 
 API = "https://power.larc.nasa.gov/api/temporal"
-DAILY_PARAMS = "T2M,T2MDEW,RH2M,WS2M,PS,PRECTOT,TS,ALLSKY_SFC_SW_DWN,ALLSKY_SFC_LW_DWN,CLRSKY_SFC_SW_DWN"
+DAILY_PARAMS = (
+    "T2M,T2MDEW,RH2M,WS2M,PS,PRECTOT,TS,ALLSKY_SFC_SW_DWN,ALLSKY_SFC_LW_DWN,CLRSKY_SFC_SW_DWN"
+)
 FILL = -999.0
 
 # Mapeo parámetro API → columna CSV
@@ -61,9 +63,7 @@ def fetch(url: str, retries: int = 3, wait: int = 5) -> dict:
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
             if attempt == retries:
                 raise
-            print(
-                f"  ⚠️ {e} — reintento {attempt}/{retries} en {wait}s", file=sys.stderr
-            )
+            print(f"  ⚠️ {e} — reintento {attempt}/{retries} en {wait}s", file=sys.stderr)
             time.sleep(wait)
 
 
@@ -162,9 +162,7 @@ def write_zone(z, start, end, hstart, hend, outdir: Path):
         "hend": hend,
         "filas": len(rows),
     }
-    (outdir / f"{z['id']}_meta.json").write_text(
-        json.dumps(meta, ensure_ascii=False, indent=2)
-    )
+    (outdir / f"{z['id']}_meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2))
     print(f"  ✔ {csv_path} ({len(rows)} filas)", file=sys.stderr)
 
 
@@ -173,13 +171,9 @@ def main():
     ap.add_argument("--points", default=str(Path(__file__).parent / "points.json"))
     ap.add_argument("--start", type=int, default=1984)
     ap.add_argument("--end", type=int, default=2025)
-    ap.add_argument(
-        "--hstart", type=int, default=None, help="año inicio hourly (def: start)"
-    )
+    ap.add_argument("--hstart", type=int, default=None, help="año inicio hourly (def: start)")
     ap.add_argument("--hend", type=int, default=None, help="año fin hourly (def: end)")
-    ap.add_argument(
-        "--out", default=str(Path(__file__).parent.parent.parent / "data" / "power")
-    )
+    ap.add_argument("--out", default=str(Path(__file__).parent.parent.parent / "data" / "power"))
     a = ap.parse_args()
     a.hstart = a.hstart or a.start
     a.hend = a.hend or a.end

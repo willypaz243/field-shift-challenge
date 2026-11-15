@@ -24,8 +24,8 @@ from pathlib import Path
 import numpy as np
 
 from .et0 import et0_hargreaves
-from .seasonal import Fit, fit, forecast, metrics_for
 from .scoring import load_crops, score_windows
+from .seasonal import fit, forecast, metrics_for
 
 VARIABLES = ["tmean", "tmin", "tmax", "pmm"]
 
@@ -52,7 +52,6 @@ def valid_mask(arr: np.ndarray) -> np.ndarray:
 
 def do_eda(dates: list[str], data: dict[str, np.ndarray], out: Path) -> dict:
     """Validación contra conocimiento local (lluvia dic–feb, heladas may–ago, seca may–sep)."""
-    idx = {d: i for i, d in enumerate(dates)}
     i2000 = next(i for i, d in enumerate(dates) if d.startswith("2000"))
     i2026 = next(i for i, d in enumerate(dates) if d.startswith("2026"))
 
@@ -186,9 +185,7 @@ def main() -> None:
         arrays[v] = np.clip(mean, 0, None) if v == "pmm" else mean
         bands[v] = band
 
-    doy = np.array(
-        [(today + timedelta(days=i + 1)).timetuple().tm_yday for i in range(H)]
-    )
+    doy = np.array([(today + timedelta(days=i + 1)).timetuple().tm_yday for i in range(H)])
     et0 = et0_hargreaves(arrays["tmean"], arrays["tmax"], arrays["tmin"], doy)
     et0 = np.clip(et0, 0, None)
 
@@ -254,9 +251,7 @@ def main() -> None:
     for cid, wins in top.items():
         if wins:
             w0 = wins[0]
-            print(
-                f"  {cid}: mejor ventana {w0['inicio']} → {w0['fin']} (score {w0['score']})"
-            )
+            print(f"  {cid}: mejor ventana {w0['inicio']} → {w0['fin']} (score {w0['score']})")
     print(
         f"Salidas: {out}/ (forecast_valle.csv, top_windows.json, metrics_backtest.json), {args.eda}"
     )

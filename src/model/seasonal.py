@@ -43,9 +43,7 @@ def fit(y: np.ndarray, t: np.ndarray) -> Fit:
     coef, *_ = np.linalg.lstsq(X, y, rcond=None)
     resid = y - X @ coef
     sigma = float(np.std(resid, ddof=2))
-    return Fit(
-        coef=coef, sigma=sigma, t_start=float(t[0]), t_end=float(t[-1]), n=len(t)
-    )
+    return Fit(coef=coef, sigma=sigma, t_start=float(t[0]), t_end=float(t[-1]), n=len(t))
 
 
 def predict(fit: Fit, t: np.ndarray) -> np.ndarray:
@@ -88,8 +86,6 @@ def backtest(
     return mae, rmse
 
 
-def metrics_for(
-    y: np.ndarray, t: np.ndarray, name: str, holdout: float, horizon: int
-) -> dict:
+def metrics_for(y: np.ndarray, t: np.ndarray, name: str, holdout: float, horizon: int) -> dict:
     mae, rmse = backtest(y, t, holdout, horizon)
     return {"variable": name, "mae": round(mae, 3), "rmse": round(rmse, 3)}

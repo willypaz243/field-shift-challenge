@@ -25,9 +25,7 @@ LAT_DEG = -17.4  # latitud del valle de Cochabamba
 MM_PER_MJ = 0.408  # conversión MJ/m² → mm (calor latente)
 
 
-def ra_mj_per_m2_day(
-    day_of_year: np.ndarray | int, lat_deg: float = LAT_DEG
-) -> np.ndarray:
+def ra_mj_per_m2_day(day_of_year: np.ndarray | int, lat_deg: float = LAT_DEG) -> np.ndarray:
     """Radiación extraterrestre [MJ/m²/día] (FAO-56 Ec. 11)."""
     n = np.asarray(day_of_year, dtype=float)
     phi = np.radians(lat_deg)
