@@ -187,6 +187,8 @@ export const es = {
   },
   zona: {
     titulo: "Mi zona",
+    acercar: "Acercar el mapa",
+    alejar: "Alejar el mapa",
     leyenda: {
       sin_agua: "Sin agua",
       inunda: "Se inunda",

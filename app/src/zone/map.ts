@@ -1,5 +1,5 @@
 type Point = { lat: number; lon: number };
-type View = { width: number; height: number };
+type View = { width: number; height: number; zoom?: number };
 type Feature = {
   geometry?: { type?: string; coordinates?: unknown };
   properties?: { reportes?: number };
@@ -15,11 +15,18 @@ export type HistoryItem = {
   nivel_pct?: number;
 };
 
+// Degrees across the screen at zoom 1; zoom divides it.
 // About 4 km across the screen: the plot and its neighbours, not the whole valley.
 const SPAN_DEG = 0.04;
 
+export const MIN_ZOOM = 1;
+// The GAMC picture has about 8 m per pixel, so more zoom only blurs it.
+export const MAX_ZOOM = 3;
+
+const span = (view: View) => SPAN_DEG / (view.zoom ?? 1);
+
 function projector(center: Point, view: View) {
-  const scale = view.width / SPAN_DEG;
+  const scale = view.width / span(view);
   const shrink = Math.cos((center.lat * Math.PI) / 180);
   return ([lon, lat]: number[]) => ({
     x: view.width / 2 + (lon - center.lon) * shrink * scale,
@@ -34,9 +41,9 @@ export function clampCenter(center: Point, view: View, bbox: number[]): Point {
   const halfLon =
     view.width /
     2 /
-    (view.width / SPAN_DEG) /
+    (view.width / span(view)) /
     Math.cos((center.lat * Math.PI) / 180);
-  const halfLat = view.height / 2 / (view.width / SPAN_DEG);
+  const halfLat = view.height / 2 / (view.width / span(view));
   const clamp = (v: number, lo: number, hi: number) =>
     lo > hi ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, v));
   return {
@@ -56,7 +63,7 @@ export function unproject(
   x: number,
   y: number,
 ): Point {
-  const scale = view.width / SPAN_DEG;
+  const scale = view.width / span(view);
   const shrink = Math.cos((center.lat * Math.PI) / 180);
   return {
     lat: center.lat - (y - view.height / 2) / scale,
@@ -136,4 +143,8 @@ export function historyItems(historial: unknown): HistoryItem[] {
       ...(valor?.nivel_pct == null ? {} : { nivel_pct: valor.nivel_pct }),
     }))
     .sort((a, b) => b.fecha.localeCompare(a.fecha));
+}
+
+export function clampZoom(zoom: number) {
+  return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom));
 }
