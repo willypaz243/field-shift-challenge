@@ -76,6 +76,22 @@ make test      # pytest
 | `pmm_max` | float |  |
 | `creado_en` | datetime | required |
 
+### `weather` (modules.climate)
+
+Short-range forecast (14 days). Filled by the T11 ingestion (#17); empty until then.
+
+| Column | Type | Notes |
+|---|---|---|
+| `zone_id` | varchar | PK, FK `zones.id` |
+| `fecha` | date | PK, civil day America/La_Paz |
+| `tmin` | float | required, °C |
+| `tmax` | float | required, °C |
+| `pmm` | float | required, mm/day |
+| `granizo` | boolean |  |
+| `confianza` | varchar | required: `alta` · `media` · `baja` |
+| `fuente` | varchar | required, source code (§10 of the contract) |
+| `actualizado_en` | datetime | required, UTC |
+
 ### `crops` (modules.crops)
 
 | Column | Type | Notes |

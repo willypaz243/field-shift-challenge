@@ -42,5 +42,7 @@ def get_session() -> Iterator[Session]:
     global _engine
     if _engine is None:
         _engine = make_engine()
+        # A DB loaded before a module added its table still has to serve that module.
+        init_db(_engine)
     with Session(_engine) as session:
         yield session

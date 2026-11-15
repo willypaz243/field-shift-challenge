@@ -1309,8 +1309,10 @@ components:
         zone_id:
           type: string
         actualizado_en:
-          type: string
-          format: date-time
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
         dias:
           type: array
           items:

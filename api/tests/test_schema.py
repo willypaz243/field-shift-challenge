@@ -6,6 +6,7 @@ EXPECTED_TABLES = {
     "zones",
     "climate_history",
     "forecasts",
+    "weather",
     "crops",
     "events",
     "reservoir",
@@ -28,6 +29,7 @@ TABLE_OWNERS = {
     "zones": "api.modules.zones.models",
     "climate_history": "api.modules.climate.models",
     "forecasts": "api.modules.climate.models",
+    "weather": "api.modules.climate.models",
     "crops": "api.modules.crops.models",
     "events": "api.modules.alerts.models",
     "reservoir": "api.modules.water.models",
@@ -114,3 +116,14 @@ def test_climate_history_has_one_row_per_zone_and_date(tmp_path):
             conn.execute(
                 "INSERT INTO climate_history (zone_id, fecha, tmean) VALUES ('D9_itocta', '2026-01-01', 18.0)"
             )
+
+
+def test_first_session_creates_missing_tables(tmp_path, monkeypatch):
+    from api.core import db
+
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path / 'old.db'}")
+    monkeypatch.setattr(db, "_engine", None)
+
+    next(db.get_session()).close()
+
+    assert "weather" in inspect(db._engine).get_table_names()

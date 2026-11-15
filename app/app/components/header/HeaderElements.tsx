@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors, Typography } from '../../../constants/Theme';
+import { HeaderLocation } from './HeaderLocation';
 
 export class HeaderLeft extends Component {
   private renderBrand() {
@@ -14,7 +15,7 @@ export class HeaderLeft extends Component {
   private renderLocation() {
     return <View style={styles.row}>
       <Ionicons name="location-outline" size={18} color={Colors.ink2} />
-      <Text style={styles.loc}>Itocta · actualizado 16 nov, 6:00</Text>
+      <HeaderLocation style={styles.loc} />
     </View>;
   }
 

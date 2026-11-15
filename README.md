@@ -57,6 +57,12 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 
 One SQLite file, `data/db/valle.db`, with tables defined by the SQLModel models of each module. `make db-init` creates them, `make db-load` (or `bash etl.sh db`) loads the ETL data. Details in [`docs/db-schema.md`](docs/db-schema.md).
 
+`make forecast` regenerates the 365-day forecast (`src.model.run_pipeline`) and replaces the `forecasts` table for every zone (`src.etl.load_forecast`). Run it weekly on the server, for example with cron (Mondays 03:00 La Paz time):
+
+```
+0 3 * * 1 cd /srv/field-shift-challenge && make forecast >> logs/forecast.log 2>&1
+```
+
 ## Architecture
 
 The API is a **modular monolith**: one FastAPI process and one SQLite database, split into modules by domain. Each module owns its tables and exposes a service; other modules only talk to it through that service.

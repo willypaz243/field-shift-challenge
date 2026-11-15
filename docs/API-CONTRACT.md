@@ -170,6 +170,7 @@ Con `desde_version`, devolver solo lo que cambió.
 }
 ```
 La app muestra 4 semanas: días 1–14 de aquí y días 15–28 de la proyección (§2.3), marcados "más lejos, puede cambiar".
+- Si el último dato tiene más de 24 h, `desactualizado: true`. Sin datos todavía: `dias: []`, `actualizado_en: null` y `desactualizado: true`.
 
 ### 3.2 `GET /zones/{zone_id}/climatology`
 **Clima típico por mes** (30 años, POWER 1984+ y IMERG 2016+). Pantallas: **Calendario → próximos meses**, **Mi cultivo** (riesgos por mes).
