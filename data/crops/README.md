@@ -12,10 +12,10 @@ La incorporación de información es manual y documentada; no hay un descargador
 - [run_pipeline.py](../../src/model/run_pipeline.py): utiliza `--crops` para generar ventanas por cultivo.
 - [load_db.py](../../src/etl/load_db.py): transforma el catálogo en registros de la tabla `crops`.
 
-Desde la raíz, para consumir el catálogo con la serie POWER existente:
+Desde la raíz, para consumir el catálogo con la DB consolidada:
 
 ```bash
-uv run python -m src.model.run_pipeline --power data/power/D1_tunari_daily.csv --crops data/crops/crops.json --out data/model --eda docs/EDA.md --horizon 365
+uv run python -m src.model.run_pipeline --db data/db/valle.db --crops data/crops/crops.json --out data/model --eda docs/EDA.md
 ```
 
 Para integrarlo a SQLite: `uv run python -m src.etl.load_db --db data/db/valle.db`. La carga también incorpora las demás fuentes disponibles.
@@ -46,6 +46,9 @@ Para integrarlo a SQLite: `uv run python -m src.etl.load_db --db data/db/valle.d
 | `foto`, `foto_url` | Referencia visual cuando está presente | Ruta / URL |
 | `fuente` | Referencia que respalda la ficha del cultivo | Texto |
 
+En el MVP, el scoring usa `tmean`, `tmin`, `pmm` y `et0` (las variables con evidencia local
+por cultivo). Las demás se cargan pero puntúan **neutro** (sin evidencia no se penaliza).
+
 ## Variables ambientales relacionadas
 
 | Variable | Qué representa | Unidad |
@@ -59,6 +62,53 @@ Para integrarlo a SQLite: `uv run python -m src.etl.load_db --db data/db/valle.d
 | `sm_surface`, `sm_root` | Humedad volumétrica superficial y radicular | m³/m³ |
 
 El evaluador combina temperatura, agua, heladas y el indicador territorial de drenaje. Usa el promedio de los tres `Kc`, una duración media del ciclo y constantes de puntuación definidas en `scoring.py`. El resultado es un puntaje de aptitud de ventana y una confianza heurística. Los campos de contexto también se conservan para la aplicación y comparación de alternativas.
+
+## Reglas de scoring (motor implementado, tarea 2.4)
+
+> Esta sección documenta **lo que implementa `src/model/scoring.py`** (fuente de verdad);
+> el motor idéntico corre en servidor y en el dispositivo móvil.
+
+Para cada ventana de L días (L = media de `ciclo_dias`) sobre la proyección:
+
+1. **Temperatura** (0–1): fracción de días con `tmean` dentro de `tmean_opt`.
+2. **Agua** (0–1): `déficit = Σ max(0, ET₀×Kc_avg − pmm)`, con `Kc_avg` = media de los tres
+   `kc`; mitigado por `drought_tolerant` (no=1.0, poco=0.6, sí=0.3);
+   `agua = 1 − min(1, déficit×mit / (2 mm/día × L))`.
+3. **Helada** (0–1): `helada = 1 − sev × días_helada / L`, con `sev` por `tolerancia`
+   (alta=0.2, media=0.5, baja=1.0) y `días_helada` = días con `tmin + FROST_OFFSET < 0`
+   (`FROST_OFFSET = 0.0`; el tmin observado ya captura heladas reales, ver EDA.md).
+4. **Erosión** (multiplicador 0.5–1.0): si la zona tiene `cerca_drenaje` y
+   `erosion_sens` = alta (0.5) o media (0.75).
+5. **Score final** = 100 × (0.45·temp + 0.40·agua + 0.15·helada) × erosión.
+   **Confianza** = decaimiento heurístico con el horizonte (0.92 → 0.4 según el centro
+   de la ventana dentro de la proyección).
+6. **Top-3**: mejores ventanas separadas ≥ 14 días.
+
+Post-MVP (documentado, no implementado): `etapa_critica` (penalizar solo el sub-rango de la
+etapa sensible) y `tipo_ciclo = perenne` (época de siembra en vez de ventana fija).
+
+## Cultivos del catálogo (14)
+
+| id | Ciclo (días) | T óptima media | Helada | Agua | FixN |
+|---|---|---|---|---|---|
+| papa | 120–180 | 15–20 °C (local) | baja | alta | ❌ |
+| choclo | 120–240 | 18–27 °C (estimado) | baja | alta | ❌ |
+| trigo | 120–150 | 12–22 °C (estimado) | media (espigazón) | media | ❌ |
+| papaliza | 180–210 | 8–14 °C (local) | alta | media | ❌ |
+| lechuga | 28–42 | 10–18 °C (local, derivado) | baja | muy alta | ❌ |
+| hortalizas | 30–90 | 10–20 °C (local) | baja | muy alta | ❌ |
+| alfalfa | perenne (sep–mar) | 15–25 °C (estimado) | media | muy alta | ✅ |
+| haba | 150–180 | 8–18 °C (estimado) | alta | media | ✅ |
+| tarwi | 180–240 | 10–20 °C (estimado) | alta | media-baja | ✅ (50+ kg N/ha) |
+| quinua | 150–180 | 12–22 °C (estimado) | media (post-floración) | media | — |
+| avena | 90–120 | 8–18 °C (estimado) | alta | media | — |
+| durazno | perenne (plantar invierno) | 12–24 °C (estimado) | media (floración) | media | ❌ |
+| flores | 60–180 | 12–22 °C (estimado) | baja | alta | ❌ |
+| maiz_forraje | 120–150 | 18–27 °C (estimado) | baja | alta | ❌ |
+
+> Los valores marcados **estimado** son agronómicos generales (FAO/tipos de cultivo), no
+> fuentes locales: validarlos con un agrónomo local si hay tiempo (o descartar el fit_T para
+> ese cultivo y basarse en helada+agua, que sí tienen evidencia local).
 
 ## Cultivos incluidos
 
@@ -76,6 +126,17 @@ El evaluador combina temperatura, agua, heladas y el indicador territorial de dr
 - `durazno`: Durazno (perenne).
 - `flores`: Flores (margaritas, claveles) (anual).
 - `maiz_forraje`: Maíz forraje (silaje) (anual).
+
+## Equivalencias de ids con los mockups
+
+La app usa los ids del catálogo. Correspondencia con los ids de los mockups:
+
+| Mockup | Catálogo | Nota |
+|---|---|---|
+| `maiz` (maíz choclo) | `choclo` | Cambiar en la app |
+| `forraje` (maíz forraje) | `maiz_forraje` | Agregado en v3 |
+| `cebolla`, `zanahoria` | `hortalizas` | La app los muestra separados |
+| `papa`, `haba`, `avena`, `alfalfa`, `lechuga` | igual | |
 
 ## Flujo
 
