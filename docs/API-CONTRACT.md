@@ -323,6 +323,7 @@ Pantalla: **Mi zona**.
 
 ### 7.3 `POST /feedback`
 Pantalla: **¿Cómo salió tu cosecha?** (backlog 4.5). Es la única fuente de "etiquetas" de éxito para validar el modelo.
+Encabezado obligatorio `Idempotency-Key` (generado en el celular). Respuestas: `201 {"id"}`; `409 {"id"}` con el id original si la clave ya se usó; `400` dato inválido; `404` `zone_not_found` / `crop_not_found`.
 ```json
 { "zone_id": "D9_itocta", "crop_id": "haba", "siembra": "2026-07-15",
   "cosecha": "2026-11-16", "resultado": "buena" }
@@ -330,7 +331,7 @@ Pantalla: **¿Cómo salió tu cosecha?** (backlog 4.5). Es la única fuente de "
 `resultado`: `buena` · `regular` · `mala`. Si el agricultor respondió "Todavía no", no se envía nada.
 
 ### 7.4 Elección de rotación (opcional)
-`POST /plans` `{ "zone_id": "D9_itocta", "rotacion_id": "choclo-haba", "siembra": "2027-04-05" }`. Solo para estadística de la zona: el plan vive en el celular.
+`POST /plans` `{ "zone_id": "D9_itocta", "rotacion_id": "choclo-haba", "siembra": "2027-04-05" }`. Solo para estadística de la zona: el plan vive en el celular. Mismo encabezado `Idempotency-Key` y mismas respuestas que `/feedback`.
 
 ---
 

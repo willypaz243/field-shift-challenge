@@ -77,3 +77,14 @@ Para cada ventana de L días (L ∈ `ciclo_dias`) sobre la proyección:
 > Los valores marcados **estimado** son agronómicos generales (FAO/tipos de cultivo), no
 > fuentes locales: validarlos con un agrónomo local si hay tiempo (o descartar el fit_T para
 > ese cultivo y basarse en helada+agua, que sí tienen evidencia local).
+
+## Equivalencias de ids con los mockups
+
+La app usa los ids del catálogo. Correspondencia con los ids de los mockups:
+
+| Mockup | Catálogo | Nota |
+|---|---|---|
+| `maiz` (maíz choclo) | `choclo` | Cambiar en la app |
+| `forraje` (maíz forraje) | `maiz_forraje` | Agregado en v3 |
+| `cebolla`, `zanahoria` | `hortalizas` | La app los muestra separados |
+| `papa`, `haba`, `avena`, `alfalfa`, `lechuga` | igual | |

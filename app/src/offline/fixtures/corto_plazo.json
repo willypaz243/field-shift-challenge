@@ -1,0 +1,23 @@
+{
+  "zone_id": "D9_itocta",
+  "actualizado_en": "2026-11-16T06:00:00-04:00",
+  "dias": [
+    {
+      "fecha": "2026-11-21",
+      "tmin": -2,
+      "tmax": 24,
+      "pmm": 0,
+      "granizo": false,
+      "confianza": "alta"
+    },
+    {
+      "fecha": "2026-11-26",
+      "tmin": 10,
+      "tmax": 23,
+      "pmm": 8,
+      "granizo": true,
+      "confianza": "media"
+    }
+  ],
+  "fuente": ["nasa_geos"]
+}
