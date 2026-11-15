@@ -1,6 +1,7 @@
 // Draft from the approved mockups; to be reviewed by a native speaker.
 // Missing texts fall back to Spanish.
 export const qu = {
+  hoy: { titulo: "Kunan", mis_cultivos: "Chakraykuna" },
   comun: { listo: "Tukuy" },
   ubicar: {
     titulo: "Chakraykiqa kaypichu?",
