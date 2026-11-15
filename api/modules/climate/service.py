@@ -22,7 +22,18 @@ def _day(f: Forecast) -> dict[str, Any]:
             "fecha": f.fecha.isoformat(),
             **{
                 k: getattr(f, k)
-                for k in ("tmin", "tmax", "tmean", "pmm", "rh", "sw", "ws", "sm_surface", "sm_root")
+                for k in (
+                    "tmin",
+                    "tmax",
+                    "tmean",
+                    "pmm",
+                    "et0",
+                    "rh",
+                    "sw",
+                    "ws",
+                    "sm_surface",
+                    "sm_root",
+                )
             },
             "incert_min": _present({"tmin": f.tmin_min, "pmm": f.pmm_min}) or None,
             "incert_max": _present({"tmin": f.tmin_max, "pmm": f.pmm_max}) or None,
