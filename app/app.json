@@ -32,6 +32,14 @@
         {
           "locationWhenInUsePermission": "Choclito usa tu ubicación para encontrar tu zona y tu parcela."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Choclito usa la cámara para la foto de tu aviso.",
+          "photosPermission": "Choclito usa tus fotos para el aviso que envías.",
+          "microphonePermission": false
+        }
       ]
     ]
   }

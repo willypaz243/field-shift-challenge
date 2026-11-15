@@ -39,3 +39,14 @@ test("without a plot the report is sent without location", () => {
     "plaga",
   ]);
 });
+
+test("a photo travels with the report as a file reference", () => {
+  const foto = {
+    uri: "file:///docs/reports/1.jpg",
+    name: "foto.jpg",
+    type: "image/jpeg",
+  };
+  expect(
+    newReport("plaga", "D9_itocta", undefined, new Date(), foto).payload.foto,
+  ).toEqual(foto);
+});

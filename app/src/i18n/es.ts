@@ -207,6 +207,9 @@ export const es = {
       plaga: "Plaga",
     },
     enviar: "Enviar aviso",
+    foto: "Foto",
+    foto_lista: "Foto agregada",
+    foto_grande: "No se pudo achicar la foto. Prueba con otra.",
     guardado: "Aviso guardado. Lo enviamos apenas se pueda.",
     hecho: {
       inundacion: "Inundación",

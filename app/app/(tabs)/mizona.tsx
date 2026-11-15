@@ -9,6 +9,7 @@ import mockMap from "../../src/offline/fixtures/mapa.json";
 import { fetchZoneMap, MapCache } from "../../src/zone/fetch";
 import { floodMarks, historyItems, notice, projectCells } from "../../src/zone/map";
 import { newReport, reportTypes, type ReportType } from "../../src/zone/report";
+import { cleanupPhotos, takePhoto, type Photo } from "../../src/zone/photo";
 import { zones } from "../../src/farm/zones";
 import { shortDate } from "../../src/ui/dates";
 import { Sheet } from "../../src/ui/Sheet";
@@ -61,18 +62,31 @@ export default function MiZonaScreen() {
   const [history, setHistory] = useState(false);
   const [event, setEvent] = useState<ReportType | null>(null);
   const [saved, setSaved] = useState(false);
+  const [photo, setPhoto] = useState<Photo | null>(null);
+  const [photoError, setPhotoError] = useState(false);
   const center = farm?.parcela ?? zones.find((z) => z.id === zone) ?? { lat: 0, lon: 0 };
   const cells = projectCells(map, center, VIEW);
   const floods = floodMarks(map, center, VIEW);
   const news = notice(map);
   const items = historyItems(data?.historial_zona);
 
+  const addPhoto = async () => {
+    setPhotoError(false);
+    const taken = await takePhoto().catch(() => "too_big" as const);
+    if (taken === "too_big") setPhotoError(true);
+    else if (taken) setPhoto(taken);
+  };
+
   const send = async () => {
     if (!event) return;
-    await client.outbox.enqueue(newReport(event, zone, farm?.parcela));
-    void client.outbox.flush().catch(() => undefined);
+    await client.outbox.enqueue(newReport(event, zone, farm?.parcela, new Date(), photo ?? undefined));
+    void client.outbox
+      .flush()
+      .then(() => cleanupPhotos(client.store.db))
+      .catch(() => undefined);
     setReporting(false);
     setEvent(null);
+    setPhoto(null);
     setSaved(true);
     setTimeout(() => setSaved(false), 4000);
   };
@@ -149,6 +163,16 @@ export default function MiZonaScreen() {
             );
           })}
         </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected: !!photo }}
+          onPress={() => void addPhoto()}
+          style={[styles.btn, styles.ghost, { flex: 0 }]}
+        >
+          <Ionicons name={photo ? "checkmark-circle" : "camera-outline"} size={24} color={Colors.fieldDeep} />
+          <Text style={[styles.btnText, { color: Colors.fieldDeep }]}>{photo ? t("zona.foto_lista") : t("zona.foto")}</Text>
+        </Pressable>
+        {photoError && <Text style={styles.noticeSub}>{t("zona.foto_grande")}</Text>}
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ disabled: !event }}

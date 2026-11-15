@@ -18,6 +18,7 @@ export function newReport(
   zone: string,
   parcela?: Point,
   now = new Date(),
+  foto?: { uri: string; name: string; type: string },
 ): Omit<Submission, "attempts" | "next_attempt"> {
   return {
     id: uuid(),
@@ -29,6 +30,7 @@ export function newReport(
         ? { lat: round3(parcela.lat), lon: round3(parcela.lon) }
         : {}),
       ocurrido_en: now.toISOString(),
+      ...(foto ? { foto } : {}),
     },
   };
 }
