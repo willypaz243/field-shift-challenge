@@ -1,0 +1,12 @@
+{
+  "zone_id": "D15_tamborada",
+  "nombre": "Tamborada (D15) — zona agrícola sur",
+  "lat": -17.488,
+  "lon": -66.134,
+  "elev_m": 3126.04,
+  "start": 1984,
+  "end": 2025,
+  "hstart": 2010,
+  "hend": 2025,
+  "filas": 15342
+}

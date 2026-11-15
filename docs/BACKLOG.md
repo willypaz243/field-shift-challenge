@@ -50,20 +50,33 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 |---|---|---|---|---|---|
 | 1 | **NASA POWER** (Power-DA) | Clima **diario**: T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS, SW/LW (all-sky) | **1984 → presente** (cubre 2010–2025 + antes ✅) | JSON por punto vía API, 0.5° — **verificado 14/11: funciona SIN token** (v2.10.3); `start`/`end` = int `YYYYMMDD`; **no hay T2MIN/T2MAX en diario** | **P0** |
 | 1b | **ERA5** (CDS ECMWF) | **t2m_min / t2m_max** diarios (heladas) + validación de T2M | **1940 → presente** | API CDS (clave gratis en cds.climate.copernicus.eu); `reanalysis-era5-single-levels` | **P0** |
-| 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | HDF5 vía Earthdata/CMR (subconjunto bbox valle) | P1 |
-| 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente** | HDF5, 9 km, EASE-Grid (EPSG:6933), Earthdata; DOI 10.5067/T5RUATAQREF8 | P1 |
+| 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | NetCDF vía Earthdata/CMR (`GPM_3IMERGDL` diario, `GPM_3IMERGHH` 30-min); ⚠️ **requiere aceptar EULA** (ver nota) | P1 |
+| 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente (brecha 2026-05/07 ya rellena, verificado)** | HDF5 9 km EASE-Grid (EPSG:6933); descarga directa CMR+token verificada; **granules globales ~148 MB** (~1,3 GB/día) | P1 |
 | 4 | **GAMC WMS** (key p04) | Zonas: periurbanos (mask urbano), distritos/comunas, drenaje | estático | WMS vía proxy (rate limit 10–15 s/peticion) | **P0** (obligatorio) |
 | 5 | **SRTM 30 m** | Elevación + pendiente por zona (erosión, escorrentía) | estático | Tiled GeoTIFF (dwtkns/earthdata) | P2 |
 | 6 | **Cultivos** (CROPS.md) | Vector de condiciones óptimas por cultivo (T, heladas, agua, ciclo, fixN, mercado) | curado | tabla local `crops` | **P0** |
 | 7 | **Eventos históricos** | Fechas de eventos imprevistos (helada/granizo/inundación/sequía) para alertas | curado 10–20 eventos | tabla local `events` | P1 |
 
-> **Nota SMAP (verificado 14/11 en nsidc.org/data/spl4smgp/versions/8):**
+> **Nota SMAP (verificado 14/11 en nsidc.org + CMR en vivo con token Earthdata):**
 > - Producto 3-horario (no 9-días), 9 km; **un solo píxel puede cubrir varias comunas**
 >   (el valle ocupa ~2×2 píxeles) → tratarlo como "humedad de suelo del valle", no por comuna.
-> - ⚠️ **14/05/2026–28/07/2026**: problema de geolocalización, datos en reprocesamiento →
->   excluir ese tramo del entrenamiento (o marcarlo).
-> - Requiere cuenta Earthdata (gratis) y descarga por script Python (Data Access Tool).
+> - ✅ **La ventana de reprocesamiento 14/05/2026–28/07/2026 ya está CUBIERTA** (verificado
+>   en vivo en CMR: 9 granules/día en el bbox el 15/06, 20/07, 15/10 y 01/11 de 2026).
+>   No excluir ese tramo.
+> - Acceso verificado en vivo (token `EARTHDATA_TOKEN` del `.env`):
+>   - Colección `C3480440870-NSIDC_CPRD` (SPL4SMGP v8, NSIDC_CPRD).
+>   - Búsqueda de granules por `bounding_box` + `temporal` en CMR ✅.
+>   - Descarga directa HTTPS con `Bearer` ✅ (~148 MB/granule, 6.5 s).
 > - Variables: surface soil moisture, root zone soil moisture, frozen fraction, incertidumbre.
+>
+> **Nota GPM/IMERG (verificado 14/11 en CMR con token):**
+> - Colecciones disponibles: `GPM_3IMERGDL` (diaria, v07, `C2723754859-GES_DISC`) y
+>   `GPM_3IMERGHH` (30-min, v07, `C2723754847-GES_DISC`). `GPM_3GR` **ya no existe** en CMR.
+> - Granules por el bbox del valle: ~1/día (IMERGDL).
+> - ⚠️ **La descarga de IMERG devuelve 403 `EULA Acceptance Failure`**: hay que aceptar el
+>   EULA una vez desde la cuenta Earthdata en
+>   `https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ`
+>   (el SMAP no lo pide). Pendiente de acción del equipo.
 
 > **Nota POWER (verificado en vivo el 14/11, API v2.10.3):**
 > - **Funciona sin token** (probado 2× sin `token` y con token inválido). El token oficial
@@ -129,7 +142,7 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 ### Fase 0 — Bases (hoy, 2–3 h) — *bloqueante*
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 0.1 | Claves de acceso: **CDS (ERA5)** — registro gratis + API key; Earthdata (para SMAP, P1, puede esperar). **POWER ya no pide token** (verificado 14/11) | 1 h | `curl` de POWER devuelve JSON diario ✅ (hecho); `cdsapi` de ERA5 responde para el bbox del valle |
+| 0.1 | Claves de acceso: **CDS (ERA5)** — registro gratis + API key; Earthdata (para SMAP, P1, puede esperar). **POWER ya no pide token** (verificado 14/11) | 1 h | `curl` de POWER devuelve JSON diario ✅ (hecho); **token Earthdata ✅ en `.env` y verificado en vivo (CMR + descarga SMAP)**; `cdsapi` de ERA5 pendiente |
 | 0.2 | Definir grid de zonas: 1–3 puntos agrícolas por distrito (D1–D12) usando mask periurbanos | 1 h | Lista de ~15–25 zonas (lat/lon, comuna vía GetFeatureInfo GAMC) |
 | 0.3 | Definir schema (§5) + repo de datos (`data/`, `src/etl`, `src/model`, `api/`, `app/`) | 0,5 h | Schema documentado; estructura de carpetas |
 | 0.4 | Catálogo de cultivos en tabla `crops` (de CROPS.md: papa, choclo, trigo, papaliza, hortalizas/lechuga, alfalfa, haba, tarwi, quinua, avena, flores, durazno) | 1 h (paralelo) | ≥10 cultivos con vector de condiciones |
@@ -137,9 +150,9 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 ### Fase 1 — ETL: explorar, extraer, cargar (hoy→noche, 4–6 h) — *prioridad máxima*
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 1.1 | **POWER** diario 1984–2025-11 para todos los puntos del grid | 2 h | CSV/DB por zona sin huecos (interpolación lineal ≤3 días si los hay) |
+| 1.1 | **POWER** diario 1984–2025-11 para todos los puntos del grid | 2 h | CSV/DB por zona sin huecos (interpolación lineal ≤3 días si los hay) — ✅ **HECHO 14/11**: 10 zonas × 15,342 filas (1984-01-01→2025-12-31), `tmean` 100% completo, `tmin/tmax` 2010+ sin huecos (derivado de hourly), `lw` solo nulo 1984–87. Heladas 2010–25: 194 días, pico may–sep ✅ coherente con CROPS.md. Nota: los 10 puntos caen en la **misma celda POWER 0.5°** (serie idéntica; solo difiere `elev_m`=3126 m) → el refinamiento por zona lo dan GAMC + SRTM |
 | 1.2 | **GPM/IMERG** diario 2010–2025 (bbox valle) | 1,5 h | Serie de precipitación cruzada con POWER (correlación > 0,8 como sanity check) |
-| 1.3 | **SMAP SPL4SMGP v8** 2015–2025: píxeles del valle, 3-h → promedio diario, reproyección EASE→WGS84; excluir 2026-05/07 | 1,5 h | `sm_surface`/`sm_root` diarios en DB |
+| 1.3 | **SMAP SPL4SMGP v8** 2015–2025: píxeles del valle, 3-h → promedio diario, reproyección EASE→WGS84 (brecha 2026-05/07 ya cubierta; ⚠️ granules globales ~148 MB → decidir ventana/estrategia de descarga) | 1,5 h | `sm_surface`/`sm_root` diarios en DB |
 | 1.4 | **GAMC**: mask periurbanos (binaria), distancias a drenaje, comuna por punto | 1 h (batch con sleeps 12 s) | `zones.es_agricola`, `cerca_drenaje`, `comuna` |
 | 1.5 | **SRTM** elevación/pendiente por zona | 0,5 h | `zones.elev_m`, `pendiente` |
 | 1.6 | Carga a DB + script de re-ejecución idempotente | 1 h | `bash etl.sh` reconstruye todo desde cero |
@@ -195,8 +208,9 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Claves de acceso (CDS/Earthdata) | Medio | **POWER funciona sin token** (verificado 14/11) → el clima histórico NO está bloqueado. CDS (ERA5 tmin/tmax) es registro gratis ~5 min; Earthdata solo para SMAP (P1, descartable) |
-| SMAP 9 km grueso + reprocesamiento 2026-05/07 | Medio | Trato "valle" no comunal; excluir tramo; es P1 descartable |
+| Claves de acceso (CDS/Earthdata) | Bajo | **POWER sin token** ✅ y **token Earthdata verificado en vivo** ✅ (CMR + descarga SMAP). Queda CDS (ERA5) opcional |
+| SMAP 9 km grueso + tamaño de granules (~1,3 GB/día) | Medio | Brecha 2026-05/07 ya cubierta ✅; tratar como "valle" no comunal; histórico completo no viable → ventana reducida o P1 descartable |
+| EULA GPM/IMERG no aceptado (403) | Bajo | Aceptar una vez: `urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ`; es P1 |
 | Rate limit GAMC (429) | Medio | Batch con sleeps 12 s (script probado); todo lo descargable ya está en `data/gamc/04/` |
 | Proyección 1 año "honestidad" | Medio (pitch) | Enmarcar como **ciclo estacional + tendencia + incertidumbre** (no "predicción mágica"); mostrar backtest con números |
 | FeatureInfo drenaje vacío | Bajo | Solo mask visual (G3); no depende de atributos |

@@ -18,8 +18,8 @@
 ### Misiones recomendadas por el enunciado
 | Dataset | Enlace de acceso | Qué aporta al reto |
 |---|---|---|
-| **SMAP** (humedad de suelo, 2–3 días) | <https://www.earthdata.nasa.gov/data/platforms/space-based-platforms/smap> · nivel L4: <https://nsidc.org/data/spl4smgp/versions/7> | Humedad de superficie, sequía, infiltración, señales tempranas de estrés |
-| **GPM / IMERG** (precipitación) | <https://gpm.nasa.gov/data> · IMERG GES DISC: <https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGHH_07/summary> | Fiabilidad de lluvia, tormentas extremas, riesgo de erosión |
+| **SMAP** (humedad de suelo, 3-h) | L4: <https://nsidc.org/data/spl4smgp/versions/8> (DOI 10.5067/T5RUATAQREF8) · CMR: `C3480440870-NSIDC_CPRD` | Humedad de superficie + zona radicular — **verificado 14/11: token Earthdata funciona (CMR + descarga directa ~148 MB/granule); brecha 14/05–28/07/2026 ya cubierta** |
+| **GPM / IMERG** (precipitación) | IMERG diario: <https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary> · CMR: `C2723754859-GES_DISC` (diario) / `C2723754847-GES_DISC` (30-min) | Fiabilidad de lluvia, tormentas extremas, riesgo de erosión — ⚠️ **exige aceptar EULA una vez**: <https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ> |
 | **Landsat 8/9** (30 m) | <https://earthexplorer.usgs.gov/> · <https://landsatlook.usgs.gov/> | NDVI, vigor vegetal, suelo desnudo, transiciones estacionales |
 | **MODIS** (250–1000 m) | <https://lpdaac.usgs.gov/products/> (ej. MOD13Q1 NDVI: <https://lpdaac.usgs.gov/products/mod13q1v061/>) | NDVI/estrés vegetal a mayor frecuencia |
 | **VIIRS** | <https://search.earthdata.nasa.gov/search?q=VIIRS> | Índices de vegetación alternativos a MODIS |

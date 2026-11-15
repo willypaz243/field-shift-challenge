@@ -1,0 +1,12 @@
+{
+  "zone_id": "D9_itocta",
+  "nombre": "Itocta (D9) — principal zona agrícola del valle",
+  "lat": -17.4611,
+  "lon": -66.2185,
+  "elev_m": 3126.04,
+  "start": 1984,
+  "end": 2025,
+  "hstart": 2010,
+  "hend": 2025,
+  "filas": 15342
+}

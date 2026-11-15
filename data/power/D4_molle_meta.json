@@ -1,0 +1,12 @@
+{
+  "zone_id": "D4_molle",
+  "nombre": "Molle (D4)",
+  "lat": -17.3938,
+  "lon": -66.1984,
+  "elev_m": 3126.04,
+  "start": 1984,
+  "end": 2025,
+  "hstart": 2010,
+  "hend": 2025,
+  "filas": 15342
+}

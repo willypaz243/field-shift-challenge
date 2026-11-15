@@ -1,0 +1,12 @@
+{
+  "zone_id": "D1_tunari",
+  "nombre": "Tunari (D1)",
+  "lat": -17.368,
+  "lon": -66.13,
+  "elev_m": 3126.04,
+  "start": 1984,
+  "end": 2025,
+  "hstart": 2010,
+  "hend": 2025,
+  "filas": 15342
+}

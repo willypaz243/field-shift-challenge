@@ -1,0 +1,12 @@
+{
+  "zone_id": "D14_valle_hermoso",
+  "nombre": "Valle Hermoso (D14)",
+  "lat": -17.437,
+  "lon": -66.112,
+  "elev_m": 3126.04,
+  "start": 1984,
+  "end": 2025,
+  "hstart": 2010,
+  "hend": 2025,
+  "filas": 15342
+}
