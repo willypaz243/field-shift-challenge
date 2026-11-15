@@ -1,4 +1,31 @@
-# Local sync client
+# Choclito - Frontend Application
+
+Documentación técnica del frontend para la aplicación móvil Choclito, desarrollada en el marco del NASA Space Apps Challenge (Field Shift). El sistema está diseñado con una arquitectura offline-first para la gestión de parcelas agrícolas, registro de cultivos y recepción de alertas climáticas tempranas.
+
+## Stack Tecnológico
+
+*   **Framework:** React Native y Expo (SDK 58).
+*   **Enrutamiento:** Expo Router (File-based routing).
+*   **Lenguaje:** TypeScript.
+*   **Sistema de Diseño:** Implementación de tokens personalizados, tipografía Atkinson Hyperlegible Next y cumplimiento de métricas de accesibilidad UI (Touch targets >= 56px, fuentes >= 15px).
+
+## Arquitectura y Estándares
+
+El código fuente obedece a estrictos lineamientos de ingeniería y control de calidad establecidos por el equipo:
+
+*   **Paradigma Orientado a Objetos (OOP):** Componentización estructurada estrictamente mediante clases ES6.
+*   **Modularización:** Separación de responsabilidades en directorios dedicados (`/components`, `/config`, `/constants`).
+*   **Restricciones de Complejidad Ciclomática:** Límite máximo de 100 líneas por archivo y 7 líneas por método para garantizar la escalabilidad y mantenibilidad.
+
+## Instrucciones de Ejecución
+
+### 1. Instalación de dependencias
+Desde la raíz del directorio `app/`, inicializar el entorno:
+
+```bash
+npm install
+
+## Offline data (`src/offline`)
 
 Issue #49. Data modules for the Expo app; screen implementation is separate.
 Use Node 22.13 or newer in a range supported by `package.json`.
@@ -11,7 +38,7 @@ npm run format:check
 npm test -- --runInBand
 ```
 
-## Integration
+### Integration
 
 Create one client at application startup and reuse it across screens:
 
@@ -33,7 +60,7 @@ Replace `MockTransport` with `HttpTransport(baseUrl)` at startup for the real AP
 Screens continue to read SQLite. Inject authentication through the transport's
 optional fetch argument once the device-token contract is defined.
 
-## Storage and retries
+### Storage and retries
 
 `sync_state` stores version, hash and successful update time per zone.
 `sync_sections` stores each contract section as JSON per zone. Deltas replace
@@ -55,7 +82,7 @@ client owns no background timer: retries run on refresh or explicit flush.
 Only the reports contract defines duplicate 409 as success. Permanent errors
 remain queued for inspection rather than losing submissions.
 
-## Mock and verification
+### Mock and verification
 
 Fixtures copy valid examples from `../docs/API-CONTRACT.md`; crops import the
 existing catalog. They demonstrate one zone, sparse forecast days and one

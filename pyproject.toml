@@ -5,14 +5,20 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi>=0.163.0",
     "h5py>=3.16.0",
     "netcdf4>=1.7.5.1.post1",
     "pillow>=13.0.0",
     "requests>=2.34.2",
+    "sqlmodel>=0.0.50",
 ]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
+    "jsonschema>=4.26.0",
+    "pytest>=9.2.0",
+    "pyyaml>=6.0.3",
     "ruff>=0.17.5",
     "ty>=0.0.104",
 ]
@@ -58,3 +64,7 @@ unused-ignore-comment = "ignore"
 [tool.ty.terminal]
 # ty sale con código 0 salvo errores reales; con todo en warn, nunca bloquea
 error-on-warning = false
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["api/tests", "src/etl/tests", "tests"]
