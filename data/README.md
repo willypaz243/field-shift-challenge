@@ -1,6 +1,6 @@
 # Datos: fuentes, ejecución e integración
 
-Esta carpeta reúne las salidas de las fuentes ambientales, el contexto territorial, los catálogos agronómicos y los resultados del modelo. Los scripts se conservan en `src/etl/` y `src/model/`; cada README indica la entrada y salida de su proceso.
+Esta carpeta reúne las salidas de las fuentes ambientales, el contexto territorial, los catálogos agronómicos y los resultados del modelo. Los scripts se conservan en `src/etl/` y `src/model/`; cada README indica la entrada y salida de su proceso. El flujo completo de extracción y consolidación, con diagramas, está en [src/etl/README.md](../src/etl/README.md).
 
 ## Guías por carpeta
 
