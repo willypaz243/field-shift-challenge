@@ -42,7 +42,7 @@ It joins satellite data with farmer reports from the same zone (water that didn'
   - Short "mishka" season: sown Mar–Apr, irrigation required.
 - Frost: May–Aug. Hail and floods: Dec–Mar. 2026–27 is an El Niño year, with drought expected in the valleys.
 - Irrigation runs in turns from the La Angostura dam and the Misicuni project. Dam levels and canal overflows set when water is available.
-- Background: `docs/CONTEXTO-LOCAL.md`, `docs/CHALLENGE.md`, `docs/DATA-SOURCES.md`.
+- Background: `docs/research/CONTEXTO-LOCAL.md`, `docs/research/CHALLENGE.md`, `docs/DATA-SOURCES.md`.
 - GAMC data: WMS layers for peri-urban zones, drainage and districts (`docs/DATA-SOURCES.md`).
 
 ## Capabilities and Constraints
@@ -71,7 +71,7 @@ It joins satellite data with farmer reports from the same zone (water that didn'
 
 ## Evidence on Hand
 
-- Real local events with dates and sources in `docs/CONTEXTO-LOCAL.md`:
+- Real local events with dates and sources in `docs/research/CONTEXTO-LOCAL.md`:
   - 10 Mar 2024 flood, Valverde canal;
   - La Angostura at 18% capacity, Jul 2024;
   - 26 Nov 2018 hailstorm;

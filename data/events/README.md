@@ -2,7 +2,7 @@
 
 ## Fuente y obtención
 
-[events.json](events.json) es una colección curada manualmente de hechos reportados por prensa, agencias y organizaciones citadas en cada registro. Su contexto ampliado está en [CONTEXTO-LOCAL.md](../../docs/CONTEXTO-LOCAL.md) y [LOCAL-CONTEXT.md](../../docs/LOCAL-CONTEXT.md).
+[events.json](events.json) es una colección curada manualmente de hechos reportados por prensa, agencias y organizaciones citadas en cada registro. Su contexto ampliado está en [CONTEXTO-LOCAL.md](../../docs/research/CONTEXTO-LOCAL.md) y [LOCAL-CONTEXT.md](../../docs/research/LOCAL-CONTEXT.md).
 
 La colección permite relacionar fechas y tipos de evento con las series ambientales y mostrar antecedentes territoriales. Conserva eventos locales y referencias regionales según la descripción de cada registro. No consulta una API ni realiza scraping al ejecutar el cargador.
 

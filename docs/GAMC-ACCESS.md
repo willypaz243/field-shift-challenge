@@ -175,7 +175,7 @@ para el proyecto 04 — solo WMS GetMap/GetFeatureInfo.
 | `drenaje_e_influencia` | ⚠️ vacío en **12 puntos** probados (centro del valle, eje Rocha, 4 faldeos) | `features: []` — probable que el FeatureInfo no esté habilitado para esa capa. Usar como contexto visual; confirmar con GAMC |
 
 Comunas confirmadas en vivo: **D4 = MOLLE**, **D12 = ADELA ZAMUDIO**, **D9 = ITOCTA** (además
-Itocta, Tunari, Valle Hermoso, Tamborada del sondeo previo en LOCAL-CONTEXT.md).
+Itocta, Tunari, Valle Hermoso, Tamborada del sondeo previo en research/LOCAL-CONTEXT.md).
 
 ---
 
