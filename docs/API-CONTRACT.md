@@ -6,7 +6,7 @@ Este documento dice **qué datos necesita la app y en qué forma**. Está alinea
 
 - [`BACKLOG.md`](BACKLOG.md): arquitectura offline-first, endpoints `/zones`, `/crops`, `/zones/{id}/forecast`, `/sync`, scoring en el dispositivo.
 - [`data/crops/crops.json`](../data/crops/crops.json): catálogo de 13 cultivos y variables comunes.
-- [`imerg/README.md`](../imerg/README.md): lluvia diaria GPM IMERG 2016–2025.
+- [`src/etl/imerg/README.md`](../src/etl/imerg/README.md): lluvia diaria GPM IMERG 2016–2025.
 - [`FLUJO-APP.md`](FLUJO-APP.md): pantallas y flujos de la app (mockups).
 
 ---

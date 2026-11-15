@@ -1,6 +1,6 @@
 # Datos: fuentes, ejecución e integración
 
-Esta carpeta reúne las salidas de las fuentes ambientales, el contexto territorial, los catálogos agronómicos y los resultados del modelo. Los scripts se conservan en `src/etl/`, `src/model/` e `imerg/`; cada README indica la entrada y salida de su proceso.
+Esta carpeta reúne las salidas de las fuentes ambientales, el contexto territorial, los catálogos agronómicos y los resultados del modelo. Los scripts se conservan en `src/etl/` y `src/model/`; cada README indica la entrada y salida de su proceso.
 
 ## Guías por carpeta
 
@@ -18,10 +18,10 @@ Esta carpeta reúne las salidas de las fuentes ambientales, el contexto territor
 
 ## Preparación
 
-Ejecutar desde la raíz del repositorio con Python 3.13 y el entorno del proyecto. Las dependencias principales se definen en [pyproject.toml](../pyproject.toml); el programa independiente IMERG tiene su propia lista en [imerg/requirements.txt](../imerg/requirements.txt).
+Ejecutar desde la raíz del repositorio con Python 3.13 y el entorno del proyecto. Las dependencias principales se definen en [pyproject.toml](../pyproject.toml); el programa independiente IMERG tiene su propia lista en [src/etl/imerg/requirements.txt](../src/etl/imerg/requirements.txt).
 
 - Puntos por zona: [src/etl/points.json](../src/etl/points.json).
-- Área del programa por celdas IMERG: [cochabamba-estudio.geojson](../imerg/areas/cochabamba-estudio.geojson).
+- Área del programa por celdas IMERG: [cochabamba-estudio.geojson](../src/etl/imerg/areas/cochabamba-estudio.geojson).
 - Acceso a descargas NASA: `EARTHDATA_TOKEN`, según el lector de cada script.
 - Acceso municipal: `GAMC_API_KEY` en `.env` de la raíz para el extractor GAMC.
 

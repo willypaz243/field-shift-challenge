@@ -2,7 +2,7 @@
 
 > Investigación del 14/11/2026. Zona: municipio Cercado de Cochabamba (capas GAMC:
 > distritos periurbanos Itocta, Tunari, Molle, Valle Hermoso, Tamborada + cota 2750).
-> Fuentes: PROINPA, SITAP/MDRyT, CIPCA, estudios UMSA, prensa local. Ver LOCAL-CONTEXT.md
+> Fuentes: PROINPA, SITAP/MDRyT, CIPCA, estudios UMSA, prensa local. Ver research/LOCAL-CONTEXT.md
 > para el clima base (POWER): lluvia dic–feb, heladas may–ago, seca may–sep.
 
 ## Contexto productivo de la zona

@@ -7,7 +7,7 @@ NASA GPM IMERG proporciona estimaciones de precipitación en una malla de 0,1°.
 - Histórico Final: `GPM_3IMERGDF`, colección 07.
 - Ejecución Late: `GPM_3IMERGDL`, colección 07.
 - Catálogo: `https://cmr.earthdata.nasa.gov/search/granules.json`.
-- [Descripción IMERG](https://gpm.nasa.gov/data/imerg) y [guía detallada del programa independiente](../../imerg/README.md).
+- [Descripción IMERG](https://gpm.nasa.gov/data/imerg) y [guía detallada del programa independiente](../../src/etl/imerg/README.md).
 
 ## Flujo utilizado por el orquestador
 
@@ -39,24 +39,24 @@ El archivo `imerg_valle_daily.csv` es la entrada que [load_db.py](../../src/etl/
 
 ## Programa por celdas: catálogo, calidad y actualizaciones
 
-[imerg.py](../../imerg/imerg.py) ofrece comandos `catalog`, `download`, `process`, `report`, `export` y `update`, para Final y Late. Usa el área de [cochabamba-estudio.geojson](../../imerg/areas/cochabamba-estudio.geojson), documentada en [areas/README.md](../../imerg/areas/README.md). Es un rectángulo de estudio con procedencia GAMC.
+[imerg.py](../../src/etl/imerg/imerg.py) ofrece comandos `catalog`, `download`, `process`, `report`, `export` y `update`, para Final y Late. Usa el área de [cochabamba-estudio.geojson](../../src/etl/imerg/areas/cochabamba-estudio.geojson), documentada en [areas/README.md](../../src/etl/imerg/areas/README.md). Es un rectángulo de estudio con procedencia GAMC.
 
 Este flujo conserva las celdas que intersectan el polígono y registra en SQLite: fecha UTC, fuente, producto, revisión, ejecución, identificador y coordenadas de celda, fracción de intersección, variable, valor, unidad, calidad, fecha de descarga y nombre del archivo. La fracción se calcula en coordenadas geográficas. El CSV exportado tiene ese esquema por celda, distinto del CSV de tres columnas consumido por el cargador del valle.
 
-Para usarlo, disponer de las dependencias de [requirements.txt](../../imerg/requirements.txt) en el intérprete elegido; el acceso de descarga se realiza mediante Earthdata/earthaccess. Desde la raíz:
+Para usarlo, disponer de las dependencias de [requirements.txt](../../src/etl/imerg/requirements.txt) en el intérprete elegido; el acceso de descarga se realiza mediante Earthdata/earthaccess. Desde la raíz:
 
 ```bash
-python imerg/imerg.py catalog --start 2025-01-01 --end 2025-01-31 --run final --bbox -66.280703 -17.531190 -66.069520 -17.257306 --output /tmp/imerg-catalog.json
-python imerg/imerg.py download --manifest /tmp/imerg-catalog.json --folder /tmp/imerg-raw-final
-python imerg/imerg.py process --folder /tmp/imerg-raw-final --polygon imerg/areas/cochabamba-estudio.geojson --database /tmp/imerg-rain.sqlite --run final
-python imerg/imerg.py report --database /tmp/imerg-rain.sqlite --start 2025-01-01 --end 2025-01-31 --output /tmp/imerg-coverage.json
-python imerg/imerg.py export --database /tmp/imerg-rain.sqlite --output /tmp/imerg-cells.csv
+python src/etl/imerg/imerg.py catalog --start 2025-01-01 --end 2025-01-31 --run final --bbox -66.280703 -17.531190 -66.069520 -17.257306 --output /tmp/imerg-catalog.json
+python src/etl/imerg/imerg.py download --manifest /tmp/imerg-catalog.json --folder /tmp/imerg-raw-final
+python src/etl/imerg/imerg.py process --folder /tmp/imerg-raw-final --polygon src/etl/imerg/areas/cochabamba-estudio.geojson --database /tmp/imerg-rain.sqlite --run final
+python src/etl/imerg/imerg.py report --database /tmp/imerg-rain.sqlite --start 2025-01-01 --end 2025-01-31 --output /tmp/imerg-coverage.json
+python src/etl/imerg/imerg.py export --database /tmp/imerg-rain.sqlite --output /tmp/imerg-cells.csv
 ```
 
 `update` reconsulta ventanas de Late (14 días) y Final (210 días), configurables con `--late-days` y `--final-days`. Conserva las ejecuciones separadas y prioriza Final válido en la vista de consulta de la misma revisión. El comando puede solicitar autenticación interactiva:
 
 ```bash
-python imerg/imerg.py update --root /tmp/imerg-updates --polygon imerg/areas/cochabamba-estudio.geojson --database /tmp/imerg-rain.sqlite
+python src/etl/imerg/imerg.py update --root /tmp/imerg-updates --polygon src/etl/imerg/areas/cochabamba-estudio.geojson --database /tmp/imerg-rain.sqlite
 ```
 
 ## Flujo
@@ -69,7 +69,7 @@ flowchart TD
     D --> E["Promedio espacial del valle"]
     E --> F["imerg_valle_daily.csv"]
     F --> G["load_db.py: pmm_sat"]
-    C --> H["imerg/imerg.py: Final o Late"]
+    C --> H["src/etl/imerg/imerg.py: Final o Late"]
     H --> I["Intersección por celda y calidad"]
     I --> J["SQLite, reportes y exportación por celda"]
 ```

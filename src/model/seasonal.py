@@ -19,6 +19,10 @@ N_HARMONICS = 4
 YEAR_DAYS = 365.25
 
 
+def valid_mask(arr: np.ndarray) -> np.ndarray:
+    return ~np.isnan(arr)
+
+
 @dataclass
 class Fit:
     coef: np.ndarray
@@ -91,3 +95,23 @@ def backtest(
 def metrics_for(y: np.ndarray, t: np.ndarray, name: str, holdout: float, horizon: int) -> dict:
     mae, rmse = backtest(y, t, holdout, horizon)
     return {"variable": name, "mae": round(mae, 3), "rmse": round(rmse, 3)}
+
+
+class SeasonalModel:
+    """Fitted seasonal model for one variable, with predict/forecast/backtest."""
+
+    def __init__(self, y: np.ndarray, t: np.ndarray) -> None:
+        self.fit: Fit = fit(y, t)
+
+    def predict(self, t: np.ndarray) -> np.ndarray:
+        return predict(self.fit, t)
+
+    def forecast(
+        self, horizon: int = 365, t_start: float | None = None
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        return forecast(self.fit, horizon, t_start)
+
+    def backtest(
+        self, y: np.ndarray, t: np.ndarray, holdout_start: float, horizon: int
+    ) -> tuple[float, float]:
+        return backtest(y, t, holdout_start, horizon)

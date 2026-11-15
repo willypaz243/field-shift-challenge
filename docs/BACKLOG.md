@@ -5,7 +5,7 @@
 > **Objetivo del reto (obligatorio):** herramienta de **apoyo a la decisión** que combine datos
 > NASA + información local (suelos, cultivos, prioridades del agricultor) para ayudar a adaptar
 > la granja a condiciones cambiantes. El enunciado exige **comparar al menos 3 estrategias de
-> rotación, incluida la rotación actual** — ver [CHALLENGE.md](./CHALLENGE.md).
+> rotación, incluida la rotación actual** — ver [CHALLENGE.md](./research/CHALLENGE.md).
 > La app **apoya, no reemplaza** el juicio del agricultor (recordatorio visible en UI).
 
 ---
@@ -297,11 +297,11 @@ No bloquean; se mencionan como "próximamente" si el jurado pregunta.
 
 ## 11. Referencias
 
-- Reto oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/> · [CHALLENGE.md](./CHALLENGE.md)
+- Reto oficial: <https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/> · [CHALLENGE.md](./research/CHALLENGE.md)
 - **API Contract (equipo app):** [API-CONTRACT.md](./API-CONTRACT.md) · **Flujo de app:** [FLUJO-APP.md](./FLUJO-APP.md)
 - SMAP v8: <https://nsidc.org/data/spl4smgp/versions/8> (DOI 10.5067/T5RUATAQREF8)
 - POWER API: <https://power.larc.nasa.gov/api/documents/>
 - Series temporales (ref. equipo): <https://www.ibm.com/mx-es/think/topics/time-series-model>
-- Cultivos y condiciones óptimas: [CROPS.md](./CROPS.md) · Contexto local: [LOCAL-CONTEXT.md](./LOCAL-CONTEXT.md)
+- Cultivos y condiciones óptimas: [CROPS.md](./CROPS.md) · Contexto local: [LOCAL-CONTEXT.md](./research/LOCAL-CONTEXT.md)
 - Acceso GAMC (live): [GAMC-ACCESS.md](./GAMC-ACCESS.md) · Datos descargados: [data/gamc/04/](../data/gamc/04/README.md)
 - Mockup: Figma "Field Shift — App Agricultor (mobile)"
