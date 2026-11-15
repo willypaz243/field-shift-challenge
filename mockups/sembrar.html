@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<title>Sembrar · Choclito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=89">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+.car{flex:1;min-height:0;display:flex;align-items:stretch;gap:10px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;margin:0 -16px;padding:4px 0 8px;scrollbar-width:none;overscroll-behavior-x:contain}
+.car::-webkit-scrollbar{display:none}
+.slide{flex:0 0 78%;scroll-snap-align:center;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:20px;background:#fff;overflow:hidden;transform:scale(.92);opacity:.6;transition:transform 260ms var(--ease-out),opacity 260ms ease}
+.slide.on{transform:scale(1);opacity:1}
+.slide.on:active{transform:scale(.98)}
+.slide.best{border-color:var(--field);box-shadow:inset 0 0 0 2px var(--field)}
+.slide img{display:block;width:100%;flex:1;min-height:160px;object-fit:cover;background:var(--paper-2)}
+.slide .tx{display:flex;flex-direction:column;gap:8px;padding:14px 16px 16px}
+.slide b{font-size:25px;font-weight:700;line-height:1.1}
+.slide p{font-size:19px;color:var(--ink-2);line-height:1.35;min-height:3.9em}
+.slide .go{display:flex;align-items:center;gap:4px;font-size:17px;font-weight:600;color:var(--field-deep);min-height:44px}
+.ctrl{display:flex;align-items:center;justify-content:center;gap:18px}
+.arr{width:56px;height:56px;border-radius:50%;background:var(--paper-2);display:grid;place-items:center;color:var(--ink);transition:transform 140ms var(--ease-out)}
+.arr:active{transform:scale(.94)}
+.dots{display:flex;gap:6px;align-items:center}
+.dots i{width:10px;height:10px;border-radius:50%;background:var(--line);transition:width 200ms var(--ease-out),background-color 200ms ease}
+.dots i.on{width:26px;border-radius:5px;background:var(--ink)}
+body{height:100dvh;overflow:hidden}
+.wall{flex:1;min-height:0;padding-bottom:100px;gap:12px}
+.wall h1.title{font-size:27px}
+.ctrl{flex:none}
+.sheetm{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:430px;max-height:88dvh;padding:0;border:0;border-radius:24px 24px 0 0;background:#fff;color:var(--ink);transform:translateY(0);transition:transform 320ms cubic-bezier(0.32,0.72,0,1),overlay 320ms allow-discrete,display 320ms allow-discrete}
+.sheetm:not([open]){transform:translateY(100%)}
+@starting-style{.sheetm[open]{transform:translateY(100%)}}
+.sheetm::backdrop{background:rgba(10,20,14,.45);transition:background-color 320ms ease,overlay 320ms allow-discrete,display 320ms allow-discrete}
+@starting-style{.sheetm[open]::backdrop{background:rgba(10,20,14,0)}}
+.sh-in{display:flex;flex-direction:column;max-height:88dvh}
+.sh-grab{width:48px;height:5px;border-radius:3px;background:var(--line);margin:10px auto 4px}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 18px 12px;border-bottom:1px solid var(--line)}
+.sh-head h2{font-size:26px;font-weight:700}
+.sh-head p{font-size:17px;color:var(--ink-2)}
+.sh-x{width:56px;height:56px;border-radius:50%;background:var(--paper-2);font-size:34px;line-height:1;font-weight:500;color:var(--ink)}
+.sh-head h2{font-size:28px}
+.cs-body{overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:14px 16px calc(18px + env(safe-area-inset-bottom))}
+.cs-img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+.cs-two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cs-box{border-radius:16px;padding:14px;background:var(--paper-2)}
+.cs-box small{display:block;font-size:16px;font-weight:700;color:var(--ink-2)}
+.cs-box b{display:block;font-size:21px;font-weight:700;line-height:1.15;margin-top:4px}
+.cs-box.sow{background:var(--field);color:#fff} .cs-box.sow small{color:#D6EEDC}
+.cs-box .or{font-size:15px;font-weight:700;opacity:.85}
+.cs-now{border:1px solid var(--line);border-radius:16px;padding:16px}
+.cs-now h3{font-size:21px}
+.cs-now p{font-size:18px;margin-top:10px}
+.cs-now ul{list-style:none;display:grid;gap:8px;margin-top:12px}
+.cs-now li{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700}
+.cs-now .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;flex:none}
+.verdict{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:8px 14px;font-weight:700;font-size:19px;margin-top:10px}
+.verdict.g{background:var(--field-soft);color:var(--field-deep)} .verdict.c{background:var(--dry-soft);color:var(--dry)} .verdict.x{background:var(--nowater-soft);color:var(--nowater)}
+.slide{position:relative}
+.slide .badge2{position:absolute;top:12px;right:12px;display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--field);color:#fff;font-size:16px;font-weight:700;box-shadow:0 2px 8px -2px rgba(0,0,0,.35)}
+.slide .badge2 svg{width:18px;height:18px}
+button.slide{font:inherit;color:inherit;text-align:left;padding:0;cursor:pointer}
+</style>
+</head>
+<body>
+<header class="status">
+  <b class="brand"><svg class="i"><use href="icons.svg#corn"/></svg>Choclito</b>
+  <span><svg class="i s"><use href="icons.svg#pin"/></svg><span data-qu="Itocta · musuqchasqa 16 nov, 6:00">Itocta · actualizado 16 nov, 6:00</span></span>
+  <a class="bell" href="avisos.html" aria-label="Avisos: 3 nuevos"><svg class="i"><use href="icons.svg#bell"/></svg><span class="badge">3</span></a>
+</header>
+<main class="wall">
+  <h1 class="title">¿Qué quieres sembrar?</h1>
+  <div class="car" id="car" role="region" aria-label="Cultivos" tabindex="0"></div>
+  <div class="ctrl">
+    <button class="arr" id="prev" aria-label="Anterior"><svg class="i"><use href="icons.svg#back"/></svg></button>
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <button class="arr" id="next" aria-label="Siguiente"><svg class="i"><use href="icons.svg#chevron"/></svg></button>
+  </div>
+</main>
+<dialog class="sheetm" id="csheet" aria-labelledby="cs-t">
+  <div class="sh-in">
+    <div class="sh-grab" aria-hidden="true"></div>
+    <div class="sh-head"><h2 id="cs-t"></h2><button class="sh-x" data-close aria-label="Cerrar">×</button></div>
+    <div class="cs-body" id="cs-b"></div>
+  </div>
+</dialog>
+<nav class="nav" aria-label="Principal">
+  <a href="hoy.html"><span class="pill"><svg class="i"><use href="icons.svg#home"/></svg></span>Hoy</a>
+  <a href="calendario.html"><span class="pill"><svg class="i"><use href="icons.svg#calendar"/></svg></span>Calendario</a>
+  <a href="sembrar.html" aria-current="page"><span class="pill"><svg class="i"><use href="icons.svg#sprout"/></svg></span>Sembrar</a>
+  <a href="zona.html"><span class="pill"><svg class="i"><use href="icons.svg#map"/></svg></span>Mi zona</a>
+</nav>
+<div class="toast" role="status" hidden><svg class="i"><use href="icons.svg#check"/></svg><span class="toast-msg"></span></div>
+<script>
+(() => {
+  const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const NOW = 10; // noviembre
+  // mismas ventanas que cultivo.html (g buena, c con cuidado, x riesgosa)
+  // [id, nombre, ventanas (g buena), descripción corta de la siembra]
+  const C = [
+    ['forraje','Maíz para forraje','xxxxxxxcgggc','Se siembra de agosto a noviembre. Listo para cosechar en unos 4 meses.'],
+    ['maiz','Maíz choclo','xxxxxxxcgggc','Se siembra de agosto a noviembre. Choclo en 3 a 4 meses.'],
+    ['papa','Papa','xxxxxxcggggc','Se siembra de julio a noviembre. Cosecha en unos 5 meses.'],
+    ['alfalfa','Alfalfa','ccggccccgcxx','Se siembra en marzo–abril o septiembre. Dura varios años.'],
+    ['avena','Avena forrajera','xcggggccxxxx','Se siembra de marzo a junio. Forraje para el invierno.'],
+    ['haba','Haba','ccgggccgcxxx','Se siembra de marzo a mayo. Aguanta el frío.'],
+    ['cebolla','Cebolla','xcgggccccxxx','Se siembra de marzo a mayo. Prefiere la época seca.'],
+    ['zanahoria','Zanahoria','xcggggcccxxx','Se siembra de marzo a junio. Aguanta el frío.'],
+    ['lechuga','Lechuga','xcggcccggcxx','Se siembra en marzo–abril o agosto–septiembre. Lista en 2 a 3 meses.'],
+  ];
+  const list = [...C.filter((c) => c[2][NOW] === 'g'), ...C.filter((c) => c[2][NOW] !== 'g')];
+  const car = document.getElementById('car'), dots = document.getElementById('dots'), n = list.length;
+  const card = ([id, nm, w, d]) => `<button class="slide${w[NOW] === 'g' ? ' best' : ''}" data-c="${id}">${w[NOW] === 'g' ? '<span class="badge2"><svg class="i s"><use href="icons.svg#check"/></svg>Mejor época</span>' : ''}<img src="img/${id}.webp" alt="${nm}" loading="lazy"><div class="tx"><b>${nm}</b><p>${d}</p><span class="go">Ver cuándo sembrar<svg class="i s"><use href="icons.svg#chevron"/></svg></span></div></button>`;
+  // tres copias para que el carrusel sea infinito; se trabaja siempre en la copia del medio
+  car.innerHTML = [...list, ...list, ...list].map(card).join('');
+  dots.innerHTML = list.map(() => '<i></i>').join('');
+  const slides = [...car.children], ds = [...dots.children];
+  const centerOf = (el) => el.offsetLeft - (car.clientWidth - el.offsetWidth) / 2;
+  const cur = () => { const mid = car.scrollLeft + car.clientWidth / 2; let best = 0, dist = 1e9;
+    slides.forEach((el, i) => { const d = Math.abs(el.offsetLeft + el.offsetWidth / 2 - mid); if (d < dist) { dist = d; best = i; } }); return best; };
+  const jump = (k) => { car.style.scrollSnapType = 'none'; car.scrollLeft = centerOf(slides[k]); requestAnimationFrame(() => (car.style.scrollSnapType = '')); };
+  const sync = () => { const k = cur(); slides.forEach((el, i) => el.classList.toggle('on', i === k)); ds.forEach((d, i) => d.classList.toggle('on', i === k % n)); };
+  let t;
+  car.addEventListener('scroll', () => {
+    requestAnimationFrame(sync);
+    clearTimeout(t);
+    t = setTimeout(() => { const k = cur(); if (k < n) jump(k + n); else if (k >= 2 * n) jump(k - n); }, 140);
+  }, { passive: true });
+  const go = (d) => car.scrollTo({ left: centerOf(slides[cur() + d]), behavior: 'smooth' });
+  document.getElementById('prev').onclick = () => go(-1);
+  document.getElementById('next').onclick = () => go(1);
+  const start = () => { jump(n); sync(); };
+  if (document.readyState === 'complete') start(); else addEventListener('load', start);
+  requestAnimationFrame(start);
+
+  // ---- detalle del cultivo en ventana ----
+  const MESF=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const H={
+ helada:{n:'Heladas de mayo a agosto',ic:'frost',col:'var(--frost)',soft:'var(--frost-soft)',v:[0,0,0,.5,1.5,2.5,3,2,.5,0,0,0]},
+ granizo:{n:'Granizo de noviembre a febrero',ic:'hail',col:'var(--ink)',soft:'var(--paper-2)',v:[2,2,1,0,0,0,0,0,0,.5,2,2]},
+ inund:{n:'Desbordes de enero a marzo',ic:'waves',col:'var(--water)',soft:'var(--water-soft)',v:[2,2,2.5,.5,0,0,0,0,0,0,.5,1.5]},
+ sequia:{n:'Poca agua de agosto a noviembre',ic:'nowater',col:'var(--dry)',soft:'var(--dry-soft)',v:[.5,.5,.5,1,1.5,2,2.5,2.5,3,3,2.5,1]}
+};
+  const W={alta:1,media:.5,baja:.15};
+  const CD={
+ alfalfa:{n:'Alfalfa',d:120,kc:.95,sed:1,win:'ccggccccgcxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'alta'},note:'Dura varios años. La primera cosecha llega a los 3–4 meses; después se cosecha cada 5–6 semanas en verano y cada 2 meses en invierno. Le afecta el salitre.',agua:'Mucha',frio:'Aguanta helada',harvestTxt:'Primer corte',sal:'media'},
+ forraje:{n:'Maíz para forraje',d:130,kc:.95,sed:1,win:'xxxxxxxcgggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'Para ensilar o dar verde a las vacas. Necesita agua en la floración.',agua:'Mucha en floración',frio:'No aguanta helada',harvestTxt:'Corte para forraje'},
+ maiz:{n:'Maíz choclo',d:110,kc:.95,sed:1,win:'xxxxxxxcgggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'Necesita calor y agua en la floración (enero–febrero).',agua:'Mucha en floración',frio:'No aguanta helada',harvestTxt:'Choclo',market:'Mucha gente saca choclo para Carnaval: ese mes suele haber más oferta.'},
+ papa:{n:'Papa',d:140,kc:.9,sed:1,win:'xxxxxxcggggc',s:{helada:'alta',granizo:'alta',inund:'media',sequia:'media'},note:'La helada quema las hojas y el granizo en floración baja la cosecha. La semilla es cara: cuida que tengas agua.',agua:'Media',frio:'No aguanta helada',harvestTxt:'Cosecha'},
+ avena:{n:'Avena forrajera',d:120,kc:.8,sed:0,win:'xcggggccxxxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'baja'},note:'Forraje de invierno: cubre el suelo en la época seca y aguanta el frío.',agua:'Poca',frio:'Aguanta helada',harvestTxt:'Corte'},
+ haba:{n:'Haba',d:150,kc:.85,sed:0,win:'ccgggccgcxxx',s:{helada:'baja',granizo:'media',inund:'media',sequia:'media'},note:'Aguanta el frío y deja nitrógeno en el suelo para el siguiente cultivo.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ cebolla:{n:'Cebolla',d:150,kc:.85,sed:0,win:'xcgggccccxxx',s:{helada:'baja',granizo:'media',inund:'alta',sequia:'media'},note:'Se pudre con exceso de agua; prefiere la época seca con riego.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ zanahoria:{n:'Zanahoria',d:110,kc:.85,sed:0,win:'xcggggcccxxx',s:{helada:'baja',granizo:'baja',inund:'alta',sequia:'media'},note:'Aguanta el frío; con suelo encharcado la raíz se deforma.',agua:'Media',frio:'Aguanta helada',harvestTxt:'Cosecha'},
+ lechuga:{n:'Lechuga',d:80,kc:.9,sed:1,win:'xcggcccggcxx',s:{helada:'media',granizo:'alta',inund:'alta',sequia:'alta'},note:'Hoja tierna: el granizo la rompe y el exceso de agua la pudre. Necesita riego frecuente. No la riegues con agua del río.',agua:'Frecuente',frio:'Aguanta helada leve',harvestTxt:'Cosecha',market:'Si todos cosechan la misma semana, el precio en La Cancha baja: escalonar ayuda.'}
+};
+  const SECO = true;
+  const SV = (id) => `<svg class="i"><use href="icons.svg#${id}"/></svg>`;
+  const ranges = (win) => { const out = []; let a = -1; for (let i = 0; i <= 12; i++) { if (i < 12 && win[i] === 'g') { if (a < 0) a = i; } else if (a >= 0) { out.push([a, i - 1]); a = -1; } } return out; };
+  const rtxt = ([a, b]) => a === b ? MESF[a] : `${MESF[a]} a ${MESF[b]}`;
+  const monthsOf = (m, d) => { const out = []; const k = Math.max(1, Math.round(d / 30)); for (let i = 0; i <= k; i++) out.push((m + i) % 12); return out; };
+  const sheet = document.getElementById('csheet');
+  function openCrop(id) {
+    const c = CD[id]; if (!c) return;
+    const rg = ranges(c.win), mo = Math.round(c.d / 30);
+    let w = c.win[NOW]; const dry = SECO && c.sed && w === 'g'; if (dry) w = 'c';
+    const lab = { g: ['Buena época', 'check'], c: ['Con cuidado', 'alert'], x: ['No es buena época', 'alert'] }[w];
+    const reason = w === 'g' ? 'Es buena época en tu zona.' : dry ? 'Es buena época, pero este año hay poca agua en La Angostura.' : w === 'c' ? 'Se puede, pero con riesgo.' : `Mejor espera a ${MESF[rg[0]?.[0] ?? 0]}.`;
+    const ms = monthsOf(NOW, c.d);
+    const rs = Object.entries(H).map(([k, z]) => ({ z, r: Math.max(...ms.map((x) => z.v[x])) * W[c.s[k]] })).filter((x) => x.r >= .7).sort((a, b) => b.r - a.r).slice(0, 2);
+    const sep = '<br><span class="or">o también</span><br>';
+    document.getElementById('cs-t').textContent = c.n;
+    document.getElementById('cs-b').innerHTML = `<img class="cs-img" src="img/${id}.webp" alt="${c.n}">
+      <div class="cs-two"><div class="cs-box sow"><small>Cuándo sembrar</small><b>${rg.map(rtxt).join(sep)}</b></div><div class="cs-box"><small>Cuándo se cosecha</small><b>${rg.map(([a, b]) => rtxt([(a + mo) % 12, (b + mo) % 12])).join(sep)}</b></div></div>
+      <div class="cs-now"><h3>Si siembras ahora</h3><span class="verdict ${w}">${SV(lab[1])}${lab[0]}</span><p>${reason}</p>${rs.length ? `<ul>${rs.map((x) => `<li><span class="ic" style="background:${x.z.soft};color:${x.z.col}">${SV(x.z.ic)}</span>${x.z.n}</li>`).join('')}</ul>` : ''}</div>
+      <button class="btn primary" data-add="${c.n}">${SV('plus')}Agregar a mis cultivos</button>`;
+    sheet.showModal();
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-c]'); if (b) { location.href = 'cultivo.html?c=' + b.dataset.c; return; }
+    const add = e.target.closest('[data-add]'); if (add) { sheet.close(); window.say && say(`${add.dataset.add} agregada a tus cultivos.`); return; }
+    if (e.target === sheet || e.target.closest('[data-close]')) sheet.close();
+  });
+  if (location.hash.startsWith('#c=')) setTimeout(() => openCrop(location.hash.slice(3)), 60);
+})();
+</script>
+<script src="app.js?v=89"></script>
+</body>
+</html>
