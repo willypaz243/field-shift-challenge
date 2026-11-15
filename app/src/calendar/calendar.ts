@@ -23,6 +23,7 @@ export type Week = {
   lejos: boolean;
   tile: WeekTile;
   pmm: number;
+  pmm_dia: number;
   helada?: string;
   granizo?: string;
 };
@@ -54,12 +55,14 @@ function byDate(section: unknown) {
   return new Map(dias.filter((d) => d.fecha).map((d) => [d.fecha!, d]));
 }
 
+// The contract rain words are per day, so the tile looks at the strongest day
+// (one >= 15 mm day is "lluvia fuerte") and the text at the daily average.
 function tileOf(dias: CalendarDay[], pmm: number): WeekTile {
   if (dias.length < MIN_DAYS) return "sin_datos";
   if (dias.some((d) => d.granizo)) return "granizo";
   if (dias.some((d) => d.tmin < 0)) return "helada";
-  if (pmm >= 15) return "lluvia_fuerte";
-  return pmm >= 4 ? "lluvia" : "sin_lluvia";
+  if (dias.some((d) => d.pmm >= 15)) return "lluvia_fuerte";
+  return pmm > 0 ? "lluvia" : "sin_lluvia";
 }
 
 export function buildWeeks(snapshot: unknown, today: string): Week[] {
@@ -102,6 +105,7 @@ function weekOf(inicio: string, dias: CalendarDay[], lejos: boolean): Week {
     lejos,
     tile: tileOf(dias, pmm),
     pmm,
+    pmm_dia: dias.length ? Math.round((pmm / dias.length) * 10) / 10 : 0,
     ...(helada ? { helada } : {}),
     ...(granizo ? { granizo } : {}),
   };

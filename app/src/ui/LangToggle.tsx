@@ -6,9 +6,26 @@ import type { Language } from "../farm/types";
 
 const LANGUAGES: Language[] = ["es", "qu"];
 
-export function LangToggle() {
+export function LangToggle({ compact = false }: { compact?: boolean }) {
   const { i18n } = useTranslation();
   const { saveFarm } = useFarm();
+  if (compact) {
+    // The tab header has room for one button: it shows the current language
+    // and switches to the other one.
+    const next = i18n.language === "qu" ? "es" : "qu";
+    return (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={next.toUpperCase()}
+        onPress={() => void saveFarm({ idioma: next })}
+        style={[styles.button, styles.on, styles.single]}
+      >
+        <Text style={[styles.text, styles.onText]}>
+          {i18n.language === "qu" ? "QU" : "ES"}
+        </Text>
+      </Pressable>
+    );
+  }
   return (
     <View style={styles.group} accessibilityRole="radiogroup">
       {LANGUAGES.map((language) => {
@@ -46,6 +63,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   on: { backgroundColor: Colors.fieldDeep },
+  single: { borderRadius: 28 },
   text: { ...Typography.label, color: Colors.ink2 },
   onText: { color: Colors.paper },
 });

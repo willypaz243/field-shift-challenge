@@ -82,3 +82,12 @@ test("rejects malformed sections without replacing the cached package", async ()
   ).rejects.toThrow("Invalid sync section");
   expect((await store.state(zone))?.version).toBe(1);
 });
+
+test("the web build applies a package without exclusive transactions", async () => {
+  const web = new LocalStore(fixture.db, false);
+  await web.apply(zone, contractPackage);
+  expect((await web.read(zone))?.zone).toEqual(contractPackage.zone);
+  await expect(
+    web.apply(zone, { ...contractPackage, zone: { id: "D3_molle" } }),
+  ).rejects.toThrow();
+});

@@ -16,6 +16,16 @@ export function testDatabase(path = ":memory:") {
     async getAllAsync(sql: string, ...params: (string | number)[]) {
       return connection.prepare(sql).all(...params);
     },
+    async withTransactionAsync(task: () => Promise<void>) {
+      connection.exec("BEGIN");
+      try {
+        await task();
+        connection.exec("COMMIT");
+      } catch (error) {
+        connection.exec("ROLLBACK");
+        throw error;
+      }
+    },
     async withExclusiveTransactionAsync(task: (db: unknown) => Promise<void>) {
       connection.exec("BEGIN");
       try {
