@@ -1,4 +1,6 @@
+import json
 from datetime import UTC, date, datetime, timedelta
+from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -10,6 +12,31 @@ from api.modules.climate.models import ClimateHistory, Forecast
 from api.modules.zones import service as zones
 
 FORECAST_SOURCES = ["nasa_power", "nasa_imerg", "nasa_smap"]
+MODEL_TYPE = "fourier_tendencia"
+METRICS_PATH = Path(__file__).resolve().parents[3] / "data" / "model" / "metrics_backtest.json"
+
+_model_info_cache: dict[str, Any] | None = None
+
+
+def _model_info() -> dict[str, Any]:
+    """Contract §2.3 `modelo` block: type + holdout MAE from the pipeline metrics."""
+    global _model_info_cache
+    if _model_info_cache is None:
+        backtest: dict[str, Any] | None = None
+        if METRICS_PATH.exists():
+            metrics = json.loads(METRICS_PATH.read_text())
+            mae = {
+                m["variable"]: m["mae"]
+                for m in metrics.get("metrics", [])
+                if m["variable"] in ("tmin", "pmm")
+            }
+            parts = str(metrics.get("holdout", "")).split("→")
+            if len(parts) == 2 and mae:
+                backtest = {"periodo": f"{parts[0].strip()[:4]}-{parts[1].strip()[:4]}", "mae": mae}
+        _model_info_cache = {"tipo": MODEL_TYPE}
+        if backtest is not None:
+            _model_info_cache["backtest"] = backtest
+    return _model_info_cache
 
 
 def _present(values: dict[str, Any]) -> dict[str, Any]:
@@ -48,6 +75,7 @@ def forecast(session: Session, zone_id: str, anio: int | None = None) -> dict[st
         "anio": anio or (days[0].anio if days else datetime.now().year + 1),
         "dias": [_day(f) for f in days],
         "fuente": FORECAST_SOURCES,
+        "modelo": _model_info(),
     }
     if days:
         result["creado_en"] = days[0].creado_en.isoformat()

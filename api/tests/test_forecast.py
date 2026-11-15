@@ -39,6 +39,17 @@ def test_forecast_returns_days_with_uncertainty_band(client, engine):
     assert body["dias"][1]["et0"] == 4.7
 
 
+def test_forecast_includes_model_info_and_et0(client, engine):
+    add_days(engine)
+
+    body = client.get("/zones/D9_itocta/forecast").json()
+
+    assert body["modelo"]["tipo"] == "fourier_tendencia"
+    assert body["modelo"]["backtest"]["mae"]["tmin"] is not None
+    assert body["dias"][0]["et0"] == 4.7
+    assert "rh" not in body["dias"][0]
+
+
 def test_forecast_filters_by_year(client, engine):
     add_days(engine)
 
