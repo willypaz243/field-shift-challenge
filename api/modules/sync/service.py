@@ -28,7 +28,7 @@ def package(session: Session, zone_id: str) -> dict[str, Any]:
         "crops": crops.catalog(),
         "forecast": climate.forecast(session, zone_id),
         "corto_plazo": climate.short_forecast(zone_id, updated),
-        "climatologia": climate.climatology(zone_id),
+        "climatologia": climate.climatology(session, zone_id),
         "alertas": alerts.active_alerts(session, zone_id),
         "rotaciones": rotations.catalog(),
         "represa": water.la_angostura(session),
