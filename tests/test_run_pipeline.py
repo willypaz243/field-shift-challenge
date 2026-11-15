@@ -58,17 +58,17 @@ class LoadHistoryTest(unittest.TestCase):
         self.tmp.cleanup()
 
     def test_filters_by_zone_and_date_range(self) -> None:
-        dates, data = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-02")
-        self.assertEqual(dates, ["2016-01-01", "2016-01-02"])
-        self.assertEqual(len(data["tmean"]), 2)
+        series = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-02")
+        self.assertEqual(series.dates, ["2016-01-01", "2016-01-02"])
+        self.assertEqual(len(series.fields["tmean"]), 2)
 
     def test_imerg_primary_power_fallback(self) -> None:
-        _, data = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-04")
-        self.assertEqual([float(x) for x in data["pmm"]], [3.5, 0.0, 2.0, 2.2])
+        series = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-04")
+        self.assertEqual([float(x) for x in series.fields["pmm"]], [3.5, 0.0, 2.0, 2.2])
 
     def test_other_variables_untouched(self) -> None:
-        _, data = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-04")
-        self.assertEqual([float(x) for x in data["tmin"]], [8.0, 9.0, 7.0, 7.5])
+        series = load_history(self.db, "D1_tunari", "2016-01-01", "2016-01-04")
+        self.assertEqual([float(x) for x in series.fields["tmin"]], [8.0, 9.0, 7.0, 7.5])
 
 
 if __name__ == "__main__":
