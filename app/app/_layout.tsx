@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { View, Text } from 'react-native';
-import { OfflineProvider } from '../src/offline/provider';
+import { OfflineProvider, useOfflineReady } from '../src/offline/provider';
 
 export default function RootLayout() {
   
@@ -16,9 +16,22 @@ export default function RootLayout() {
 
   return (
     <OfflineProvider>
+      <ReadyStack />
+    </OfflineProvider>
+  );
+}
+
+// Screens read the local database and the farm answers, so they wait for both.
+function ReadyStack() {
+  if (!useOfflineReady()) return null;
+  return (
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="ubicar" options={{ headerShown: false }} />
+        <Stack.Screen name="agua" options={{ headerShown: false }} />
+        <Stack.Screen name="avisos" options={{ headerShown: false }} />
+        <Stack.Screen name="cultivo/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="rotar" options={{ headerShown: false }} />
       </Stack>
-    </OfflineProvider>
   );
 }

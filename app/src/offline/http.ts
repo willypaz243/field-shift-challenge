@@ -4,7 +4,9 @@ import type { Submission, SyncPackage, Transport } from "./types";
 export class HttpTransport implements Transport {
   constructor(
     private baseUrl: string,
-    private request: typeof fetch = fetch,
+    // Browsers reject fetch called as a method of another object ("Illegal
+    // invocation"), so the default wraps it instead of storing it.
+    private request: typeof fetch = (input, init) => fetch(input, init),
   ) {}
 
   async pull(zone: string, version?: number): Promise<SyncPackage | null> {

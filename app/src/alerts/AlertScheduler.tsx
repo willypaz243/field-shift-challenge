@@ -1,0 +1,23 @@
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useOffline } from "../offline/provider";
+import { alertRows } from "./alerts";
+import { scheduleLocal } from "./notify";
+import { notificationPlan } from "./plan";
+import { notificationText } from "./text";
+
+export function AlertScheduler() {
+  const { t } = useTranslation();
+  const { data } = useOffline();
+  useEffect(() => {
+    if (!data) return;
+    const plan = notificationPlan(alertRows(data.alertas, new Set()));
+    const items = plan.map((p) => ({
+      id: p.id,
+      at: p.at,
+      ...notificationText(p.alert, t),
+    }));
+    void scheduleLocal("alerta:", items).catch(() => undefined);
+  }, [data, t]);
+  return null;
+}
