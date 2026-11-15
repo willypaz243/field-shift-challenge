@@ -87,6 +87,7 @@ def query_cmr_month(token: str, year: int, month: int) -> list[dict]:
         "temporal": f"{start.isoformat()}T00:00:00Z,{end.isoformat()}T00:00:00Z",
         "bounding_box": f"{BBOX['west']},{BBOX['south']},{BBOX['east']},{BBOX['north']}",
         "provider": "GES_DISC",
+        "page_size": "500",  # CMR ya no usa `limit`; default = 10 granules
     }
     headers = {"Authorization": f"Bearer {token}"} if token else {}
 
@@ -259,18 +260,14 @@ def main():
         return
 
     # Fase 2: Descarga + extracción paralela
-    log.info(
-        f"Fase 2: descarga + extracción ({len(pending)} días, {args.workers} workers)"
-    )
+    log.info(f"Fase 2: descarga + extracción ({len(pending)} días, {args.workers} workers)")
     tmp_dir = Path(tempfile.mkdtemp(prefix="imerg_etl_"))
 
     done = 0
     failed = 0
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         futures = {
-            pool.submit(
-                process_day, (g["date"].isoformat(), g["url"], token, tmp_dir)
-            ): g["date"]
+            pool.submit(process_day, (g["date"].isoformat(), g["url"], token, tmp_dir)): g["date"]
             for g in pending
         }
         for fut in as_completed(futures):
@@ -289,9 +286,7 @@ def main():
                 failed += 1
 
     shutil.rmtree(tmp_dir, ignore_errors=True)
-    log.info(
-        f"Completado: {done} OK, {failed} fail. Total en CSV: {len(writer.existing_dates())}"
-    )
+    log.info(f"Completado: {done} OK, {failed} fail. Total en CSV: {len(writer.existing_dates())}")
 
 
 if __name__ == "__main__":
