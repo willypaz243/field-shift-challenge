@@ -30,6 +30,7 @@ function ReadyStack() {
         <Stack.Screen name="ubicar" options={{ headerShown: false }} />
         <Stack.Screen name="agua" options={{ headerShown: false }} />
         <Stack.Screen name="avisos" options={{ headerShown: false }} />
+        <Stack.Screen name="cultivo/[id]" options={{ headerShown: false }} />
       </Stack>
   );
 }
