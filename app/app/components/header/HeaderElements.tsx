@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors, Typography } from '../../../constants/Theme';
 import { HeaderLocation } from './HeaderLocation';
+import { Bell } from '../../../src/ui/Bell';
+import { LangToggle } from '../../../src/ui/LangToggle';
 
 export class HeaderLeft extends Component {
   private renderBrand() {
@@ -27,35 +29,15 @@ export class HeaderLeft extends Component {
   }
 }
 
-export class HeaderRight extends Component {
-  private renderBell() {
-    return <Pressable style={styles.bell}>
-      <Ionicons name="notifications-outline" size={26} color={Colors.ink} />
-      <View style={styles.badge}><Text style={styles.badgeTxt}>3</Text></View>
-    </Pressable>;
-  }
-
-  private renderLang() {
-    return <Pressable style={styles.lang}>
-      <Text style={styles.langTxt}>ES</Text>
-    </Pressable>;
-  }
-
-  render() {
-    return <View style={[styles.row, { gap: 12 }]}>
-      {this.renderBell()}
-      {this.renderLang()}
-    </View>;
-  }
+export function HeaderRight() {
+  return <View style={[styles.row, { gap: 12 }]}>
+    <Bell />
+    <LangToggle />
+  </View>;
 }
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   brand: { fontFamily: 'AtkinsonHyperlegibleNext-Bold', fontSize: 22, color: Colors.fieldDeep },
   loc: { ...Typography.meta, color: Colors.ink2 },
-  bell: { minWidth: 56, minHeight: 56, justifyContent: 'center', alignItems: 'center' },
-  badge: { position: 'absolute', top: 8, right: 8, backgroundColor: '#D9381E', borderRadius: 12, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' },
-  badgeTxt: { color: Colors.paper, fontSize: 12, fontFamily: 'AtkinsonHyperlegibleNext-Bold' },
-  lang: { backgroundColor: Colors.fieldDeep, borderRadius: 28, width: 56, height: 56, justifyContent: 'center', alignItems: 'center' },
-  langTxt: { color: Colors.paper, fontFamily: 'AtkinsonHyperlegibleNext-Bold', fontSize: 17 }
 });

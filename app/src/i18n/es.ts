@@ -1,4 +1,30 @@
 export const es = {
+  avisos: {
+    titulo: "Avisos",
+    alertas: "Alertas",
+    recordatorios: "Recordatorios",
+    nuevo: "Nuevo",
+    campana: "Avisos: {{count}} nuevos",
+    sin_alertas: "No hay alertas para tu zona.",
+    sin_recordatorios: "Cuando agregues cultivos, aquí verás cuándo cosechar.",
+    esta_semana: "Esta semana",
+    madrugada: "madrugada",
+    tipo: {
+      helada: "Helada",
+      granizo: "Granizo posible",
+      lluvia_fuerte: "Lluvia fuerte",
+      desborde: "Desborde",
+      sequia: "Poca lluvia",
+      represa_baja: "La Angostura con poca agua",
+      temporada: "Temporada",
+    },
+    helada_detalle: "Puede bajar a {{tmin}} °C.",
+    volver: "Te avisamos de nuevo el {{dia}}.",
+    poco_seguro: "Todavía poco seguro.",
+    represa_detalle:
+      "{{nivel}} % de su capacidad. Puede que te llegue menos agua para regar.",
+    notificacion: "{{tipo}} el {{dia}}",
+  },
   zona: {
     titulo: "Mi zona",
     leyenda: {
