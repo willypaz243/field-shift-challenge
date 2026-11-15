@@ -79,13 +79,39 @@ Para cada ventana de L días (L = media de `ciclo_dias`) sobre la proyección:
    (`FROST_OFFSET = 0.0`; el tmin observado ya captura heladas reales, ver EDA.md).
 4. **Erosión** (multiplicador 0.5–1.0): si la zona tiene `cerca_drenaje` y
    `erosion_sens` = alta (0.5) o media (0.75).
-5. **Score final** = 100 × (0.45·temp + 0.40·agua + 0.15·helada) × erosión.
-   **Confianza** = decaimiento heurístico con el horizonte (0.92 → 0.4 según el centro
-   de la ventana dentro de la proyección).
+5. **Score final** = 100 × (0.45·temp + 0.40·agua + 0.15·helada) × erosión (1 decimal).
+   **Confianza** = decaimiento heurístico con el horizonte: `0.92 − 0.5×centro`,
+   recortado a [0.4, 0.9] según el centro de la ventana dentro de la proyección;
+   sin horizonte (ventana suelta) vale 0.7.
 6. **Top-3**: mejores ventanas separadas ≥ 14 días.
 
 Post-MVP (documentado, no implementado): `etapa_critica` (penalizar solo el sub-rango de la
 etapa sensible) y `tipo_ciclo = perenne` (época de siembra en vez de ventana fija).
+
+## Salida de `score_window` (tarea 12a)
+
+`score_window(cultivo, zona, tmean, tmin, pmm, et0, horizonte, pos)` devuelve:
+
+| Campo | Significado |
+|---|---|
+| `score` | 0–100, 1 decimal |
+| `veredicto` | `bueno` (≥ 70) · `con_cuidado` (≥ 40) · `malo`; umbrales configurables (`umbral_bueno`/`umbral_malo`) |
+| `confianza` | 0.4–0.9 (heurística del punto 5) |
+| `motivos` | Códigos (no frases; la app traduce por i18n), en orden fijo |
+| `detalle` | `temp`, `agua`, `helada`, `erosion`, `deficit_mm`, `frost_days` |
+
+Códigos de `motivos` (aparecen solo si el valor mostrado correspondiente es no nulo):
+
+| Código | Condición |
+|---|---|
+| `temp_fuera_rango` | `detalle.temp < 1.0` |
+| `deficit_agua` | `detalle.deficit_mm > 0` |
+| `heladas` | `detalle.frost_days > 0` |
+| `erosion_riesgo` | `detalle.erosion < 1.0` |
+
+**Contrato de portabilidad:** [test_vectors.json](../model/test_vectors.json) publica 16
+vectores (entrada → salida esperada) que la app móvil debe reproducir exactamente
+(issue #37 [T12a]); los tests de `tests/test_scoring.py` los corren contra esta función.
 
 ## Cultivos del catálogo (14)
 

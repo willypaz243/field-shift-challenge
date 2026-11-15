@@ -1,6 +1,10 @@
-"""Planting-window scoring (task 2.4).
+"""Planting-window scoring (tasks 2.4 and 12a).
 
-For each crop and each L-day window (cycle) inside the forecast:
+Reference implementation shared by the server and the mobile app. The
+mobile side must reproduce it exactly; the published test vectors
+(`data/model/test_vectors.json`) are the portability contract.
+
+For each L-day window (crop cycle) inside the forecast:
 
     score = 100 * (0.45*temp + 0.40*water + 0.15*frost) * erosion
 
@@ -10,10 +14,22 @@ For each crop and each L-day window (cycle) inside the forecast:
 - **frost** (0-1): 1 - sev * (days with tmin < 0) / L, by tolerance.
 - **erosion** (0.5-1.0): penalizes erosion sensitivity near drainage (GAMC).
 
-Confidence: heuristic that decays with the horizon inside the forecast.
-Top-3: best windows separated by >= 14 days.
+Output of `score_window`:
+- `score` (0-100, 1 decimal)
+- `veredicto`: `bueno` (>= 70), `con_cuidado` (>= 40), `malo`; thresholds
+  configurable (`umbral_bueno` / `umbral_malo`)
+- `confianza`: heuristic that decays with the window center inside the
+  forecast (base 0.7 when no horizon is given)
+- `motivos`: codes, not sentences (the app translates them via i18n).
+  Each code appears iff the matching displayed `detalle` value is nonzero:
+  - `temp_fuera_rango`: some days outside the optimal temperature range
+  - `deficit_agua`: deficit over the crop water demand
+  - `heladas`: days with sub-zero tmin
+  - `erosion_riesgo`: erosion-sensitive crop near drainage
+- `detalle`: per-component values (temp, agua, helada, erosion, deficit_mm,
+  frost_days)
 
-The function is identical on server and mobile (dependency-free copy -> `scoring_js`).
+Top-3: best windows separated by >= 14 days.
 """
 
 from __future__ import annotations
@@ -30,6 +46,31 @@ MIN_GAP_DAYS = 14
 # so observed tmin already captures frost; the offset stays 0.0 as a calibration
 # hook for local stations (see EDA.md).
 FROST_OFFSET = 0.0
+# Verdict thresholds (API-CONTRACT §2): >= 70 bueno, >= 40 con_cuidado, else malo.
+VERDICT_GOOD = 70.0
+VERDICT_POOR = 40.0
+BASE_CONFIDENCE = 0.7
+
+
+def veredicto(
+    score: float,
+    umbral_bueno: float = VERDICT_GOOD,
+    umbral_malo: float = VERDICT_POOR,
+) -> str:
+    """Map a 0-100 score to a verdict. Thresholds are configurable."""
+    if score >= umbral_bueno:
+        return "bueno"
+    if score >= umbral_malo:
+        return "con_cuidado"
+    return "malo"
+
+
+def _confianza(L: int, horizon: int | None, pos: int) -> float:
+    """Heuristic confidence: decays with the window center in the forecast."""
+    if horizon is None or horizon <= 0:
+        return BASE_CONFIDENCE
+    center = (pos + L / 2) / horizon
+    return max(0.4, min(0.9, 0.92 - 0.5 * center))
 
 
 def score_window(
@@ -39,8 +80,17 @@ def score_window(
     tmin: list[float],
     pmm: list[float],
     et0: list[float],
+    horizon: int | None = None,
+    pos: int = 0,
+    umbral_bueno: float = VERDICT_GOOD,
+    umbral_malo: float = VERDICT_POOR,
 ) -> dict:
-    """Score one window. Inputs: arrays of length L (window days)."""
+    """Score one window. Inputs: arrays of length L (window days).
+
+    `crop`: entry of `crops.json`; `zone`: dict with `cerca_drenaje`
+    (meters to the nearest drainage, or None). `horizon`/`pos` locate the
+    window inside the forecast for the confidence.
+    """
     L = len(tmean)
     lo, hi = crop["temp"]["tmean_opt"]
 
@@ -65,15 +115,33 @@ def score_window(
     if zone.get("cerca_drenaje") is not None and crop.get("erosion_sens") in EROSION_PEN:
         erosion = EROSION_PEN[crop["erosion_sens"]]
 
-    score = 100.0 * (0.45 * temp + 0.40 * agua + 0.15 * helada) * erosion
+    score = round(100.0 * (0.45 * temp + 0.40 * agua + 0.15 * helada) * erosion, 1)
+
+    # Reasons are derived from the displayed values so the mobile port
+    # reproduces them without extra floating-point decisions.
+    motivos: list[str] = []
+    if round(temp, 2) < 1.0:
+        motivos.append("temp_fuera_rango")
+    if round(deficit, 1) > 0:
+        motivos.append("deficit_agua")
+    if frost_days > 0:
+        motivos.append("heladas")
+    if erosion < 1.0:
+        motivos.append("erosion_riesgo")
+
     return {
-        "score": round(score, 1),
-        "temp": round(temp, 2),
-        "agua": round(agua, 2),
-        "helada": round(helada, 2),
-        "erosion": erosion,
-        "deficit_mm": round(deficit, 1),
-        "frost_days": frost_days,
+        "score": score,
+        "veredicto": veredicto(score, umbral_bueno, umbral_malo),
+        "confianza": round(_confianza(L, horizon, pos), 2),
+        "motivos": motivos,
+        "detalle": {
+            "temp": round(temp, 2),
+            "agua": round(agua, 2),
+            "helada": round(helada, 2),
+            "erosion": erosion,
+            "deficit_mm": round(deficit, 1),
+            "frost_days": frost_days,
+        },
     }
 
 
@@ -86,6 +154,8 @@ def score_windows(
     pmm: list[float],
     et0: list[float],
     horizon: int | None = None,
+    umbral_bueno: float = VERDICT_GOOD,
+    umbral_malo: float = VERDICT_POOR,
 ) -> list[dict]:
     """Top-3 planting windows for a crop.
 
@@ -104,17 +174,20 @@ def score_windows(
             tmin[s : s + L],
             pmm[s : s + L],
             et0[s : s + L],
+            horizon=horizon,
+            pos=s,
+            umbral_bueno=umbral_bueno,
+            umbral_malo=umbral_malo,
         )
-        # Heuristic confidence: decays with the window center
-        center = (s + L / 2) / horizon
-        conf = max(0.4, min(0.9, 0.92 - 0.5 * center))
         scored.append(
             {
                 "inicio": dates[s],
                 "fin": dates[s + L - 1],
                 "score": det["score"],
-                "confianza": round(conf, 2),
-                "detalle": det,
+                "veredicto": det["veredicto"],
+                "confianza": det["confianza"],
+                "motivos": det["motivos"],
+                "detalle": det["detalle"],
             }
         )
 
