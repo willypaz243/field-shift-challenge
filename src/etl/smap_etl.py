@@ -26,7 +26,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from threading import Lock
-from xml.etree import ElementTree  # noqa: F401 (not used, kept for future)
+from typing import Any
 
 logging.basicConfig(
     level=logging.INFO,
@@ -70,7 +70,7 @@ def load_token() -> str:
 # ─── CMR ──────────────────────────────────────────────────────────────────────
 
 
-def cmr_query(token: str, params: dict) -> dict:
+def cmr_query(token: str, params: dict[str, Any]) -> dict[str, Any]:
     """Consulta CMR y devuelve el JSON completo."""
     qs = "&".join(f"{k}={v}" for k, v in params.items())
     url = f"{CMR_URL}?{qs}"
@@ -108,7 +108,7 @@ def collect_urls(token: str, start: date, end: date) -> list[tuple[date, str]]:
 
         entries = data.get("feed", {}).get("entry", [])
         # Agrupar por fecha, elegir el granule más cercano a TARGET_HOUR_UTC
-        by_day: dict[str, list[dict]] = {}
+        by_day: dict[str, list[tuple[datetime, dict[str, Any]]]] = {}
         for g in entries:
             pgi = g.get("producer_granule_id", "")
             # Formato: SMAP_L4_SM_gph_YYYYMMDDTHHMMSS_Vv8013_001.h5

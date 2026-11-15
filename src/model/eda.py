@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 
@@ -65,7 +66,9 @@ class EdaReport:
         finally:
             con.close()
         n_days = self.series.n_days
-        return ((s_imerg or 0) / n_days * 365.25, (s_power or 0) / n_days * 365.25)
+        imerg = 0.0 if s_imerg is None else float(s_imerg)
+        power = 0.0 if s_power is None else float(s_power)
+        return (imerg / n_days * 365.25, power / n_days * 365.25)
 
     def checks(self) -> list[tuple[str, bool, str]]:
         mean_tmean = np.mean([self.monthly[m]["tmean"] for m in range(1, 13)])
@@ -95,7 +98,7 @@ class EdaReport:
             ),
         ]
 
-    def summary(self) -> dict:
+    def summary(self) -> dict[str, Any]:
         checks = self.checks()
         return {
             "rainy_dec_feb_mm": round(self.rainy, 1),

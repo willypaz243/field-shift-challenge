@@ -40,7 +40,7 @@ def load_history(db: Path, zone_id: str, start: str, end: str) -> HistorySeries:
     finally:
         con.close()
     dates: list[str] = []
-    cols: dict[str, list] = {v: [] for v in VARIABLES}
+    cols: dict[str, list[float | None]] = {v: [] for v in VARIABLES}
     for fecha, tmean, tmin, tmax, pmm, pmm_sat in rows:
         dates.append(fecha)
         cols["tmean"].append(tmean)

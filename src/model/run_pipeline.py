@@ -25,6 +25,7 @@ import argparse
 import json
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 from .backtest import Backtester
 from .eda import EdaReport
@@ -66,7 +67,7 @@ class Pipeline:
         self.horizon = horizon
         self.today = today
 
-    def run(self) -> dict:
+    def run(self) -> dict[str, Any]:
         self.out.mkdir(parents=True, exist_ok=True)
         series = load_history(self.db, self.zone, self.start, self.end)
 
@@ -108,7 +109,12 @@ class Pipeline:
         self._print_summary(eda_summary, metrics, top)
         return eda_summary
 
-    def _print_summary(self, eda: dict, metrics: list[dict], top: dict) -> None:
+    def _print_summary(
+        self,
+        eda: dict[str, Any],
+        metrics: list[dict[str, Any]],
+        top: dict[str, list[dict[str, Any]]],
+    ) -> None:
         print(f"EDA: {eda['checks_passed']}/{eda['checks_total']} checks OK")
         for m in metrics:
             print(f"  {m['variable']}: MAE={m['mae']} RMSE={m['rmse']}")

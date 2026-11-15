@@ -21,6 +21,7 @@ import math
 import os
 import time
 from pathlib import Path
+from typing import Any
 
 import requests
 from PIL import Image
@@ -55,7 +56,7 @@ EARTH_M_PER_DEG_LON = 111_320
 SLEEP_S = 12  # measured rate limit: burst of 8 calls -> 429; 10-15 s -> OK
 
 
-def featureinfo(service: str, lon: float, lat: float) -> dict | None:
+def featureinfo(service: str, lon: float, lat: float) -> dict[str, Any] | None:
     """GetFeatureInfo at (lon, lat) with a bbox of +/-0.002 deg (~200 m). Returns properties or None."""
     w = 0.002
     params = {
@@ -121,7 +122,7 @@ def drainage_distance_m(img: Image.Image, lon: float, lat: float) -> int | None:
             min(DRAIN_W, int(cx + DRAIN_RADIUS_M / mpx_x) + 2),
         ):
             rgba = img.getpixel((px, py))
-            if len(rgba) == 4 and rgba[3] == 0:
+            if isinstance(rgba, tuple) and len(rgba) == 4 and rgba[3] == 0:
                 continue  # transparent: no drainage
             px_lon = DRAIN_BBOX["west"] + (px + 0.5) * mpx_x / m_per_deg_lon
             px_lat = DRAIN_BBOX["north"] - (py + 0.5) * mpx_y / EARTH_M_PER_DEG_LAT
@@ -142,7 +143,7 @@ def main() -> None:
     args = ap.parse_args()
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    existing: dict = {}
+    existing: dict[str, Any] = {}
     if out.exists():
         existing = json.loads(out.read_text())
 

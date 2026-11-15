@@ -1,5 +1,6 @@
 import hashlib
 import json
+from typing import Any
 
 from sqlmodel import Session
 
@@ -19,7 +20,7 @@ def ensure_zone(session: Session, zone_id: str) -> None:
     zones.get_zone(session, zone_id)
 
 
-def package(session: Session, zone_id: str) -> dict:
+def package(session: Session, zone_id: str) -> dict[str, Any]:
     zone = zones.get_zone(session, zone_id)
     version, updated = zones.last_load_version(session)
     sections = {

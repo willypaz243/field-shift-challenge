@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from sqlmodel import Session
 
@@ -10,5 +11,5 @@ def get_crop(session: Session, crop_id: str) -> Crop | None:
     return session.get(Crop, crop_id)
 
 
-def read_catalog() -> dict:
+def read_catalog() -> dict[str, Any]:
     return json.loads((data_dir() / "crops" / "crops.json").read_text())

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def add_itocta_details(engine):
     with Session(engine) as session:
         zone = session.get(Zone, "D9_itocta")
+        assert zone is not None
         zone.nombre, zone.comuna, zone.distrito = "Itocta", "ITOCTA", "D9"
         zone.elev_m, zone.pendiente, zone.cerca_drenaje = 2590.0, 2.1, 1
         session.add(zone)

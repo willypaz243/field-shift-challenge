@@ -30,6 +30,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import requests
@@ -72,7 +73,7 @@ def load_token() -> str:
 # ─── CMR ──────────────────────────────────────────────────────────────────────
 
 
-def query_cmr_month(token: str, year: int, month: int) -> list[dict]:
+def query_cmr_month(token: str, year: int, month: int) -> list[dict[str, Any]]:
     """Return a list of {date, url} for a month."""
     start = date(year, month, 1)
     end = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
@@ -118,7 +119,8 @@ _tls = threading.local()
 
 def http_session(token: str) -> requests.Session:
     """One keep-alive session per thread: skips the TLS handshake per file."""
-    s = getattr(_tls, "session", None)
+    stored = getattr(_tls, "session", None)
+    s = stored if isinstance(stored, requests.Session) else None
     if s is None:
         s = requests.Session()
         if token:
@@ -207,13 +209,13 @@ class CsvWriter:
             with open(self.path, "w", newline="") as f:
                 csv.writer(f).writerow(["fecha", "pmm_imerg", "n_pixels"])
 
-    def write_row(self, row: tuple):
+    def write_row(self, row: tuple[Any, ...]):
         with self.lock:
             with open(self.path, "a", newline="") as f:
                 csv.writer(f).writerow(row)
 
     def existing_dates(self) -> set[str]:
-        dates = set()
+        dates: set[str] = set()
         if self.path.exists():
             with open(self.path) as f:
                 for row in csv.DictReader(f):
@@ -223,7 +225,7 @@ class CsvWriter:
 
 def finalize_csv(path: Path) -> int:
     """Rewrite the CSV sorted by date, keeping the first row of any duplicate."""
-    rows: dict[str, dict] = {}
+    rows: dict[str, dict[str, Any]] = {}
     with open(path) as f:
         for r in csv.DictReader(f):
             rows.setdefault(r["fecha"], r)
@@ -259,7 +261,7 @@ def main() -> None:
 
     # Phase 1: CMR by month
     log.info("Phase 1: CMR query by month")
-    all_granules: list[dict] = []
+    all_granules: list[dict[str, Any]] = []
     d = start
     while d <= end:
         granules = query_cmr_month(token, d.year, d.month)
@@ -289,7 +291,7 @@ def main() -> None:
         ThreadPoolExecutor(max_workers=args.workers) as dl,
         ProcessPoolExecutor(max_workers=args.extract_workers) as ex,
     ):
-        extract_map: dict = {}
+        extract_map: dict[Any, str] = {}
         dl_map = {
             dl.submit(download_granule, g["date"].isoformat(), g["url"], token, tmp_dir): g["date"]
             for g in pending

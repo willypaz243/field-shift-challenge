@@ -23,6 +23,7 @@ import json
 import math
 import time
 from pathlib import Path
+from typing import Any
 
 import requests
 
@@ -67,7 +68,7 @@ def main() -> None:
     args = ap.parse_args()
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    existing: dict = {}
+    existing: dict[str, Any] = {}
     if out.exists():
         existing = json.loads(out.read_text())
 

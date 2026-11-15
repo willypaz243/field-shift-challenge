@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from typing import override
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -49,11 +50,13 @@ def make_db(path: Path) -> None:
 
 
 class LoadHistoryTest(unittest.TestCase):
+    @override
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.db = Path(self.tmp.name) / "t.db"
         make_db(self.db)
 
+    @override
     def tearDown(self) -> None:
         self.tmp.cleanup()
 
