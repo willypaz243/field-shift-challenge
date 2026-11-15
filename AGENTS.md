@@ -40,6 +40,7 @@ Rules for anyone (human or AI agent) contributing to this repo. Read before writ
 
 ## Code
 
+- All code is written in English: file names, code, comments, docstrings and log messages. Only data (user-facing text, catalog content) stays in Spanish.
 - No emojis in code, comments, logs, commit messages or PRs.
 - Comments explain *why*, never *what*. Do not write comments like "this is a get function".
 - Follow the existing style. Run before pushing:
