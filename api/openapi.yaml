@@ -63,8 +63,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CropsCatalog'
               example:
-                version: 2
-                actualizado: '2026-11-14'
+                version: 3
+                actualizado: '2026-11-15'
                 zona: Cercado de Cochabamba (valle + alturas sobre cota 2750)
                 variables:
                 - tmin
@@ -109,6 +109,15 @@ paths:
                     inicial: 0.75
                     medio: 1.15
                     final: 1.05
+                  granizo_sens: alta
+                  etapas:
+                  - - 0
+                    - siembra
+                  - - 20
+                    - crecimiento
+                  - - 120
+                    - cosecha
+                  foto: img/papa.webp
                   mercado: 'Cultivo ancla del Cercado: 26.544 Tm / 2.396 ha (SITAP)'
                   siembra_local: ago / dic (después del riesgo fuerte de heladas)
                   rotacion: No repetir papa tras papa (otoñal/plagas); precede bien tras haba/tarwi; precede a trigo
@@ -143,6 +152,19 @@ paths:
                     inicial: 0.3
                     medio: 1.2
                     final: 1.05
+                  granizo_sens: media
+                  etapas:
+                  - - 0
+                    - siembra
+                  - - 15
+                    - crecimiento
+                  - - 50
+                    - floracion
+                  - - 70
+                    - granos
+                  - - 120
+                    - cosecha
+                  foto: img/maiz.webp
                   mercado: 'Choclo cochabambino (waltaco, kulli, morochito, ch''iji): demanda segura local (anticuchos/sillpacho)'
                   siembra_local: sep–oct (con riego hasta dic); precoz 120–170 días, amiláceo tardío 7–8 meses
                   rotacion: Alta extracción de N; después conviene leguminosa (haba/tarwi) o descanso. Interruptor de ciclos
@@ -543,8 +565,8 @@ paths:
                   cerca_drenaje: 140
                   altitud_alta: false
                 crops:
-                  version: 2
-                  actualizado: '2026-11-14'
+                  version: 3
+                  actualizado: '2026-11-15'
                   zona: Cercado de Cochabamba (valle + alturas sobre cota 2750)
                   variables:
                   - tmin
@@ -589,6 +611,15 @@ paths:
                       inicial: 0.75
                       medio: 1.15
                       final: 1.05
+                    granizo_sens: alta
+                    etapas:
+                    - - 0
+                      - siembra
+                    - - 20
+                      - crecimiento
+                    - - 120
+                      - cosecha
+                    foto: img/papa.webp
                     mercado: 'Cultivo ancla del Cercado: 26.544 Tm / 2.396 ha (SITAP)'
                     siembra_local: ago / dic (después del riesgo fuerte de heladas)
                     rotacion: No repetir papa tras papa (otoñal/plagas); precede bien tras haba/tarwi; precede a trigo
@@ -623,6 +654,19 @@ paths:
                       inicial: 0.3
                       medio: 1.2
                       final: 1.05
+                    granizo_sens: media
+                    etapas:
+                    - - 0
+                      - siembra
+                    - - 15
+                      - crecimiento
+                    - - 50
+                      - floracion
+                    - - 70
+                      - granos
+                    - - 120
+                      - cosecha
+                    foto: img/maiz.webp
                     mercado: 'Choclo cochabambino (waltaco, kulli, morochito, ch''iji): demanda segura local (anticuchos/sillpacho)'
                     siembra_local: sep–oct (con riego hasta dic); precoz 120–170 días, amiláceo tardío 7–8 meses
                     rotacion: Alta extracción de N; después conviene leguminosa (haba/tarwi) o descanso. Interruptor de ciclos
@@ -887,8 +931,15 @@ paths:
     post:
       tags:
       - feedback
-      summary: Harvest result
+      summary: Harvest result (queued offline, idempotent)
       operationId: createFeedback
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Generated on the phone; a repeated key returns 409 with the original id
       requestBody:
         required: true
         content:
@@ -909,7 +960,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/Created'
               example:
-                id: fb-12
+                id: '12'
+        '409':
+          description: 'Idempotency-Key already used: original id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: '12'
         '400':
           description: resultado must be buena, regular or mala
           content:
@@ -920,12 +979,29 @@ paths:
                 error:
                   codigo: invalid_request
                   mensaje_tecnico: resultado must be buena, regular or mala
+        '404':
+          description: crop_id kiwi does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: crop_not_found
+                  mensaje_tecnico: crop_id kiwi does not exist
   /plans:
     post:
       tags:
       - feedback
-      summary: Chosen rotation plan (statistics only)
+      summary: Chosen rotation plan (statistics only, idempotent)
       operationId: createPlan
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Generated on the phone; a repeated key returns 409 with the original id
       requestBody:
         required: true
         content:
@@ -944,7 +1020,35 @@ paths:
               schema:
                 $ref: '#/components/schemas/Created'
               example:
-                id: plan-3
+                id: '3'
+        '409':
+          description: 'Idempotency-Key already used: original id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Created'
+              example:
+                id: '3'
+        '400':
+          description: siembra is required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: invalid_request
+                  mensaje_tecnico: siembra is required
+        '404':
+          description: zone_id D99_x does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  codigo: zone_not_found
+                  mensaje_tecnico: zone_id D99_x does not exist
 components:
   schemas:
     Error:
