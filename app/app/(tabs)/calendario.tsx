@@ -121,8 +121,8 @@ export default function CalendarioScreen() {
               </View>
               {w.tile !== "sin_datos" && (
                 <View style={styles.wx}>
-                  <Text style={[styles.wxText, w.pmm >= 4 && styles.wet]}>
-                    {capital(t(`hoy.lluvia.${rainWord(w.pmm)}`).toLowerCase())}
+                  <Text style={[styles.wxText, w.pmm_dia >= 4 && styles.wet]}>
+                    {capital(t(`hoy.lluvia.${rainWord(w.pmm_dia)}`).toLowerCase())}
                   </Text>
                   {w.helada && <Text style={[styles.wxText, styles.frost]}>{t("calendario.helada_el", { dia: weekday(w.helada) })}</Text>}
                   {w.granizo && <Text style={styles.wxText}>{t("calendario.granizo_el", { dia: weekday(w.granizo) })}</Text>}
@@ -177,8 +177,8 @@ export default function CalendarioScreen() {
               <View style={styles.body}>
                 <Text style={styles.range}>{range(w)}</Text>
                 <View style={styles.wx}>
-                  <Text style={[styles.wxText, w.pmm >= 4 && styles.wet]}>
-                    {capital(t(`hoy.lluvia.${rainWord(w.pmm)}`).toLowerCase())}
+                  <Text style={[styles.wxText, w.pmm_dia >= 4 && styles.wet]}>
+                    {capital(t(`hoy.lluvia.${rainWord(w.pmm_dia)}`).toLowerCase())}
                   </Text>
                   {w.helada && <Text style={[styles.wxText, styles.frost]}>{t("calendario.helada_el", { dia: weekday(w.helada) })}</Text>}
                 </View>

@@ -22,7 +22,7 @@ export class HeaderLeft extends Component {
   }
 
   render() {
-    return <View style={{ gap: 4 }}>
+    return <View style={{ gap: 4, flexShrink: 1 }}>
       {this.renderBrand()}
       {this.renderLocation()}
     </View>;
@@ -32,7 +32,7 @@ export class HeaderLeft extends Component {
 export function HeaderRight() {
   return <View style={[styles.row, { gap: 12 }]}>
     <Bell />
-    <LangToggle />
+    <LangToggle compact />
   </View>;
 }
 

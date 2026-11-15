@@ -121,3 +121,14 @@ test("past weeks come from the measured history, newest first", () => {
   ]).toEqual([5, 5, "helada", "2026-11-10"]);
   expect(weeks[1].tile).toBe("sin_datos");
 });
+
+test("a rainy-season week reads by its daily rain, not its weekly total", () => {
+  const week = buildWeeks(
+    {
+      corto_plazo: { dias: days("2026-11-16", 7, { pmm: 4.3 }) },
+      forecast: { dias: [] },
+    },
+    "2026-11-16",
+  )[0];
+  expect([week.tile, week.pmm, week.pmm_dia]).toEqual(["lluvia", 30.1, 4.3]);
+});

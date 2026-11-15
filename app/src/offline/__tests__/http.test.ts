@@ -53,3 +53,19 @@ test("treats a repeated feedback or plan key (409) as already delivered", async 
     ).resolves.toBeUndefined();
   }
 });
+
+test("the default request calls fetch unbound, as browsers require", async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = function (this: unknown) {
+    if (this !== undefined && this !== globalThis)
+      throw new TypeError("Illegal invocation");
+    return Promise.resolve({ status: 304 } as Response);
+  } as typeof fetch;
+  try {
+    await expect(
+      new HttpTransport("https://example.test").pull("D9_itocta", 1),
+    ).resolves.toBeNull();
+  } finally {
+    globalThis.fetch = original;
+  }
+});

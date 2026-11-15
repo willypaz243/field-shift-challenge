@@ -8,7 +8,20 @@ import {
 } from "./types";
 
 export class LocalStore {
-  constructor(readonly db: SQLiteDatabase) {}
+  // expo-sqlite has no exclusive transactions on web (a single worker
+  // connection serialises the queries anyway), so the web build uses a plain one.
+  constructor(
+    readonly db: SQLiteDatabase,
+    private exclusive = true,
+  ) {}
+
+  private transaction(task: (tx: SQLiteDatabase) => Promise<void>) {
+    if (this.exclusive)
+      return this.db.withExclusiveTransactionAsync((tx) =>
+        task(tx as unknown as SQLiteDatabase),
+      );
+    return this.db.withTransactionAsync(() => task(this.db));
+  }
 
   state(zone: string) {
     return this.db.getFirstAsync<{
@@ -34,7 +47,7 @@ export class LocalStore {
   }
 
   async apply(zone: string, packet: SyncPackage) {
-    await this.db.withExclusiveTransactionAsync(async (tx) => {
+    await this.transaction(async (tx) => {
       const current = await tx.getFirstAsync<{ version: number }>(
         "SELECT version FROM sync_state WHERE zone_id = ?",
         zone,
