@@ -53,6 +53,10 @@ App for small farmers in Cercado, Cochabamba (Bolivia). It combines NASA data wi
 | Tests | `pytest` (API and data), `jest` (app) |
 | Formatting | `ruff` (Python), `prettier` + `eslint` (TS) |
 
+## Database
+
+One SQLite file, `data/db/valle.db`, with tables defined by the SQLModel models of each module. `make db-init` creates them, `make db-load` (or `bash etl.sh db`) loads the ETL data. Details in [`docs/db-schema.md`](docs/db-schema.md).
+
 ## Architecture
 
 The API is a **modular monolith**: one FastAPI process and one SQLite database, split into modules by domain. Each module owns its tables and exposes a service; other modules only talk to it through that service.

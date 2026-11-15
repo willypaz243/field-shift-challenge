@@ -13,3 +13,9 @@ Fotos de Wikimedia Commons, reducidas a 640 px y convertidas a WebP. Uso con atr
 | lechuga.webp | [Lettuce Mini Heads "Bambi" (7331116918).jpg](https://commons.wikimedia.org/wiki/File:Lettuce_Mini_Heads_%22Bambi%22_(7331116918).jpg) | Dwight Sipler from Stow, MA, USA | CC BY 2.0 |
 | avena.webp | [Avena sativa, Haver rijp.jpg](https://commons.wikimedia.org/wiki/File:Avena_sativa,_Haver_rijp.jpg) | Rasbak | CC BY-SA 3.0 |
 | forraje.webp | [Cattle eating corn silage 2.jpg](https://commons.wikimedia.org/wiki/File:Cattle_eating_corn_silage_2.jpg) | Peter Van den Bossche | CC BY-SA 2.0 |
+| wheat.webp | [Ripe wheat ears.jpg](https://commons.wikimedia.org/wiki/File:Ripe_wheat_ears.jpg) | Jazzmaster1997 | CC BY 4.0 |
+| oca.webp | [Ullucus tuberosus.jpg](https://commons.wikimedia.org/wiki/File:Ullucus_tuberosus.jpg) | Sir William Jackson Hooker (1785–1865) | Dominio público (ilustración botánica) |
+| peruvian-lupin.webp | [Peruvian Field Lupines.jpg](https://commons.wikimedia.org/wiki/File:Peruvian_Field_Lupines.jpg) | D. Gordon E. Robertson | CC BY-SA 3.0 |
+| quinoa.webp | [Chenopodium quinoa -red faro- MHNT.BOT.2007.43.66.jpg](https://commons.wikimedia.org/wiki/File:Chenopodium_quinoa_-red_faro-_MHNT.BOT.2007.43.66.jpg) | Roger Culos | CC BY-SA 3.0 |
+| peach.webp | [Starr-160309-4065-Prunus persica var persica-Flordaprince ripe fruit with bites-Hawea Pl Olinda-Maui (26861333382).jpg](https://commons.wikimedia.org/wiki/File:Starr-160309-4065-Prunus_persica_var_persica-Flordaprince_ripe_fruit_with_bites-Hawea_Pl_Olinda-Maui_(26861333382).jpg) | Forest and Kim Starr | CC BY 3.0 us |
+| flowers.webp | [20200325 Bellis perennis 01.jpg](https://commons.wikimedia.org/wiki/File:20200325_Bellis_perennis_01.jpg) | Flocci Nivis | CC BY 4.0 |
