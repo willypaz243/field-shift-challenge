@@ -48,3 +48,19 @@ class Forecast(SQLModel, table=True):
     pmm_min: float | None = None
     pmm_max: float | None = None
     creado_en: datetime = Field(default_factory=utcnow)
+
+
+class WeatherDay(SQLModel, table=True):
+    """Short-range forecast (14 days), written by the T11 ingestion (issue #17)."""
+
+    __tablename__ = "weather"
+
+    zone_id: str = Field(foreign_key="zones.id", primary_key=True)
+    fecha: date = Field(primary_key=True)
+    tmin: float
+    tmax: float
+    pmm: float
+    granizo: bool | None = None
+    confianza: str
+    fuente: str
+    actualizado_en: datetime = Field(default_factory=utcnow)

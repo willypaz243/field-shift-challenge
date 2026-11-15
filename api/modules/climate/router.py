@@ -34,3 +34,12 @@ def get_history(
     hasta: Annotated[date | None, Query()] = None,
 ) -> dict[str, Any]:
     return service.zone_history(session, zone_id, desde, hasta)
+
+
+@router.get("/zones/{zone_id}/weather")
+def get_weather(
+    zone_id: str,
+    session: Annotated[Session, Depends(get_session)],
+    dias: Annotated[int, Query()] = service.WEATHER_MAX_DAYS,
+) -> dict[str, Any]:
+    return service.zone_weather(session, zone_id, dias)

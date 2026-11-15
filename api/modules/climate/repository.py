@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy import func
 from sqlmodel import Session, select
 
-from api.modules.climate.models import ClimateHistory, Forecast
+from api.modules.climate.models import ClimateHistory, Forecast, WeatherDay
 
 
 def forecast_days(session: Session, zone_id: str, anio: int | None = None) -> list[Forecast]:
@@ -28,3 +28,14 @@ def last_history_date(session: Session, zone_id: str) -> date | None:
     return session.exec(
         select(func.max(ClimateHistory.fecha)).where(ClimateHistory.zone_id == zone_id)
     ).first()
+
+
+def weather_days(session: Session, zone_id: str, desde: date, limit: int) -> list[WeatherDay]:
+    return list(
+        session.exec(
+            select(WeatherDay)
+            .where(WeatherDay.zone_id == zone_id, WeatherDay.fecha >= desde)
+            .order_by(WeatherDay.fecha)
+            .limit(limit)
+        )
+    )

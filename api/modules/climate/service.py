@@ -1,5 +1,6 @@
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from sqlmodel import Session
 
@@ -42,12 +43,38 @@ def forecast(session: Session, zone_id: str, anio: int | None = None) -> dict[st
     return result
 
 
-def short_forecast(zone_id: str, updated: datetime | None) -> dict[str, Any]:
+WEATHER_MAX_DAYS = 14
+# The short forecast is refreshed at least daily; older data means the source failed.
+WEATHER_STALE_AFTER = timedelta(hours=24)
+LA_PAZ = ZoneInfo("America/La_Paz")
+
+
+def _as_utc(moment: datetime) -> datetime:
+    return moment if moment.tzinfo else moment.replace(tzinfo=UTC)
+
+
+def short_forecast(session: Session, zone_id: str, dias: int = WEATHER_MAX_DAYS) -> dict[str, Any]:
+    now = datetime.now(UTC)
+    days = repository.weather_days(session, zone_id, now.astimezone(LA_PAZ).date(), dias)
+    updated = max((_as_utc(d.actualizado_en) for d in days), default=None)
     return {
         "zone_id": zone_id,
-        "actualizado_en": updated.isoformat() if updated else None,
-        "dias": [],
-        "fuente": [],
+        "actualizado_en": updated.astimezone(LA_PAZ).isoformat() if updated else None,
+        "dias": [
+            _present(
+                {
+                    "fecha": d.fecha.isoformat(),
+                    "tmin": d.tmin,
+                    "tmax": d.tmax,
+                    "pmm": d.pmm,
+                    "granizo": d.granizo,
+                    "confianza": d.confianza,
+                }
+            )
+            for d in days
+        ],
+        "fuente": sorted({d.fuente for d in days}),
+        "desactualizado": updated is None or now - updated > WEATHER_STALE_AFTER,
     }
 
 
@@ -160,3 +187,10 @@ def zone_history(
 def zone_forecast(session: Session, zone_id: str, anio: int | None) -> dict[str, Any]:
     _require_zone(session, zone_id)
     return forecast(session, zone_id, anio)
+
+
+def zone_weather(session: Session, zone_id: str, dias: int) -> dict[str, Any]:
+    _require_zone(session, zone_id)
+    if not 1 <= dias <= WEATHER_MAX_DAYS:
+        raise ApiError(400, "invalid_request", f"dias must be 1 to {WEATHER_MAX_DAYS}")
+    return short_forecast(session, zone_id, dias)

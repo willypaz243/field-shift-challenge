@@ -1,6 +1,6 @@
 from api.core.models import SyncVersion
 from api.modules.alerts.models import Event
-from api.modules.climate.models import ClimateHistory, Forecast
+from api.modules.climate.models import ClimateHistory, Forecast, WeatherDay
 from api.modules.crops.models import Crop
 from api.modules.feedback.models import Feedback, Plan
 from api.modules.reports.models import Report
@@ -17,5 +17,6 @@ __all__ = [
     "Report",
     "Reservoir",
     "SyncVersion",
+    "WeatherDay",
     "Zone",
 ]
