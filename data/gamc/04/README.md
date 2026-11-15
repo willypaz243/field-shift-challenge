@@ -82,14 +82,14 @@ Atributos por `GetFeatureInfo` (`Distrito`, `Comuna`):
 ```bash
 # Leyenda (capa periurbanos; cambiar service_id para las otras)
 curl -G "https://serviciosgamc.cochabamba.bo/api/gs/wms" \
-  --data-urlencode "key=37f574a3292eafd287024269399aafa51b7cf55932603e2f" \
+  --data-urlencode "key=$GAMC_API_KEY" \
   --data-urlencode "service_id=c52066a1-32fd-4925-81e0-c2dcb8f4238f" \
   --data-urlencode "REQUEST=GetLegendGraphic" --data-urlencode "VERSION=1.0.0" \
   --data-urlencode "FORMAT=image/png" -o leyenda.png
 
 # Mapa
 curl -G "https://serviciosgamc.cochabamba.bo/api/gs/wms" \
-  --data-urlencode "key=37f574a3292eafd287024269399aafa51b7cf55932603e2f" \
+  --data-urlencode "key=$GAMC_API_KEY" \
   --data-urlencode "service_id=c52066a1-32fd-4925-81e0-c2dcb8f4238f" \
   --data-urlencode "SERVICE=WMS" --data-urlencode "VERSION=1.1.1" --data-urlencode "REQUEST=GetMap" \
   --data-urlencode "LAYERS=" --data-urlencode "FORMAT=image/png" --data-urlencode "TRANSPARENT=true" \
