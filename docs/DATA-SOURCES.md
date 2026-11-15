@@ -23,7 +23,7 @@
 | **Landsat 8/9** (30 m) | <https://earthexplorer.usgs.gov/> · <https://landsatlook.usgs.gov/> | NDVI, vigor vegetal, suelo desnudo, transiciones estacionales |
 | **MODIS** (250–1000 m) | <https://lpdaac.usgs.gov/products/> (ej. MOD13Q1 NDVI: <https://lpdaac.usgs.gov/products/mod13q1v061/>) | NDVI/estrés vegetal a mayor frecuencia |
 | **VIIRS** | <https://search.earthdata.nasa.gov/search?q=VIIRS> | Índices de vegetación alternativos a MODIS |
-| **NASA POWER** (agroclimatología) | <https://power.larc.nasa.gov/> · API: <https://power.larc.nasa.gov/api/documents/> | Temp, radiación, humedad, evapotranspiración, riesgo de heladas (fácil acceso por API, ideal para Cochabamba) |
+| **NASA POWER** (agroclimatología) | <https://power.larc.nasa.gov/> · API: `https://power.larc.nasa.gov/api/temporal/daily/point` | Temp, radiación, humedad, precipitación, viento — **verificado 14/11: funciona SIN token** (v2.10.3). `start`/`end` = int `YYYYMMDD` (desde 1984). `community=ag`. Parámetros válidos diario: `T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS, ALLSKY_SFC_SW_DWN, ALLSKY_SFC_LW_DWN, CLRSKY_SFC_SW_DWN`. **Sin T2MIN/T2MAX en diario** → derivar de `temporal/hourly/point?parameters=T2M` (verificado) o tomar de ERA5 |
 | **SRTM** (elevación 30 m) | <https://www.earthdata.nasa.gov/data/instruments/srtm> · descarga: <https://dwtkns.com/srtm30m/> | Pendiente, escorrentía, riesgo de erosión, flujo de agua |
 | **ECOSTRESS** (LST y ET, alta resolución) | <https://ecostress.jpl.nasa.gov/data> | Hotspots de estrés térmico/hídrico, microclima de campo |
 | **GRACE / GRACE-FO** (almacenamiento de agua) | <https://gracefo.jpl.nasa.gov/data/> | Tendencias de agua a largo plazo |

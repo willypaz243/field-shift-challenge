@@ -48,7 +48,8 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 
 | # | Fuente | Qué aporta | Rango | Formato / acceso | Prioridad |
 |---|---|---|---|---|---|
-| 1 | **NASA POWER** (Power-DA) | Clima **diario**: T2M/T2Max/T2Min, PRECTOT, RH2M, WS2M, SW, Q2M, PS | **1984 → presente** (cubre 2010–2025 + antes ✅) | JSON por punto vía API (token Earthdata gratuito); 0.5° | **P0** |
+| 1 | **NASA POWER** (Power-DA) | Clima **diario**: T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS, SW/LW (all-sky) | **1984 → presente** (cubre 2010–2025 + antes ✅) | JSON por punto vía API, 0.5° — **verificado 14/11: funciona SIN token** (v2.10.3); `start`/`end` = int `YYYYMMDD`; **no hay T2MIN/T2MAX en diario** | **P0** |
+| 1b | **ERA5** (CDS ECMWF) | **t2m_min / t2m_max** diarios (heladas) + validación de T2M | **1940 → presente** | API CDS (clave gratis en cds.climate.copernicus.eu); `reanalysis-era5-single-levels` | **P0** |
 | 2 | **GPM / IMERG** | Precipitación satelital diaria (validación de POWER, tormentas extremas) | 2000 → presente | HDF5 vía Earthdata/CMR (subconjunto bbox valle) | P1 |
 | 3 | **SMAP L4 SPL4SMGP v8** | **Humedad de suelo** superficial + zona radicular (3-h → promedio diario) | **2015-03-31 → presente** | HDF5, 9 km, EASE-Grid (EPSG:6933), Earthdata; DOI 10.5067/T5RUATAQREF8 | P1 |
 | 4 | **GAMC WMS** (key p04) | Zonas: periurbanos (mask urbano), distritos/comunas, drenaje | estático | WMS vía proxy (rate limit 10–15 s/peticion) | **P0** (obligatorio) |
@@ -64,9 +65,23 @@ eventos hist. (curado)  ───────┘              ─► reglas de a
 > - Requiere cuenta Earthdata (gratis) y descarga por script Python (Data Access Tool).
 > - Variables: surface soil moisture, root zone soil moisture, frozen fraction, incertidumbre.
 
-> **Nota POWER:** la serie diaria 1984+ resuelve el requisito "2010–2025 y antes si es
-> posible". Usar 2010–2025 como ventana de entrenamiento principal; 1984–2009 como
-> contexto/climatología larga.
+> **Nota POWER (verificado en vivo el 14/11, API v2.10.3):**
+> - **Funciona sin token** (probado 2× sin `token` y con token inválido). El token oficial
+>   (https://power.larc.nasa.gov/api/tokens/, email → 32 chars) sigue recomendado como
+>   buena práctica, pero no bloquea.
+> - `start`/`end` = **entero `YYYYMMDD`** (no epoch). Rango disponible: 1981/1984 → presente.
+> - Parámetros válidos del diario `community=ag`: `T2M, T2MDEW, RH2M, WS2M, PS, PRECTOT, TS,
+>   ALLSKY_SFC_SW_DWN, ALLSKY_SFC_LW_DWN, CLRSKY_SFC_SW_DWN`. **NO existen** `T2MIN/T2MAX`
+>   ni `ET/SWC/Q2M` en diario.
+> - **tmin/tmax (heladas):** derivar de **hourly `T2M`** (verificado: 2025-11-01 → min 8.6 °C
+>   05:00, max 23.1 °C 12:00) o usar **ERA5** (`t2m_min/t2m_max`, 1940+).
+> - La respuesta incluye la **elevación del punto** (Cochabamba valle: 3126 m) → útil para
+>   `zones.elev_m` sin SRTM.
+> - Ejemplo verificado:
+>   `https://power.larc.nasa.gov/api/temporal/daily/point?latitude=-17.39&longitude=-66.17&start=20251101&end=20251107&parameters=T2M,PRECTOT,RH2M,WS2M,PS&community=ag&format=JSON`
+>
+> **Nota de ventana de entrenamiento:** usar 2010–2025 como principal; 1984–2009 como
+> contexto/climatología larga (resuelve el requisito "antes de 2010 si es posible").
 
 ## 4. Uso de datos GAMC (obligatorio del reto) — 4 utilidades concretas
 
@@ -114,7 +129,7 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 ### Fase 0 — Bases (hoy, 2–3 h) — *bloqueante*
 | ID | Tarea | Est. | Criterio de aceptación |
 |---|---|---|---|
-| 0.1 | Cuenta Earthdata + token API POWER | 0,5 h | `curl` de POWER para 1 punto del valle devuelve JSON diario |
+| 0.1 | Claves de acceso: **CDS (ERA5)** — registro gratis + API key; Earthdata (para SMAP, P1, puede esperar). **POWER ya no pide token** (verificado 14/11) | 1 h | `curl` de POWER devuelve JSON diario ✅ (hecho); `cdsapi` de ERA5 responde para el bbox del valle |
 | 0.2 | Definir grid de zonas: 1–3 puntos agrícolas por distrito (D1–D12) usando mask periurbanos | 1 h | Lista de ~15–25 zonas (lat/lon, comuna vía GetFeatureInfo GAMC) |
 | 0.3 | Definir schema (§5) + repo de datos (`data/`, `src/etl`, `src/model`, `api/`, `app/`) | 0,5 h | Schema documentado; estructura de carpetas |
 | 0.4 | Catálogo de cultivos en tabla `crops` (de CROPS.md: papa, choclo, trigo, papaliza, hortalizas/lechuga, alfalfa, haba, tarwi, quinua, avena, flores, durazno) | 1 h (paralelo) | ≥10 cultivos con vector de condiciones |
@@ -180,7 +195,7 @@ sync_version(id, creado_en, hash)       -- versionado para sync delta del móvil
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Earthdata/token POWER tarde | **Alto** (bloquea todo) | **Tarea 0.1 primera de hoy**; fallback: POWER vía Earthdata Search (descarga manual de 1–2 puntos) |
+| Claves de acceso (CDS/Earthdata) | Medio | **POWER funciona sin token** (verificado 14/11) → el clima histórico NO está bloqueado. CDS (ERA5 tmin/tmax) es registro gratis ~5 min; Earthdata solo para SMAP (P1, descartable) |
 | SMAP 9 km grueso + reprocesamiento 2026-05/07 | Medio | Trato "valle" no comunal; excluir tramo; es P1 descartable |
 | Rate limit GAMC (429) | Medio | Batch con sleeps 12 s (script probado); todo lo descargable ya está en `data/gamc/04/` |
 | Proyección 1 año "honestidad" | Medio (pitch) | Enmarcar como **ciclo estacional + tendencia + incertidumbre** (no "predicción mágica"); mostrar backtest con números |
