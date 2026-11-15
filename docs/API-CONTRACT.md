@@ -374,6 +374,7 @@ Encabezado obligatorio `Idempotency-Key` (generado en el celular). Respuestas: `
 | `nasa_imerg` | GPM IMERG V07 diario, Final y Late, 2016+ |
 | `nasa_smap` | SMAP L4 SPL4SMGP v8, 2015+ |
 | `nasa_geos` | GEOS-FP (pronóstico corto, si se elige, §12) |
+| `open_meteo` | Open-Meteo (pronóstico corto de 14 días, CC BY 4.0) |
 | `srtm` | Open-Meteo Elevation (DEM global ~30 m; el servidor SRTM original dejó de responder) |
 | `gamc_wms` | GAMC WMS (periurbanos, distritos, drenaje) |
 | `riego_n1` | Asociación de Usuarios del Sistema de Riego N°1 La Angostura |
